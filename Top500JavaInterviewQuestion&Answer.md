@@ -7217,7 +7217,286 @@ Do you want me to do that?
 
 ---
 
+This is a **core Java OOP concept** and a **very common interview question**. Let’s break it down **clearly, concisely, and with examples**.
+
+---
+
+## 1️⃣ Method Overloading
+
+### 📌 Definition
+
+> **Method overloading** means defining **multiple methods with the same name** in the **same class**, but with **different parameter lists**.
+
+### ✔ Key Rules
+
+* Same method name
+* Different **number, type, or order** of parameters
+* Can change return type **only if parameters differ**
+* Happens at **compile time** (compile-time polymorphism)
+
+### ✅ Example
+
+```java
+class Calculator {
+    int add(int a, int b) {
+        return a + b;
+    }
+
+    double add(double a, double b) {
+        return a + b;
+    }
+
+    int add(int a, int b, int c) {
+        return a + b + c;
+    }
+}
+```
+
+### 🧠 Important Notes
+
+* Overloading **does not depend on inheritance**
+* Cannot overload **only by return type**
+* `static`, `final`, and `private` methods **can be overloaded**
+
+---
+
+## 2️⃣ Method Overriding
+
+### 📌 Definition
+
+> **Method overriding** means redefining a **parent class method** in a **child class** with the **same method signature**.
+
+### ✔ Key Rules
+
+* Same method name
+* Same parameters
+* Return type must be **same or covariant**
+* Requires **inheritance**
+* Happens at **runtime** (runtime polymorphism)
+
+### ✅ Example
+
+```java
+class Animal {
+    void sound() {
+        System.out.println("Animal sound");
+    }
+}
+
+class Dog extends Animal {
+    @Override
+    void sound() {
+        System.out.println("Dog barks");
+    }
+}
+```
+
+### 🧠 Important Notes
+
+* `static` methods are **hidden**, not overridden
+* `final` methods **cannot be overridden**
+* `private` methods are **not inherited**, so cannot be overridden
+* Access level **cannot be reduced**
+
+---
+
+## 3️⃣ Overloading vs Overriding (Comparison Table)
+
+| Feature          | Overloading       | Overriding               |
+| ---------------- | ----------------- | ------------------------ |
+| Occurs in        | Same class        | Parent–child class       |
+| Parameters       | Must differ       | Must be same             |
+| Return type      | Can differ        | Same or covariant        |
+| Binding          | Compile-time      | Runtime                  |
+| Inheritance      | Not required      | Required                 |
+| Polymorphism     | Compile-time      | Runtime                  |
+| Static methods   | Can be overloaded | Cannot be overridden     |
+| Access modifiers | No restriction    | Cannot reduce visibility |
+
+---
+
+## 4️⃣ Real-World Example
+
+### Overloading
+
+```java
+System.out.println("Hello");
+System.out.println(10);
+System.out.println(10.5);
+```
+
+### Overriding
+
+```java
+List list = new ArrayList();
+list.add("Java"); // ArrayList's implementation
+```
+
+---
+
+## 5️⃣ One-Line Interview Answer ⭐
+
+> **"Method overloading allows multiple methods with the same name but different parameters in the same class and is resolved at compile time, while method overriding redefines a parent class method in a child class with the same signature and is resolved at runtime."**
+
+---
+
+## 6️⃣ Common Tricky Interview Questions
+
+1. Can we overload `main()`? ✔ Yes
+2. Can we override `static` methods? ❌ No (method hiding)
+3. Can return type differ in overriding? ✔ Only covariant
+4. Can private methods be overridden? ❌ No
+5. Why overriding is runtime polymorphism?
+
+---
+
+If you want, I can next explain **method hiding vs overriding**, which is a **very tricky interview concept**, or give you **real interview trick questions with answers**.
+
+Just tell me 👍
+
+---
+
 # 52.Explain covariant return types.
+
+---
+
+**Covariant return types** are an important **Java OOP concept** related to **method overriding** and are commonly asked in **interviews**.
+
+---
+
+## 1️⃣ Definition
+
+> **Covariant return type** means that when **overriding a method**, the **return type of the child class method can be a subclass of the return type of the parent class method**.
+
+✔ Introduced in **Java 5**
+✔ Applies **only to method overriding**, not overloading
+
+---
+
+## 2️⃣ Basic Example
+
+```java
+class Animal {
+    Animal getAnimal() {
+        return new Animal();
+    }
+}
+
+class Dog extends Animal {
+    @Override
+    Dog getAnimal() {   // Covariant return type
+        return new Dog();
+    }
+}
+```
+
+* Parent method returns `Animal`
+* Child method returns `Dog` (a subclass of `Animal`)
+* This is **legal and safe**
+
+---
+
+## 3️⃣ Why Covariant Return Types Exist
+
+Without covariant return types, overriding required **exact return type match**, which was restrictive.
+
+### Benefit
+
+* Improves **readability**
+* Avoids **explicit casting**
+* More **type-safe**
+
+---
+
+## 4️⃣ Another Practical Example
+
+```java
+class Vehicle { }
+
+class Car extends Vehicle { }
+
+class Factory {
+    Vehicle create() {
+        return new Vehicle();
+    }
+}
+
+class CarFactory extends Factory {
+    @Override
+    Car create() {
+        return new Car();
+    }
+}
+```
+
+Now:
+
+```java
+CarFactory factory = new CarFactory();
+Car car = factory.create(); // No casting needed
+```
+
+---
+
+## 5️⃣ Rules for Covariant Return Types
+
+1. Applicable **only in method overriding**
+2. Return type must be a **subclass**
+3. Works only for **object types**, not primitives
+4. Method signature (name + parameters) must remain the same
+5. Access modifier cannot be reduced
+
+---
+
+## 6️⃣ Invalid Example ❌
+
+```java
+class A {
+    Animal get() {
+        return new Animal();
+    }
+}
+
+class B extends A {
+    Object get() {   // ❌ Object is parent of Animal
+        return new Object();
+    }
+}
+```
+
+❌ Not allowed because return type is **wider**, not narrower.
+
+---
+
+## 7️⃣ Covariant Return vs Overloading
+
+| Aspect           | Covariant Return     | Overloading  |
+| ---------------- | -------------------- | ------------ |
+| Method signature | Same                 | Different    |
+| Return type      | Subclass allowed     | Can differ   |
+| Compile/Runtime  | Runtime (overriding) | Compile-time |
+
+---
+
+## 8️⃣ One-Line Interview Answer ⭐
+
+> **"Covariant return types allow an overridden method in a subclass to return a more specific subtype of the return type declared in the parent class method."**
+
+---
+
+## 9️⃣ Common Interview Follow-Ups
+
+1. Do covariant returns work with primitives? ❌
+2. Since which Java version? ✔ Java 5
+3. Why not allow contravariant returns?
+4. Difference between covariant return and generics
+5. Covariant return in interfaces
+
+---
+
+If you want, I can next explain **method hiding vs overriding** or give you **tricky interview questions around covariant returns**.
+
+Just tell me 👍
 
 ---
 
@@ -7225,7 +7504,302 @@ Do you want me to do that?
 
 ---
 
+This is a **classic Java interview question** and often asked in tricky ways.
+
+## Short Answer ⭐
+
+> **Java is always pass-by-value. There is NO pass-by-reference in Java.**
+
+But what is passed as the *value* depends on the variable type.
+
+---
+
+## 1️⃣ What “pass-by-value” Means
+
+* When a method is called, **a copy of the variable’s value** is passed.
+* Changes to the parameter **do not affect the original variable**.
+
+---
+
+## 2️⃣ Primitive Types → Value of Data is Copied
+
+```java
+void change(int x) {
+    x = 20;
+}
+
+int a = 10;
+change(a);
+System.out.println(a); // 10
+```
+
+✔ `a` remains unchanged
+✔ Method receives a **copy of the value (10)**
+
+---
+
+## 3️⃣ Objects → Value of Reference is Copied
+
+This is where confusion happens.
+
+```java
+class Person {
+    String name;
+}
+
+void modify(Person p) {
+    p.name = "Aditya";
+}
+
+Person person = new Person();
+person.name = "Rahul";
+
+modify(person);
+System.out.println(person.name); // Aditya
+```
+
+### Why did it change?
+
+* Java passes **a copy of the reference**
+* Both copies point to the **same object**
+* Object state can be modified
+
+---
+
+## 4️⃣ Reassigning the Object Reference ❌
+
+```java
+void reassign(Person p) {
+    p = new Person();
+    p.name = "New Person";
+}
+
+Person person = new Person();
+person.name = "Original";
+
+reassign(person);
+System.out.println(person.name); // Original
+```
+
+✔ Reference reassignment does **not** affect the original
+✔ Proof that Java is **not pass-by-reference**
+
+---
+
+## 5️⃣ Visual Explanation
+
+```text
+Before call:
+person → Object A
+
+Inside method:
+p → Object A (copy of reference)
+
+Reassignment:
+p → Object B (only local copy changes)
+
+After method:
+person → Object A
+```
+
+---
+
+## 6️⃣ Why Java Is NOT Pass-by-Reference
+
+If Java were pass-by-reference:
+
+* Reassigning `p` would change `person`
+* But it **doesn’t**
+
+Hence:
+
+> **Java passes object references by value**
+
+---
+
+## 7️⃣ Common Interview Trap Question ❗
+
+### Q: Can Java simulate pass-by-reference?
+
+✔ Yes, **indirectly**:
+
+* Use mutable objects
+* Use wrapper classes
+* Return modified object
+
+```java
+Person modify(Person p) {
+    p.name = "Aditya";
+    return p;
+}
+```
+
+---
+
+## 8️⃣ One-Line Interview Answer ⭐
+
+> **"Java is strictly pass-by-value; for objects, the value being passed is the object reference, not the actual object."**
+
+---
+
+## 9️⃣ Interview Follow-Ups
+
+1. Why can object fields change but not reference?
+2. How does String behave (immutability)?
+3. Difference between C++ pass-by-reference vs Java?
+4. How does Java handle arrays?
+5. Why this design choice?
+
+---
+
+If you want, I can next explain **this behavior using memory diagrams**, or give **tricky interview questions based on this concept**.
+
+Just tell me 👍
+
+---
+
 # 54.Can we override private/static/ﬁnal methods?
+
+---
+
+This is a **very common and tricky Java interview question** because it tests understanding of **method overriding vs method hiding and inheritance**.
+
+---
+
+## Short Answer ⭐
+
+| Method Type | Can it be Overridden? |
+| ----------- | --------------------- |
+| **private** | ❌ No                  |
+| **static**  | ❌ No (method hiding)  |
+| **final**   | ❌ No                  |
+
+---
+
+## 1️⃣ Can we override **private methods**? ❌
+
+### ❌ Why?
+
+* Private methods are **not inherited**
+* Overriding requires inheritance
+
+### Example
+
+```java
+class Parent {
+    private void show() {
+        System.out.println("Parent");
+    }
+}
+
+class Child extends Parent {
+    void show() {   // Not overriding
+        System.out.println("Child");
+    }
+}
+```
+
+✔ This is **method redefinition**, not overriding
+✔ `@Override` will cause a **compile-time error**
+
+---
+
+## 2️⃣ Can we override **static methods**? ❌
+
+### ❌ Why?
+
+* Static methods belong to the **class**, not the object
+* Overriding is **runtime polymorphism**
+* Static methods are **compile-time bound**
+
+### Example (Method Hiding)
+
+```java
+class Parent {
+    static void display() {
+        System.out.println("Parent");
+    }
+}
+
+class Child extends Parent {
+    static void display() {
+        System.out.println("Child");
+    }
+}
+
+Parent p = new Child();
+p.display(); // Parent
+```
+
+✔ This is called **method hiding**, not overriding
+
+---
+
+## 3️⃣ Can we override **final methods**? ❌
+
+### ❌ Why?
+
+* `final` prevents modification
+* JVM guarantees method behavior will not change
+
+### Example
+
+```java
+class Parent {
+    final void test() {
+        System.out.println("Parent");
+    }
+}
+
+class Child extends Parent {
+    // Compile-time error
+    void test() {
+        System.out.println("Child");
+    }
+}
+```
+
+---
+
+## 4️⃣ Comparison Summary Table
+
+| Keyword | Inherited | Overridable | Notes                |
+| ------- | --------- | ----------- | -------------------- |
+| private | ❌         | ❌           | Not visible to child |
+| static  | ✔         | ❌           | Method hiding        |
+| final   | ✔         | ❌           | Prevents overriding  |
+
+---
+
+## 5️⃣ Tricky Interview Points 🔥
+
+1. **Private methods can be overloaded** ✔
+2. **Static methods can be overloaded** ✔
+3. **Final methods can be overloaded** ✔
+4. `@Override` on static/private → **compile-time error**
+5. Static methods are resolved using **reference type**, not object type
+
+---
+
+## 6️⃣ One-Line Interview Answer ⭐
+
+> **"Private, static, and final methods cannot be overridden in Java—private methods are not inherited, static methods are hidden, and final methods are explicitly restricted from overriding."**
+
+---
+
+## 7️⃣ Follow-Up Interview Questions
+
+1. Difference between **method hiding and overriding**
+2. Why static methods can’t be overridden
+3. Can constructors be overridden?
+4. Can we override default methods?
+5. How polymorphism works internally
+
+---
+
+If you want, I can next explain **method hiding vs overriding with JVM-level details** or give you **real interview trick questions**.
+
+Just tell me 👍
 
 ---
 
@@ -7233,7 +7807,353 @@ Do you want me to do that?
 
 ---
 
+This is a **very common design & interview question** because it tests your understanding of **OOP design choices** in Java.
+
+---
+
+## Short Answer ⭐
+
+> **Use an abstract class when you want to share state (fields), constructors, and common implementation among closely related classes, and when multiple inheritance is not required.**
+
+---
+
+## 1️⃣ Key Differences That Drive the Decision
+
+| Aspect                | Abstract Class                       | Interface                            |
+| --------------------- | ------------------------------------ | ------------------------------------ |
+| Fields                | Can have instance variables          | Only `public static final` constants |
+| Constructors          | ✔ Yes                                | ❌ No                                 |
+| Method implementation | Can have abstract + concrete methods | Default methods only                 |
+| State                 | ✔ Can hold state                     | ❌ No instance state                  |
+| Multiple inheritance  | ❌ Single inheritance                 | ✔ Multiple interfaces                |
+| Access modifiers      | Any                                  | `public` only                        |
+| Use case              | "Is-a" + shared behavior             | Capability/contract                  |
+
+---
+
+## 2️⃣ When Abstract Class Is the Better Choice
+
+### 1️⃣ You Need to Maintain State
+
+```java
+abstract class Vehicle {
+    protected int speed;
+
+    abstract void move();
+
+    void accelerate(int value) {
+        speed += value;
+    }
+}
+```
+
+✔ Shared **instance variables**
+✔ Common behavior
+
+---
+
+### 2️⃣ You Need Constructors
+
+```java
+abstract class Employee {
+    String name;
+
+    Employee(String name) {
+        this.name = name;
+    }
+}
+```
+
+✔ Interfaces **cannot have constructors**
+
+---
+
+### 3️⃣ You Want to Provide Base Functionality
+
+```java
+abstract class DatabaseConnector {
+    void openConnection() {
+        System.out.println("Opening connection");
+    }
+
+    abstract void executeQuery();
+}
+```
+
+✔ Avoid code duplication
+✔ Enforce method implementation where needed
+
+---
+
+### 4️⃣ You Are Modeling a Strong “Is-A” Relationship
+
+```java
+abstract class Shape {
+    abstract double area();
+}
+```
+
+✔ Closely related classes (`Circle`, `Rectangle`)
+✔ Logical hierarchy
+
+---
+
+### 5️⃣ You Want Controlled Inheritance
+
+* Abstract class allows **single inheritance**
+* Helps enforce **design constraints**
+
+---
+
+## 3️⃣ When Interface Is a Better Choice (For Contrast)
+
+* Multiple inheritance required
+* No shared state
+* Define a **capability or contract**
+
+```java
+interface Flyable {
+    void fly();
+}
+```
+
+---
+
+## 4️⃣ Real-World Example
+
+### Abstract Class
+
+```java
+abstract class HttpServlet {
+    protected void service() {}
+}
+```
+
+### Interface
+
+```java
+interface Runnable {
+    void run();
+}
+```
+
+---
+
+## 5️⃣ Interview-Friendly Decision Rule 🔥
+
+> **Choose an abstract class if you need state, constructors, or shared code; choose an interface if you need multiple inheritance or to define a contract.**
+
+---
+
+## 6️⃣ One-Line Interview Answer ⭐
+
+> **"Use an abstract class when classes are closely related and need to share state, constructors, or common behavior, whereas interfaces are better for defining contracts and supporting multiple inheritance."**
+
+---
+
+## 7️⃣ Common Follow-Up Interview Questions
+
+1. Can an abstract class implement an interface?
+2. Can abstract class have static methods?
+3. Can interface have default methods?
+4. Multiple inheritance using interfaces
+5. Abstract class vs interface performance
+
+---
+
+If you want, I can next explain **how Java 8 changed interfaces** or give **real-world design scenarios with abstract class vs interface**.
+
+Just tell me 👍
+
+---
+
 # 56.What is java.lang.instrument used for?
+
+---
+
+`java.lang.instrument` is a **low-level Java API** used to **instrument (modify or analyze) bytecode of classes at runtime or JVM startup**. It is mainly used for **monitoring, profiling, APM tools, code coverage, and runtime enhancement**—*without changing application source code*.
+
+---
+
+## 1️⃣ What is `java.lang.instrument`?
+
+> **`java.lang.instrument` allows Java agents to intercept and transform class bytecode as classes are loaded or redefined by the JVM.**
+
+It enables:
+
+* **Bytecode transformation**
+* **Class load interception**
+* **Runtime class redefinition**
+* **Object size measurement**
+
+---
+
+## 2️⃣ Core Components
+
+### 🔹 `Instrumentation` Interface
+
+Provided by the JVM to an **agent**, exposes methods like:
+
+```java
+addTransformer(ClassFileTransformer t)
+redefineClasses(ClassDefinition... defs)
+getObjectSize(Object object)
+```
+
+### 🔹 Java Agent
+
+A special JAR that runs **before or alongside** the application.
+
+Two entry points:
+
+```java
+premain(String args, Instrumentation inst) // JVM startup
+agentmain(String args, Instrumentation inst) // Attach to running JVM
+```
+
+---
+
+## 3️⃣ How It Works (High Level)
+
+```text
+JVM starts
+ → Java Agent loads
+   → Instrumentation instance provided
+     → Agent registers transformer
+       → JVM loads class
+         → Transformer modifies bytecode
+```
+
+---
+
+## 4️⃣ Simple Example: Java Agent
+
+### Agent Class
+
+```java
+public class MyAgent {
+    public static void premain(String args, Instrumentation inst) {
+        inst.addTransformer((loader, className, classBeingRedefined,
+                              protectionDomain, classfileBuffer) -> {
+            System.out.println("Loading class: " + className);
+            return classfileBuffer; // no modification
+        });
+    }
+}
+```
+
+### Manifest (`MANIFEST.MF`)
+
+```
+Premain-Class: MyAgent
+```
+
+### Run Application
+
+```bash
+java -javaagent:myagent.jar MyApp
+```
+
+---
+
+## 5️⃣ Common Use Cases (Very Important for Interviews)
+
+### 1️⃣ Application Performance Monitoring (APM)
+
+* New Relic
+* AppDynamics
+* Datadog
+* Dynatrace
+
+👉 Inject timing, tracing, and metrics code
+
+---
+
+### 2️⃣ Profilers & Debugging Tools
+
+* JVM profilers
+* Memory analyzers
+* Thread monitoring
+
+---
+
+### 3️⃣ Code Coverage Tools
+
+* JaCoCo
+* Cobertura
+
+👉 Inject counters into bytecode
+
+---
+
+### 4️⃣ Security & Auditing
+
+* Method call interception
+* Sensitive data tracking
+
+---
+
+### 5️⃣ Hot Code Replacement / Redefinition
+
+```java
+instrumentation.redefineClasses(...)
+```
+
+✔ Change method bodies at runtime
+❌ Cannot change class structure (fields/method signatures)
+
+---
+
+## 6️⃣ What You *Can* and *Cannot* Do
+
+### ✔ You CAN
+
+* Modify method bytecode
+* Insert logging, metrics
+* Redefine method bodies
+* Measure object size
+
+### ❌ You CANNOT
+
+* Add/remove fields
+* Change method signatures
+* Change class hierarchy
+
+---
+
+## 7️⃣ Difference from Reflection
+
+| Aspect                  | Instrumentation | Reflection |
+| ----------------------- | --------------- | ---------- |
+| Bytecode modification   | ✔ Yes           | ❌ No       |
+| Runtime behavior change | ✔ Deep          | ✔ Limited  |
+| JVM-level access        | ✔ Yes           | ❌ No       |
+| Used by tools           | ✔ Yes           | Rare       |
+
+---
+
+## 8️⃣ One-Line Interview Answer ⭐
+
+> **"`java.lang.instrument` is used to build Java agents that can monitor, analyze, or modify bytecode at class-load or runtime, commonly used in profiling, APM, code coverage, and monitoring tools."**
+
+---
+
+## 9️⃣ Common Interview Follow-Ups
+
+1. Difference between `premain` and `agentmain`
+2. Can we modify method signatures? (❌)
+3. How APM tools work internally
+4. Instrumentation vs ByteBuddy vs ASM
+5. Class redefinition limitations
+
+---
+
+If you want, I can next explain
+✅ **How tools like New Relic actually inject code**
+✅ **ByteBuddy vs ASM**
+✅ **How to build a real agent step-by-step**
+
+Just tell me 👍
 
 ---
 
@@ -7241,7 +8161,364 @@ Do you want me to do that?
 
 ---
 
+**Metaspace** is the **memory area in Java** that stores **class metadata** and replaced **PermGen** starting from **Java 8**.
+
+---
+
+## 1️⃣ What Is Metaspace?
+
+> **Metaspace is native memory used by the JVM to store class-level metadata such as class structures, methods, fields, constant pools, and annotations.**
+
+* Introduced in **Java 8**
+* Replaced **Permanent Generation (PermGen)**
+* Uses **native (off-heap) memory**, not Java heap
+
+---
+
+## 2️⃣ What Is Stored in Metaspace?
+
+* Class metadata
+* Method metadata
+* Runtime constant pool
+* Field information
+* Annotations
+* Bytecode
+* ClassLoader data
+
+⚠️ **Object instances are NOT stored here** (they go to the heap)
+
+---
+
+## 3️⃣ Why PermGen Was Replaced
+
+### Problems with PermGen
+
+* Fixed size → frequent `OutOfMemoryError: PermGen space`
+* Hard to tune
+* ClassLoader leaks caused memory issues
+
+### Advantages of Metaspace
+
+* Grows dynamically
+* Uses native memory
+* Easier tuning
+* Fewer class-loading related OOMs
+
+---
+
+## 4️⃣ Memory Location Comparison
+
+| Memory Area | Java Version       | Location      |
+| ----------- | ------------------ | ------------- |
+| PermGen     | Java 7 and earlier | Heap          |
+| Metaspace   | Java 8+            | Native memory |
+
+---
+
+## 5️⃣ Tuning Metaspace
+
+Although dynamic, it **can still cause OOM** if native memory is exhausted.
+
+### JVM Options
+
+```bash
+-XX:MetaspaceSize=128m
+-XX:MaxMetaspaceSize=512m
+```
+
+### Possible Error
+
+```text
+java.lang.OutOfMemoryError: Metaspace
+```
+
+---
+
+## 6️⃣ When Can Metaspace Grow Too Much?
+
+1. **ClassLoader leaks**
+2. Dynamic class generation (e.g., proxies, frameworks)
+3. Hot redeployments (app servers)
+4. Bytecode manipulation tools
+
+---
+
+## 7️⃣ Garbage Collection of Metaspace
+
+* Metadata is **GCed when ClassLoader becomes unreachable**
+* Frequent in:
+
+  * Web containers (Tomcat)
+  * OSGi systems
+  * Microservices with hot reload
+
+---
+
+## 8️⃣ Real-World Example
+
+Frameworks that heavily use Metaspace:
+
+* Spring (CGLIB, proxies)
+* Hibernate
+* ByteBuddy
+* Mockito
+* Lombok
+
+---
+
+## 9️⃣ One-Line Interview Answer ⭐
+
+> **"Metaspace is a native memory area introduced in Java 8 to store class metadata, replacing PermGen, allowing dynamic growth and reducing class-loading related OutOfMemoryErrors."**
+
+---
+
+## 🔟 Common Interview Follow-Ups
+
+1. Difference between **PermGen and Metaspace**
+2. What causes `OutOfMemoryError: Metaspace`?
+3. How to monitor Metaspace usage?
+4. Does Metaspace use heap memory? (❌)
+5. Relationship between Metaspace and ClassLoader leaks
+
+---
+
+If you want, I can next explain
+✅ **Heap vs Stack vs Metaspace vs Native memory**
+✅ **How Spring affects Metaspace**
+✅ **Metaspace OOM debugging steps**
+
+Just tell me 👍
+
+---
+
 # 58.How to detect memory leaks in Java?
+
+---
+
+Detecting **memory leaks in Java** is a **very important real-world + interview topic**, especially for **backend / senior Java developers**.
+
+---
+
+## 1️⃣ What Is a Memory Leak in Java?
+
+> **A memory leak occurs when objects that are no longer needed are still strongly referenced and therefore not garbage collected.**
+
+✔ JVM has GC
+❌ GC cannot collect **reachable objects**
+
+---
+
+## 2️⃣ Common Causes of Memory Leaks
+
+* Static collections (`static Map`, `static List`)
+* ClassLoader leaks (web apps)
+* Listeners not deregistered
+* ThreadLocal misuse
+* Caches without eviction
+* Improper equals/hashCode
+* Infinite object growth
+
+---
+
+## 3️⃣ Symptoms of Memory Leaks
+
+* Gradually increasing heap usage
+* Frequent Full GCs
+* Application slowdown
+* `OutOfMemoryError: Java heap space`
+* `OutOfMemoryError: Metaspace`
+
+---
+
+## 4️⃣ Detection Techniques (Step-by-Step)
+
+---
+
+### 1️⃣ Enable GC Logs (First Step)
+
+```bash
+-Xlog:gc*           # Java 11+
+-XX:+PrintGCDetails # Java 8
+```
+
+✔ Look for:
+
+* Increasing heap after Full GC
+* GC not reclaiming memory
+
+---
+
+### 2️⃣ Take Heap Dumps
+
+#### Automatically on OOM
+
+```bash
+-XX:+HeapDumpOnOutOfMemoryError
+-XX:HeapDumpPath=/tmp/heapdump.hprof
+```
+
+#### Manually
+
+```bash
+jmap -dump:live,file=heap.hprof <pid>
+```
+
+---
+
+### 3️⃣ Analyze Heap Dump (Most Important Step)
+
+#### Tools
+
+* **Eclipse MAT** ⭐⭐⭐
+* VisualVM
+* JProfiler
+* YourKit
+
+✔ Look for:
+
+* Dominator Tree
+* Retained Heap
+* Large object graphs
+* GC Roots
+
+---
+
+### 4️⃣ Identify GC Roots
+
+> Objects reachable from GC Roots **cannot be collected**
+
+Common GC Roots:
+
+* Static fields
+* Threads
+* JNI references
+* ClassLoaders
+
+---
+
+### 5️⃣ Compare Multiple Heap Dumps
+
+* Take heap dumps at **different times**
+* Compare growth patterns
+* Identify objects continuously growing
+
+---
+
+## 5️⃣ Typical Leak Patterns (Very Important)
+
+---
+
+### 🔴 Static Collection Leak
+
+```java
+static List<Object> cache = new ArrayList<>();
+```
+
+✔ Objects never released
+
+---
+
+### 🔴 Listener Leak
+
+```java
+button.addListener(listener);
+// listener never removed
+```
+
+---
+
+### 🔴 ThreadLocal Leak
+
+```java
+ThreadLocal<User> user = new ThreadLocal<>();
+user.set(obj); // not removed
+```
+
+✔ Fix:
+
+```java
+user.remove();
+```
+
+---
+
+### 🔴 ClassLoader Leak
+
+* Redeployments in Tomcat
+* Classes not unloaded
+
+---
+
+## 6️⃣ Metaspace Leak Detection
+
+Symptoms:
+
+* Growing Metaspace
+* `OutOfMemoryError: Metaspace`
+
+Tools:
+
+```bash
+jcmd <pid> VM.classloader_stats
+```
+
+---
+
+## 7️⃣ Live Monitoring Tools
+
+| Tool      | Use                       |
+| --------- | ------------------------- |
+| VisualVM  | Heap + GC                 |
+| JConsole  | Memory monitoring         |
+| JProfiler | Deep analysis             |
+| YourKit   | Production-safe profiling |
+
+---
+
+## 8️⃣ Code-Level Prevention Techniques
+
+* Use **WeakHashMap** for caches
+* Remove listeners properly
+* Avoid static references
+* Close resources (`try-with-resources`)
+* Use bounded caches (LRU)
+* Clear ThreadLocals
+
+---
+
+## 9️⃣ Interview One-Line Answer ⭐
+
+> **"Memory leaks in Java are detected by monitoring heap usage, analyzing GC logs, capturing heap dumps, and using tools like Eclipse MAT to find objects retained by GC roots."**
+
+---
+
+## 🔟 Real-World Debugging Strategy (Production)
+
+1. Observe heap growth
+2. Enable GC logging
+3. Capture heap dump
+4. Analyze retained objects
+5. Identify GC roots
+6. Fix code & redeploy
+
+---
+
+## 🔥 Bonus Interview Questions
+
+1. Difference between heap dump and thread dump
+2. What is retained heap?
+3. How GC Roots prevent collection
+4. ThreadLocal memory leak
+5. Metaspace leak vs heap leak
+
+---
+
+If you want, I can next explain
+✅ **ThreadLocal memory leaks in depth**
+✅ **Eclipse MAT step-by-step walkthrough**
+✅ **Real production memory leak case studies**
+
+Just tell me 👍
 
 ---
 
@@ -7249,7 +8526,330 @@ Do you want me to do that?
 
 ---
 
+In Java, a **ClassLoader** is a fundamental part of the JVM responsible for **loading `.class` files into memory at runtime**. It plays a critical role in **security, modularity, and dynamic loading**, and it’s a **very common interview topic**.
+
+---
+
+## 1️⃣ What Is a ClassLoader?
+
+> **A ClassLoader is an object that loads Java classes into the JVM dynamically during runtime.**
+
+Key points:
+
+* Converts `.class` bytecode into **`Class<?>` objects**
+* Follows the **Parent Delegation Model**
+* Ensures **security and isolation**
+* Allows **dynamic class loading**
+
+---
+
+## 2️⃣ Why Do We Need ClassLoaders?
+
+* Separate **JDK classes** from **application classes**
+* Prevent **malicious code** from replacing core Java classes
+* Support **hot deployment** (web servers)
+* Enable **plugin systems**
+* Allow frameworks (Spring, Hibernate) to generate classes at runtime
+
+---
+
+## 3️⃣ Parent Delegation Model
+
+```text
+Application ClassLoader
+        ↓
+Extension / Platform ClassLoader
+        ↓
+Bootstrap ClassLoader
+```
+
+✔ A class loader first asks its **parent** to load the class
+✔ Loads class itself **only if parent cannot**
+
+---
+
+## 4️⃣ Types of ClassLoaders
+
+### 1️⃣ Bootstrap ClassLoader
+
+* Loads **core Java classes**
+* Location:
+
+  * Java 8: `rt.jar`
+  * Java 9+: `jrt:/java.base`
+* Implemented in **native code**
+* Parent of all class loaders
+
+Example:
+
+```java
+System.out.println(String.class.getClassLoader()); // null
+```
+
+---
+
+### 2️⃣ Platform ClassLoader
+
+(Extension ClassLoader in Java 8 and earlier)
+
+* Loads **JDK extension classes**
+* Location:
+
+  * Java 8: `jre/lib/ext`
+  * Java 9+: Platform modules
+* Parent: Bootstrap ClassLoader
+
+---
+
+### 3️⃣ Application ClassLoader (System ClassLoader)
+
+* Loads **application classes**
+* Location:
+
+  * `classpath`
+* Parent: Platform ClassLoader
+
+Example:
+
+```java
+System.out.println(ClassLoader.getSystemClassLoader());
+```
+
+---
+
+### 4️⃣ Custom ClassLoader
+
+* User-defined class loaders
+* Extend `ClassLoader`
+* Used in:
+
+  * Application servers
+  * Plugin systems
+  * Dynamic bytecode generation
+
+Example:
+
+```java
+class MyClassLoader extends ClassLoader {
+    @Override
+    protected Class<?> findClass(String name) throws ClassNotFoundException {
+        byte[] byteCode = loadClassBytes(name);
+        return defineClass(name, byteCode, 0, byteCode.length);
+    }
+}
+```
+
+---
+
+## 5️⃣ ClassLoader Hierarchy (Visual)
+
+```text
+Bootstrap (native)
+   ↓
+Platform / Extension
+   ↓
+Application
+   ↓
+Custom ClassLoaders
+```
+
+---
+
+## 6️⃣ Important Interview Concepts
+
+### 🔹 ClassLoader Isolation
+
+* Same class loaded by **different class loaders** = **different classes**
+* Common in:
+
+  * Tomcat
+  * OSGi
+  * Microservices
+
+---
+
+### 🔹 ClassLoader Leak
+
+* Occurs when ClassLoader is **not garbage collected**
+* Common cause of **Metaspace OOM**
+
+---
+
+## 7️⃣ Real-World Examples
+
+* **Spring** – dynamic proxies
+* **Hibernate** – bytecode enhancement
+* **Tomcat** – web app class loaders
+* **JUnit** – test isolation
+
+---
+
+## 8️⃣ One-Line Interview Answer ⭐
+
+> **"A ClassLoader loads Java classes into the JVM at runtime using the parent delegation model; the main types are Bootstrap, Platform (Extension), Application, and Custom ClassLoaders."**
+
+---
+
+## 9️⃣ Common Follow-Up Interview Questions
+
+1. What is **parent delegation**?
+2. Difference between **Class.forName()** and **ClassLoader.loadClass()**
+3. What causes **ClassLoader leaks**?
+4. Can we override `loadClass()`?
+5. How modules affect class loading (Java 9+)
+
+---
+
+If you want, I can next explain
+✅ **ClassLoader leaks with real examples**
+✅ **Difference between Class.forName and loadClass**
+✅ **Tomcat class loading hierarchy**
+
+Just tell me 👍
+
+---
+
 # 60.What is JIT compiler?
+
+---
+
+The **JIT (Just-In-Time) compiler** is a key part of the **JVM execution engine** that **improves Java performance** by compiling frequently executed bytecode into **native machine code at runtime**.
+
+---
+
+## 1️⃣ What Is JIT Compiler?
+
+> **The JIT compiler converts Java bytecode into optimized native machine code at runtime to improve execution speed.**
+
+Without JIT:
+
+* Bytecode is **interpreted line by line** (slow)
+
+With JIT:
+
+* Hot code is **compiled once** and **reused** (fast)
+
+---
+
+## 2️⃣ How JIT Works (Step-by-Step)
+
+1. `.java` → compiled to `.class` (bytecode)
+2. JVM starts executing bytecode using **interpreter**
+3. JVM identifies **hot methods / hot loops**
+4. JIT compiles hot code to **native machine code**
+5. JVM executes native code directly
+
+---
+
+## 3️⃣ What Is “Hot Code”?
+
+* Methods or loops executed **frequently**
+* Detected using **profiling counters**
+
+Example:
+
+```java
+for (int i = 0; i < 1_000_000; i++) {
+    sum += i;
+}
+```
+
+This loop becomes **hot** → JIT compiled
+
+---
+
+## 4️⃣ Types of JIT Compilers (HotSpot JVM)
+
+### 🔹 C1 (Client Compiler)
+
+* Faster compilation
+* Less aggressive optimizations
+* Good for **quick startup**
+
+### 🔹 C2 (Server Compiler)
+
+* Slower compilation
+* Highly optimized code
+* Best for **long-running apps**
+
+### 🔹 Tiered Compilation (Default)
+
+* Starts with C1
+* Recompiles with C2 if code stays hot
+
+---
+
+## 5️⃣ Key JIT Optimizations (Interview Favorite)
+
+* **Inlining**
+* **Dead code elimination**
+* **Loop unrolling**
+* **Escape analysis**
+* **Lock elimination**
+* **Constant folding**
+
+---
+
+## 6️⃣ JIT vs AOT (Ahead-Of-Time)
+
+| Aspect           | JIT                   | AOT                  |
+| ---------------- | --------------------- | -------------------- |
+| Compilation time | Runtime               | Build time           |
+| Optimization     | Runtime profile-based | Static               |
+| Startup time     | Slower                | Faster               |
+| Peak performance | Higher                | Lower                |
+| Used in          | JVM                   | GraalVM Native Image |
+
+---
+
+## 7️⃣ Benefits of JIT
+
+✔ High performance
+✔ Adaptive optimization
+✔ Platform-independent bytecode
+✔ Runtime profiling
+
+---
+
+## 8️⃣ Drawbacks
+
+❌ Warm-up time
+❌ Higher memory usage
+❌ Not ideal for short-lived programs
+
+---
+
+## 9️⃣ Real-World Impact
+
+* Web servers
+* Microservices
+* Trading systems
+* Big data applications
+
+---
+
+## 🔟 One-Line Interview Answer ⭐
+
+> **"The JIT compiler improves Java performance by converting frequently executed bytecode into optimized native machine code at runtime."**
+
+---
+
+## 🔥 Common Follow-Up Questions
+
+1. Interpreter vs JIT
+2. What is tiered compilation?
+3. How JVM detects hot methods?
+4. Why Java startup is slow?
+5. JIT vs GraalVM
+
+---
+
+If you want, I can next explain
+✅ **JIT vs Interpreter with diagrams**
+✅ **How JVM decides hotness**
+✅ **JIT optimizations in real code**
+
+Just tell me 👍
 
 ---
 
@@ -7257,7 +8857,432 @@ Do you want me to do that?
 
 ---
 
+Annotations in Java work through a combination of **compile-time metadata**, **class file storage**, and **runtime reflection processing**. They **do not change program logic by themselves**—they provide **metadata** that tools, frameworks, or the JVM can read and act upon.
+
+---
+
+## 1️⃣ What Are Annotations Internally?
+
+> **Annotations are special interfaces whose data is stored in the `.class` file and optionally retained at runtime for reflection-based access.**
+
+Example:
+
+```java
+@Override
+public String toString() {
+    return "Hello";
+}
+```
+
+Internally:
+
+* `@Override` is **metadata**
+* Compiler and tools interpret it
+
+---
+
+## 2️⃣ Annotation Is an Interface (Key Insight)
+
+All annotations:
+
+```java
+public interface MyAnnotation extends java.lang.annotation.Annotation {
+}
+```
+
+Example:
+
+```java
+@interface Author {
+    String name();
+    int version();
+}
+```
+
+Compiles to:
+
+```java
+interface Author extends Annotation {
+    String name();
+    int version();
+}
+```
+
+---
+
+## 3️⃣ Annotation Lifecycle (Internal Flow)
+
+### Step 1: Compilation
+
+* Compiler **validates annotation usage**
+* Stores annotation data in `.class` file
+
+### Step 2: Class File Storage
+
+Annotations are stored in:
+
+* **RuntimeVisibleAnnotations**
+* **RuntimeInvisibleAnnotations**
+
+Depends on retention policy.
+
+### Step 3: Runtime Processing
+
+* JVM loads class
+* Reflection API reads annotation metadata
+* Framework acts accordingly
+
+---
+
+## 4️⃣ Retention Policy (VERY Important)
+
+```java
+@Retention(RetentionPolicy.RUNTIME)
+```
+
+| Retention | Stored in Class File | Available at Runtime |
+| --------- | -------------------- | -------------------- |
+| SOURCE    | ❌                    | ❌                    |
+| CLASS     | ✅                    | ❌                    |
+| RUNTIME   | ✅                    | ✅                    |
+
+---
+
+## 5️⃣ Target: Where Annotations Can Be Applied
+
+```java
+@Target(ElementType.METHOD)
+```
+
+Examples:
+
+* TYPE
+* METHOD
+* FIELD
+* PARAMETER
+* CONSTRUCTOR
+
+Compiler enforces this.
+
+---
+
+## 6️⃣ How Reflection Reads Annotations
+
+Example:
+
+```java
+Method m = MyClass.class.getMethod("myMethod");
+MyAnnotation ann = m.getAnnotation(MyAnnotation.class);
+```
+
+Internally:
+
+* JVM parses annotation metadata
+* Creates **proxy instance**
+* Returns values via method calls
+
+---
+
+## 7️⃣ Dynamic Proxy Creation (Advanced)
+
+Annotation instances are:
+
+* **Not real objects**
+* Created via **dynamic proxies**
+* Values retrieved from class metadata
+
+Example:
+
+```java
+ann.name(); // fetched from constant pool
+```
+
+---
+
+## 8️⃣ Compile-Time Annotation Processing (APT)
+
+Annotations can be processed at **compile time**:
+
+```java
+@SupportedAnnotationTypes("MyAnnotation")
+public class MyProcessor extends AbstractProcessor {
+}
+```
+
+Used for:
+
+* Lombok
+* MapStruct
+* AutoValue
+* Dagger
+
+✔ No reflection
+✔ Faster
+✔ Safer
+
+---
+
+## 9️⃣ JVM-Level Annotations
+
+Some annotations affect JVM behavior:
+
+* `@Override` → compiler check
+* `@Deprecated` → warnings
+* `@FunctionalInterface` → interface validation
+
+But **JVM ignores most annotations unless explicitly programmed to read them**.
+
+---
+
+## 🔟 Real-World Framework Example (Spring)
+
+```java
+@RestController
+public class UserController {
+    @GetMapping("/users")
+    public List<User> getUsers() {}
+}
+```
+
+Internally Spring:
+
+1. Scans classpath
+2. Reads annotations via reflection
+3. Registers beans
+4. Maps URLs to methods
+
+---
+
+## 1️⃣1️⃣ Key Interview Summary ⭐
+
+> **Annotations are metadata stored in class files. Depending on retention, they are processed at compile time or runtime using reflection or annotation processors. The JVM itself does not execute annotations—frameworks do.**
+
+---
+
+## 1️⃣2️⃣ Common Interview Follow-Ups
+
+* Why RUNTIME retention is slower?
+* How Lombok works without reflection?
+* Can annotations change bytecode?
+* Custom annotation with example
+* Annotation vs XML configuration
+
+---
+
+If you want, next I can explain
+✅ **Annotation processing vs reflection**
+✅ **How Spring reads annotations internally**
+✅ **How Lombok modifies bytecode**
+
+Just tell me 👍
+
+---
+
 # 62.How to create custom annotations?
+
+---
+
+Creating **custom annotations in Java** involves defining an annotation type, specifying **where it can be used**, **how long it is retained**, and optionally **processing it** (at compile time or runtime).
+
+---
+
+## 1️⃣ Basic Syntax of a Custom Annotation
+
+```java
+@interface MyAnnotation {
+}
+```
+
+✔ `@interface` is used instead of `class` or `interface`
+
+---
+
+## 2️⃣ Example: Simple Custom Annotation
+
+```java
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface LogExecution {
+}
+```
+
+### What this means:
+
+* `RUNTIME` → available via reflection
+* `METHOD` → can be applied only to methods
+
+---
+
+## 3️⃣ Using the Custom Annotation
+
+```java
+public class Service {
+
+    @LogExecution
+    public void process() {
+        System.out.println("Processing...");
+    }
+}
+```
+
+---
+
+## 4️⃣ Annotation Elements (Attributes)
+
+```java
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface Author {
+    String name();
+    int version() default 1;
+}
+```
+
+### Usage:
+
+```java
+@Author(name = "Aditya", version = 2)
+public class MyClass {
+}
+```
+
+### Rules:
+
+✔ Elements look like methods
+✔ No parameters allowed
+✔ Can have `default` values
+
+---
+
+## 5️⃣ Special Element: `value()`
+
+```java
+public @interface Role {
+    String value();
+}
+```
+
+Usage:
+
+```java
+@Role("ADMIN")
+public class User {
+}
+```
+
+✔ No need to specify key if element name is `value`
+
+---
+
+## 6️⃣ Meta-Annotations (VERY Important)
+
+| Meta-Annotation | Purpose                    |
+| --------------- | -------------------------- |
+| `@Retention`    | Lifecycle                  |
+| `@Target`       | Usage location             |
+| `@Documented`   | Appears in Javadoc         |
+| `@Inherited`    | Inherited by subclasses    |
+| `@Repeatable`   | Can be used multiple times |
+
+---
+
+## 7️⃣ Repeatable Annotation Example
+
+```java
+@Repeatable(Roles.class)
+public @interface Role {
+    String value();
+}
+
+public @interface Roles {
+    Role[] value();
+}
+```
+
+Usage:
+
+```java
+@Role("ADMIN")
+@Role("USER")
+public class UserService {
+}
+```
+
+---
+
+## 8️⃣ Reading Custom Annotations at Runtime (Reflection)
+
+```java
+Class<?> clazz = MyClass.class;
+
+if (clazz.isAnnotationPresent(Author.class)) {
+    Author author = clazz.getAnnotation(Author.class);
+    System.out.println(author.name());
+}
+```
+
+---
+
+## 9️⃣ Processing Annotation at Compile Time (Advanced)
+
+```java
+@SupportedAnnotationTypes("Author")
+@SupportedSourceVersion(SourceVersion.RELEASE_17)
+public class AuthorProcessor extends AbstractProcessor {
+}
+```
+
+Used by:
+
+* Lombok
+* MapStruct
+* Dagger
+
+✔ No runtime overhead
+✔ Code generation
+
+---
+
+## 🔟 Real-World Example (Spring-Style Custom Annotation)
+
+```java
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface RequiresRole {
+    String value();
+}
+```
+
+Used for:
+
+* Security
+* Logging
+* Validation
+* Auditing
+
+---
+
+## 1️⃣1️⃣ Common Interview Mistakes ❌
+
+* Forgetting `@Retention(RUNTIME)`
+* Using wrong `@Target`
+* Expecting annotation to execute logic automatically
+* Not using processor or reflection
+
+---
+
+## 1️⃣2️⃣ One-Line Interview Answer ⭐
+
+> **Custom annotations are created using `@interface`, configured with meta-annotations like `@Retention` and `@Target`, and processed using reflection or annotation processors.**
+
+---
+
+If you want next:
+✅ **Custom annotation + AOP example (Spring)**
+✅ **Compile-time vs runtime processing**
+✅ **Annotation best practices**
+
+Just tell me 👍
 
 ---
 
@@ -7265,7 +9290,375 @@ Do you want me to do that?
 
 ---
 
+**Annotation processing** in Java is a **compile-time mechanism** that scans and processes annotations to **generate or validate code before the program runs**. It is part of the Java Compiler API (**JSR 269**).
+
+> **In short:** Annotation processing allows you to read annotations **during compilation**, not at runtime, and generate additional source files, classes, or resources.
+
+---
+
+## 1️⃣ Why Annotation Processing Exists
+
+Without annotation processing:
+
+* Use **reflection at runtime** → slower, error-prone
+
+With annotation processing:
+
+* Generate code **at compile time**
+* Catch errors early
+* Improve performance
+
+---
+
+## 2️⃣ Where Annotation Processing Happens
+
+```
+.java source
+   ↓
+Annotation Processor (APT)
+   ↓
+Generated .java / .class files
+   ↓
+Compilation continues
+```
+
+✔ Happens **before bytecode is generated**
+✔ No reflection required at runtime
+
+---
+
+## 3️⃣ Key Components (JSR 269)
+
+### 🔹 Annotation Processor
+
+```java
+public class MyProcessor extends AbstractProcessor
+```
+
+### 🔹 Processing Environment
+
+* `Elements`
+* `Types`
+* `Messager`
+* `Filer`
+
+---
+
+## 4️⃣ Basic Annotation Processor Example
+
+### Step 1: Custom Annotation
+
+```java
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.SOURCE)
+public @interface AutoHello {
+}
+```
+
+---
+
+### Step 2: Annotation Processor
+
+```java
+@SupportedAnnotationTypes("com.example.AutoHello")
+@SupportedSourceVersion(SourceVersion.RELEASE_17)
+public class AutoHelloProcessor extends AbstractProcessor {
+
+    @Override
+    public boolean process(Set<? extends TypeElement> annotations,
+                           RoundEnvironment roundEnv) {
+
+        for (Element e : roundEnv.getElementsAnnotatedWith(AutoHello.class)) {
+            System.out.println("Found: " + e.getSimpleName());
+        }
+        return true;
+    }
+}
+```
+
+---
+
+## 5️⃣ Processing Rounds (IMPORTANT)
+
+Annotation processing occurs in **multiple rounds**:
+
+1. Processor runs
+2. Generates new code
+3. Compiler re-runs processors on new code
+4. Stops when no new files are generated
+
+---
+
+## 6️⃣ What Can Annotation Processors Do?
+
+✔ Generate Java source files
+✔ Generate config files
+✔ Validate annotation usage
+✔ Produce compile-time errors
+
+❌ Cannot modify existing source code directly
+❌ Cannot change runtime behavior directly
+
+---
+
+## 7️⃣ Compile-Time vs Runtime Annotation Processing
+
+| Feature       | Compile-Time (APT) | Runtime (Reflection) |
+| ------------- | ------------------ | -------------------- |
+| When          | Compile time       | Runtime              |
+| Performance   | Fast               | Slower               |
+| Type safety   | High               | Lower                |
+| Used by       | Lombok, Dagger     | Spring, Hibernate    |
+| Modifies code | Generates new      | No                   |
+
+---
+
+## 8️⃣ Popular Frameworks Using Annotation Processing
+
+* **Lombok** → generates getters/setters
+* **MapStruct** → generates mappers
+* **Dagger** → dependency injection
+* **AutoValue** → immutable objects
+* **Room (Android)**
+
+---
+
+## 9️⃣ How Compiler Finds Annotation Processors
+
+1. `META-INF/services/javax.annotation.processing.Processor`
+2. Or `@AutoService(Processor.class)`
+
+---
+
+## 🔟 Common Interview Question ⭐
+
+**Q:** Why Lombok does not use reflection?
+**A:** Because it uses **annotation processing at compile time**, generating bytecode before runtime.
+
+---
+
+## 1️⃣1️⃣ One-Line Interview Answer
+
+> **Annotation processing is a compile-time mechanism that scans annotations and generates or validates code using the Java Compiler API, eliminating the need for runtime reflection.**
+
+---
+
+## 1️⃣2️⃣ When to Use Annotation Processing?
+
+✔ Code generation
+✔ Boilerplate elimination
+✔ Performance-critical systems
+✔ Compile-time validation
+
+---
+
+If you want next:
+✅ **Difference between APT and reflection**
+✅ **How Lombok works internally**
+✅ **Create a full working annotation processor**
+
+Just tell me 👍
+
+---
+
 # 64.What are lambdas and how do they work internally?
+
+---
+
+**Lambdas in Java** are a concise way to represent **anonymous functions** that implement **functional interfaces**. Internally, they are implemented using **invokedynamic**, **method handles**, and **runtime-generated classes**, not anonymous inner classes.
+
+---
+
+## 1️⃣ What Is a Lambda Expression?
+
+> **A lambda is an implementation of a functional interface written in a compact form.**
+
+Example:
+
+```java
+Runnable r = () -> System.out.println("Hello");
+```
+
+Equivalent pre-Java 8:
+
+```java
+Runnable r = new Runnable() {
+    public void run() {
+        System.out.println("Hello");
+    }
+};
+```
+
+---
+
+## 2️⃣ Functional Interface Requirement
+
+A lambda:
+✔ Must target a **functional interface**
+✔ Interface must have **exactly one abstract method**
+
+```java
+@FunctionalInterface
+interface Calculator {
+    int add(int a, int b);
+}
+```
+
+---
+
+## 3️⃣ Lambda Syntax Breakdown
+
+```java
+(a, b) -> a + b
+```
+
+| Part     | Meaning         |
+| -------- | --------------- |
+| `(a, b)` | Parameters      |
+| `->`     | Lambda operator |
+| `a + b`  | Method body     |
+
+---
+
+## 4️⃣ How Lambdas Work Internally (IMPORTANT)
+
+### ❌ Not Anonymous Inner Classes
+
+Java lambdas:
+
+* Do **not** create a new class per lambda
+* Are **lighter and faster**
+
+---
+
+### ✔ Step-by-Step Internal Flow
+
+```java
+Runnable r = () -> System.out.println("Hi");
+```
+
+#### 1. Compile Time
+
+* Compiler does **not** generate a class
+* Emits `invokedynamic` instruction
+
+#### 2. Runtime (JVM)
+
+* `invokedynamic` links lambda to:
+
+  * Functional interface method
+  * Lambda body
+* JVM creates a **synthetic method**
+* Uses **LambdaMetafactory**
+
+#### 3. Execution
+
+* Lambda instance is created
+* Method reference points to synthetic method
+
+---
+
+## 5️⃣ invokedynamic (Key Concept)
+
+* JVM instruction added in Java 7
+* Enables **dynamic language features**
+* Allows runtime linking of lambda logic
+
+```text
+invokedynamic #0
+```
+
+---
+
+## 6️⃣ LambdaMetafactory (Advanced)
+
+Responsible for:
+
+* Creating lambda implementation
+* Binding parameters
+* Generating bytecode dynamically
+
+✔ Faster than reflection
+✔ Reusable lambda instances
+
+---
+
+## 7️⃣ Capturing Variables (Effectively Final)
+
+```java
+int x = 10;
+Runnable r = () -> System.out.println(x);
+```
+
+Rules:
+✔ `x` must be **effectively final**
+✔ Captured values stored in lambda object
+
+---
+
+## 8️⃣ Stateless vs Stateful Lambdas
+
+| Type      | Behavior                                  |
+| --------- | ----------------------------------------- |
+| Stateless | No captured variables (singleton)         |
+| Stateful  | Captures variables (new instance per use) |
+
+---
+
+## 9️⃣ Lambda vs Anonymous Class (Internal)
+
+| Feature        | Lambda          | Anonymous Class |
+| -------------- | --------------- | --------------- |
+| Class creation | No              | Yes             |
+| this reference | Enclosing class | Inner class     |
+| Performance    | Faster          | Slower          |
+| Bytecode       | invokedynamic   | new class       |
+
+---
+
+## 🔟 Lambda and Streams
+
+```java
+list.stream()
+    .filter(x -> x > 10)
+    .map(x -> x * 2)
+    .forEach(System.out::println);
+```
+
+Each lambda becomes a **method handle** linked at runtime.
+
+---
+
+## 1️⃣1️⃣ Memory & Performance Benefits
+
+✔ Less class loading
+✔ Better inlining
+✔ JIT-friendly
+✔ Reduced memory footprint
+
+---
+
+## 1️⃣2️⃣ One-Line Interview Answer ⭐
+
+> **Lambdas are lightweight implementations of functional interfaces compiled using invokedynamic, allowing the JVM to generate efficient runtime implementations without creating anonymous inner classes.**
+
+---
+
+## 1️⃣3️⃣ Common Follow-Up Questions
+
+* Why lambda variables must be effectively final?
+* Difference between lambda and method reference?
+* Can lambdas be serialized?
+* Why invokedynamic is used?
+
+---
+
+If you want next:
+✅ **Method references internals**
+✅ **Streams internals**
+✅ **Why lambdas are faster than anonymous classes**
+
+Just tell me 👍
 
 ---
 
@@ -7273,7 +9666,466 @@ Do you want me to do that?
 
 ---
 
+**Type Erasure** is the mechanism by which Java implements **generics** while maintaining **backward compatibility** with pre-Java 5 code.
+
+> **In short:** Generic type information exists **only at compile time** and is **removed (erased)** at runtime.
+
+---
+
+## 1️⃣ Why Type Erasure Exists
+
+When generics were introduced (Java 5):
+
+* JVM already existed
+* Billions of `.class` files without generics
+
+✔ Type erasure allows:
+
+* Old bytecode to run on new JVMs
+* New generic code to run on old JVM expectations
+
+---
+
+## 2️⃣ What Happens During Type Erasure?
+
+At **compile time**, the compiler:
+
+1. Replaces type parameters with their **bounds**
+2. Inserts **type casts** where needed
+3. Removes generic type information
+
+---
+
+## 3️⃣ Simple Example
+
+### Generic Code
+
+```java
+List<String> list = new ArrayList<>();
+list.add("Java");
+String s = list.get(0);
+```
+
+### After Type Erasure (Conceptually)
+
+```java
+List list = new ArrayList();
+list.add("Java");
+String s = (String) list.get(0);
+```
+
+✔ Casts are inserted by compiler
+✔ Runtime sees **raw types**
+
+---
+
+## 4️⃣ Erasure Rules (VERY IMPORTANT)
+
+### 1️⃣ Unbounded Type Parameter
+
+```java
+class Box<T> { T value; }
+```
+
+⬇
+
+```java
+class Box {
+    Object value;
+}
+```
+
+---
+
+### 2️⃣ Bounded Type Parameter
+
+```java
+class Box<T extends Number> { T value; }
+```
+
+⬇
+
+```java
+class Box {
+    Number value;
+}
+```
+
+---
+
+### 3️⃣ Multiple Bounds
+
+```java
+<T extends Number & Comparable<T>>
+```
+
+⬇
+
+```java
+<T extends Number>
+```
+
+(first bound retained)
+
+---
+
+## 5️⃣ Method-Level Generics Example
+
+```java
+public <T> T get(T obj) {
+    return obj;
+}
+```
+
+⬇
+
+```java
+public Object get(Object obj) {
+    return obj;
+}
+```
+
+---
+
+## 6️⃣ Bridge Methods (Advanced Interview Topic)
+
+Used to maintain **polymorphism** after erasure.
+
+```java
+class Parent<T> {
+    T get() { return null; }
+}
+
+class Child extends Parent<String> {
+    String get() { return "Hi"; }
+}
+```
+
+Compiler generates:
+
+```java
+Object get() {
+    return get();
+}
+```
+
+✔ Ensures method overriding works
+
+---
+
+## 7️⃣ Consequences of Type Erasure
+
+### ❌ Cannot Do
+
+```java
+if (obj instanceof List<String>) ❌
+new T() ❌
+T.class ❌
+```
+
+### ✔ Can Do
+
+```java
+instanceof List
+```
+
+---
+
+## 8️⃣ Generics Are Compile-Time Only
+
+```java
+List<String> a = new ArrayList<>();
+List<Integer> b = new ArrayList<>();
+
+System.out.println(a.getClass() == b.getClass()); // true
+```
+
+✔ Same runtime class
+
+---
+
+## 9️⃣ Why Arrays + Generics Don’t Mix Well
+
+```java
+List<String>[] arr = new ArrayList[10]; // Warning
+```
+
+Because:
+
+* Arrays are **reified**
+* Generics are **erased**
+
+---
+
+## 🔟 How Java Preserves Some Generic Info
+
+Although erased:
+
+* Generic info is stored in **class metadata**
+* Accessible via **reflection**
+* Not enforced by JVM
+
+---
+
+## 1️⃣1️⃣ One-Line Interview Answer ⭐
+
+> **Type erasure removes generic type information at runtime by replacing type parameters with their bounds, ensuring backward compatibility with older Java versions.**
+
+---
+
+## 1️⃣2️⃣ Common Interview Follow-Ups
+
+* Why no `new T()`?
+* What are bridge methods?
+* Difference between reified and erased types?
+* How does Kotlin handle generics?
+
+---
+
+If you want next:
+✅ **Type erasure vs reified generics**
+✅ **Generics interview problems**
+✅ **Why Java chose type erasure**
+
+Just tell me 👍
+
+---
+
 # 66.How are Generics implemented internally?
+
+---
+
+Java **generics are implemented using *type erasure***, with help from the **compiler**, **synthetic casts**, and **bridge methods**—not by the JVM enforcing generic types at runtime.
+
+> **Key idea:** Generics provide **compile-time type safety**, but at runtime the JVM mostly sees **non-generic (raw) types**.
+
+---
+
+## 1️⃣ High-Level View
+
+```
+Generic source code
+        ↓ (javac)
+Type checking + type erasure
+        ↓
+Non-generic bytecode
+        ↓
+JVM execution (no generic types)
+```
+
+✔ Type safety → **compiler responsibility**
+✔ Runtime → **no generic enforcement**
+
+---
+
+## 2️⃣ What Is Type Erasure (Core Mechanism)
+
+During compilation, the compiler:
+
+1. **Removes type parameters**
+2. **Replaces them with bounds**
+3. **Inserts casts where needed**
+4. **Generates bridge methods (if required)**
+
+---
+
+## 3️⃣ Simple Example
+
+### Source Code
+
+```java
+List<String> list = new ArrayList<>();
+list.add("Java");
+String s = list.get(0);
+```
+
+### After Compilation (Conceptual)
+
+```java
+List list = new ArrayList();
+list.add("Java");
+String s = (String) list.get(0);
+```
+
+✔ Casts are added automatically
+✔ JVM sees only `List`
+
+---
+
+## 4️⃣ How Type Parameters Are Replaced
+
+### Unbounded Type
+
+```java
+class Box<T> {
+    T value;
+}
+```
+
+⬇
+
+```java
+class Box {
+    Object value;
+}
+```
+
+---
+
+### Bounded Type
+
+```java
+class Box<T extends Number> {
+    T value;
+}
+```
+
+⬇
+
+```java
+class Box {
+    Number value;
+}
+```
+
+✔ First bound is used if multiple bounds exist
+
+---
+
+## 5️⃣ Method-Level Generics
+
+```java
+public <T> T identity(T value) {
+    return value;
+}
+```
+
+⬇
+
+```java
+public Object identity(Object value) {
+    return value;
+}
+```
+
+---
+
+## 6️⃣ Bridge Methods (VERY IMPORTANT)
+
+Used to preserve **polymorphism after erasure**.
+
+### Example
+
+```java
+class Parent<T> {
+    T get() { return null; }
+}
+
+class Child extends Parent<String> {
+    @Override
+    String get() { return "Hello"; }
+}
+```
+
+### Compiler Generates
+
+```java
+Object get() {
+    return get(); // calls String get()
+}
+```
+
+✔ Ensures overriding works correctly
+✔ Invisible to developers
+
+---
+
+## 7️⃣ Runtime Behavior of Generics
+
+```java
+List<String> a = new ArrayList<>();
+List<Integer> b = new ArrayList<>();
+
+System.out.println(a.getClass() == b.getClass()); // true
+```
+
+✔ Same runtime class
+✔ Generic info erased
+
+---
+
+## 8️⃣ Why These Things Are NOT Allowed
+
+```java
+new T()                 ❌
+T.class                ❌
+instanceof List<String> ❌
+```
+
+Because:
+
+* Type parameters don’t exist at runtime
+
+---
+
+## 9️⃣ Why Arrays + Generics Don’t Mix
+
+```java
+List<String>[] arr = new ArrayList[10]; // Warning
+```
+
+| Arrays                      | Generics          |
+| --------------------------- | ----------------- |
+| Reified (runtime type info) | Erased            |
+| Runtime checks              | Compile-time only |
+
+➡ Leads to **heap pollution**
+
+---
+
+## 🔟 Where Generic Info Still Exists
+
+Although erased:
+
+* Stored in **class metadata**
+* Accessible via **reflection**
+* Used by tools/frameworks
+* **Not enforced by JVM**
+
+---
+
+## 1️⃣1️⃣ Why Java Chose Type Erasure
+
+✔ Backward compatibility
+✔ No JVM changes required
+✔ Old bytecode still works
+
+❌ No runtime generics
+❌ More restrictions
+
+---
+
+## 1️⃣2️⃣ One-Line Interview Answer ⭐
+
+> **Java generics are implemented using type erasure, where the compiler removes generic type information, replaces type parameters with bounds, inserts casts, and generates bridge methods to preserve polymorphism.**
+
+---
+
+## 1️⃣3️⃣ Common Follow-Up Questions
+
+* Why no `new T()`?
+* What are bridge methods?
+* Type erasure vs reified generics (Kotlin)
+* How heap pollution happens
+
+---
+
+If you want next:
+✅ **Generics pitfalls & interview traps**
+✅ **Type erasure vs Kotlin reified types**
+✅ **Advanced generics examples**
+
+Just tell me 👍
 
 ---
 
@@ -7281,7 +10133,250 @@ Do you want me to do that?
 
 ---
 
+In Java **Generics**, **wildcards** (`?`) are used to specify **unknown types**. They allow **flexible API design** while maintaining **type safety**. There are **unbounded** and **bounded** wildcards.
+
+---
+
+## 1️⃣ Unbounded Wildcard
+
+> `?` represents an **unknown type** with no restrictions.
+
+### Syntax
+
+```java
+List<?> list = new ArrayList<String>();
+```
+
+### Rules
+
+* Can **read elements** as `Object`
+* Cannot **add elements** (except `null`)
+* Useful when **type doesn’t matter**
+
+### Example
+
+```java
+public void printList(List<?> list) {
+    for (Object obj : list) {
+        System.out.println(obj);
+    }
+}
+```
+
+✅ Works for `List<String>`, `List<Integer>`, etc.
+
+---
+
+## 2️⃣ Bounded Wildcards
+
+Bounded wildcards restrict the **unknown type**.
+
+---
+
+### 2.1 Upper Bounded Wildcard (`? extends T`)
+
+> Unknown type **is a subtype of T** (or T itself)
+
+```java
+List<? extends Number> numbers = new ArrayList<Integer>();
+```
+
+### Rules
+
+* Can **read elements** as `Number`
+* Cannot **add elements** (except `null`) — because actual type may be a subtype
+* Useful for **covariance**
+
+### Example
+
+```java
+public double sum(List<? extends Number> list) {
+    double sum = 0;
+    for (Number n : list) sum += n.doubleValue();
+    return sum;
+}
+```
+
+✔ Can pass `List<Integer>` or `List<Double>`
+
+---
+
+### 2.2 Lower Bounded Wildcard (`? super T`)
+
+> Unknown type **is a supertype of T** (or T itself)
+
+```java
+List<? super Integer> list = new ArrayList<Number>();
+```
+
+### Rules
+
+* Can **add elements** of type `T` (Integer)
+* Cannot assume exact type when **reading** (read as `Object`)
+* Useful for **contravariance**
+
+### Example
+
+```java
+public void addIntegers(List<? super Integer> list) {
+    list.add(10);
+    list.add(20);
+}
+```
+
+✔ Can pass `List<Integer>` or `List<Number>`
+
+---
+
+## 3️⃣ Summary Table
+
+| Wildcard      | Restriction    | Read   | Write | Use Case                    |
+| ------------- | -------------- | ------ | ----- | --------------------------- |
+| `?`           | None           | Object | ❌     | Type doesn’t matter         |
+| `? extends T` | Subtype of T   | T      | ❌     | Covariance (read-only)      |
+| `? super T`   | Supertype of T | Object | T     | Contravariance (write-only) |
+
+---
+
+## 4️⃣ PECS Rule (Interview Tip)
+
+> **Producer Extends, Consumer Super**
+
+* **Producer (`extends`)** → provides values → safe to **read**
+* **Consumer (`super`)** → consumes values → safe to **write**
+
+```java
+List<? extends Number> producer = ...; // read numbers
+List<? super Integer> consumer = ...;  // write integers
+```
+
+---
+
+## 5️⃣ Practical Examples
+
+```java
+// Upper bound (reading)
+List<Double> doubles = Arrays.asList(1.1, 2.2);
+System.out.println(sum(doubles)); // sum(List<? extends Number>)
+
+// Lower bound (writing)
+List<Number> numbers = new ArrayList<>();
+addIntegers(numbers); // List<? super Integer>
+```
+
+---
+
+## 6️⃣ One-Line Interview Answer ⭐
+
+> **Unbounded wildcard `?` means unknown type, upper bounded `? extends T` allows reading subtypes of T, and lower bounded `? super T` allows writing instances of T.**
+
+---
+
+If you want next, I can explain:
+✅ **Difference between `? extends` vs `? super` with memory diagram**
+✅ **Common interview pitfalls with wildcards**
+
+Do you want me to do that?
+
+---
+
 # 68.What is raw type in Java?
+
+---
+
+In Java, a **raw type** is the **generic class or interface used without specifying its type parameter**. Raw types existed **before Java 5**, before generics were introduced, and are primarily **kept for backward compatibility**.
+
+> **In short:** Using a raw type disables **generic type checking** at compile time, and the compiler treats it as a non-generic type.
+
+---
+
+## 1️⃣ Example of Raw Type
+
+```java
+List list = new ArrayList();  // raw type
+list.add("Hello");
+list.add(100); // Allowed, no type safety
+
+for (Object obj : list) {
+    System.out.println(obj);
+}
+```
+
+Compare with **generic type**:
+
+```java
+List<String> list = new ArrayList<>();
+list.add("Hello");
+list.add(100); // Compile-time error
+```
+
+---
+
+## 2️⃣ Key Points About Raw Types
+
+1. **Compile-time type checking is disabled**
+
+   * You can insert any type into a raw collection.
+
+2. **Backward compatibility**
+
+   * Old code (pre-Java 5) still works with new JVM.
+
+3. **Generics warnings**
+
+   * Compiler shows a **“unchecked” warning** when using raw types.
+
+```text
+Note: RawTypesExample.java uses unchecked or unsafe operations.
+```
+
+4. **Interactions with generics**
+
+   * Using raw types with generics can lead to **`ClassCastException` at runtime**.
+
+---
+
+## 3️⃣ Example With Generics vs Raw Types
+
+```java
+List<String> stringList = new ArrayList<>();
+List rawList = stringList; // raw type
+
+rawList.add(10); // Compiles, but dangerous
+String s = stringList.get(1); // ClassCastException at runtime
+```
+
+✔ Using raw types bypasses type safety → risky
+
+---
+
+## 4️⃣ Rules About Raw Types
+
+* Cannot specify type arguments for **inner classes**
+* Using raw types **produces unchecked warnings**
+* Should **avoid raw types** in modern code
+
+---
+
+## 5️⃣ Why Raw Types Exist
+
+* Maintain **backward compatibility**
+* Allow older code to **compile and run** without generics
+* Facilitate gradual migration to generics
+
+---
+
+## 6️⃣ One-Line Interview Answer ⭐
+
+> **A raw type is a generic class or interface used without specifying its type parameter, which disables compile-time type checking and exists for backward compatibility.**
+
+---
+
+If you want, I can next explain:
+✅ **Difference between raw type and unbounded wildcard (`?`)**
+✅ **Problems caused by raw types in real code**
+
+Do you want me to explain that?
 
 ---
 
@@ -7289,7 +10384,290 @@ Do you want me to do that?
 
 ---
 
+Making a **List thread-safe** in Java depends on **how you want to handle concurrency**—whether you want simple synchronization, high performance, or lock-free access. Here’s a detailed breakdown:
+
+---
+
+## 1️⃣ Using `Collections.synchronizedList()`
+
+Java provides a wrapper that **synchronizes all method calls**.
+
+```java
+List<String> list = new ArrayList<>();
+List<String> syncList = Collections.synchronizedList(list);
+```
+
+### Usage Rules
+
+* **Iterating requires manual synchronization**:
+
+```java
+synchronized(syncList) {
+    for (String s : syncList) {
+        System.out.println(s);
+    }
+}
+```
+
+✔ Pros: Simple, easy
+❌ Cons: Full lock on all operations → may reduce performance
+
+---
+
+## 2️⃣ Using `CopyOnWriteArrayList`
+
+* Part of **`java.util.concurrent`**
+* Uses **copy-on-write mechanism**: modifies a new copy of the array for write operations
+* Reads are **lock-free**
+
+```java
+List<String> cowList = new CopyOnWriteArrayList<>();
+cowList.add("A");
+cowList.add("B");
+
+for (String s : cowList) {
+    System.out.println(s);
+}
+```
+
+### Characteristics
+
+* **Good for mostly-read, rarely-write** scenarios
+* Write operations are slower (copy happens)
+* Iterators are **fail-safe** → do not throw `ConcurrentModificationException`
+
+---
+
+## 3️⃣ Using `Vector` (Legacy)
+
+```java
+Vector<String> vector = new Vector<>();
+vector.add("A");
+vector.add("B");
+```
+
+✔ Methods are synchronized
+❌ Legacy class, generally **avoid using** in modern code
+
+---
+
+## 4️⃣ Using Explicit Locks
+
+```java
+List<String> list = new ArrayList<>();
+ReentrantLock lock = new ReentrantLock();
+
+lock.lock();
+try {
+    list.add("A");
+    list.remove("B");
+} finally {
+    lock.unlock();
+}
+```
+
+✔ Fine-grained control over locking
+✔ Can implement custom concurrency logic
+
+---
+
+## 5️⃣ Summary Table
+
+| Method                         | Thread Safety        | Iteration                   | Use Case                       |
+| ------------------------------ | -------------------- | --------------------------- | ------------------------------ |
+| `Collections.synchronizedList` | Full synchronization | Manual `synchronized` block | Simple concurrent use          |
+| `CopyOnWriteArrayList`         | Reads lock-free      | Safe (fail-safe)            | Mostly reads, few writes       |
+| `Vector`                       | Full synchronization | Safe                        | Legacy code only               |
+| `ReentrantLock`                | Custom               | Manual                      | High performance, fine control |
+
+---
+
+## 6️⃣ Best Practices
+
+* Prefer **`CopyOnWriteArrayList`** for **read-heavy workloads**
+* Prefer **`synchronizedList`** for **legacy or simple synchronization**
+* Avoid **Vector** in new code
+* Use **locks** if you need **atomic operations across multiple methods**
+
+---
+
+## 7️⃣ One-Line Interview Answer ⭐
+
+> **A list can be made thread-safe by using `Collections.synchronizedList()`, `CopyOnWriteArrayList`, `Vector`, or explicit locks such as `ReentrantLock`, depending on performance and usage requirements.**
+
+---
+
+If you want, I can next explain:
+✅ **Difference between `synchronizedList` and `CopyOnWriteArrayList` with internal workings**
+✅ **Why `CopyOnWriteArrayList` iterators are fail-safe**
+
+Do you want me to do that?
+
+---
+
 # 70.How to avoid deadlock in concurrent programming?
+
+---
+
+**Deadlock** occurs in concurrent programming when **two or more threads are waiting indefinitely for each other’s locks**, so none of them can proceed. Avoiding deadlocks requires careful **lock management** and **thread coordination**.
+
+Here’s a detailed guide:
+
+---
+
+## 1️⃣ Common Causes of Deadlock
+
+1. **Mutual exclusion** – threads hold exclusive locks.
+2. **Hold and wait** – a thread holds one lock and waits for another.
+3. **No preemption** – locks cannot be forcibly taken from threads.
+4. **Circular wait** – a cycle exists where threads wait on each other.
+
+All four conditions together can cause deadlock.
+
+---
+
+## 2️⃣ Strategies to Avoid Deadlock
+
+### 2.1 Lock Ordering
+
+* Always acquire locks in **a fixed global order**.
+* Prevents circular wait.
+
+```java
+class Account {
+    private final Object lock1 = new Object();
+    private final Object lock2 = new Object();
+
+    public void transfer(Account target, int amount) {
+        Object first = this.hashCode() < target.hashCode() ? lock1 : target.lock1;
+        Object second = this.hashCode() < target.hashCode() ? target.lock1 : lock1;
+
+        synchronized(first) {
+            synchronized(second) {
+                // transfer logic
+            }
+        }
+    }
+}
+```
+
+---
+
+### 2.2 Try-Lock with Timeout
+
+* Use `ReentrantLock.tryLock(timeout)` instead of `synchronized`.
+* If lock cannot be acquired in time, release already held locks and retry.
+
+```java
+ReentrantLock lock1 = new ReentrantLock();
+ReentrantLock lock2 = new ReentrantLock();
+
+if (lock1.tryLock(1, TimeUnit.SECONDS)) {
+    try {
+        if (lock2.tryLock(1, TimeUnit.SECONDS)) {
+            try {
+                // critical section
+            } finally {
+                lock2.unlock();
+            }
+        }
+    } finally {
+        lock1.unlock();
+    }
+}
+```
+
+---
+
+### 2.3 Avoid Nested Locks
+
+* Minimize situations where **one thread holds multiple locks**.
+* Design classes to require **single lock** whenever possible.
+
+---
+
+### 2.4 Lock Hierarchies / Single Lock
+
+* Assign a **global lock hierarchy** or use **one lock per resource type**.
+* Forces threads to acquire locks in a consistent sequence.
+
+---
+
+### 2.5 Deadlock Detection Tools
+
+* **JStack / Thread dump analysis** → detect circular waits.
+* **ThreadMXBean** in `java.lang.management` → programmatic deadlock detection.
+
+```java
+ThreadMXBean bean = ManagementFactory.getThreadMXBean();
+long[] threadIds = bean.findDeadlockedThreads();
+if (threadIds != null) {
+    System.out.println("Deadlock detected");
+}
+```
+
+---
+
+### 2.6 Use Higher-Level Concurrency Utilities
+
+* Prefer `java.util.concurrent`:
+
+  * `ConcurrentHashMap` → no explicit locking
+  * `BlockingQueue` → thread-safe queues
+  * `Semaphore` → controlled resource access
+
+---
+
+## 3️⃣ General Principles
+
+1. **Always acquire locks in the same order**.
+2. **Keep synchronized blocks short**.
+3. **Prefer try-lock with timeout** over blocking indefinitely.
+4. **Use thread-safe collections and atomic variables** instead of explicit locks.
+5. **Monitor and log lock acquisition** for debugging.
+
+---
+
+## 4️⃣ Example: Avoiding Deadlock with Lock Ordering
+
+```java
+class Resource {
+    private final ReentrantLock lock = new ReentrantLock();
+
+    public void safeMethod(Resource other) {
+        Resource first = this.hashCode() < other.hashCode() ? this : other;
+        Resource second = this.hashCode() < other.hashCode() ? other : this;
+
+        first.lock.lock();
+        try {
+            second.lock.lock();
+            try {
+                // perform action safely
+            } finally {
+                second.lock.unlock();
+            }
+        } finally {
+            first.lock.unlock();
+        }
+    }
+}
+```
+
+✅ Fixed order prevents circular wait → avoids deadlock.
+
+---
+
+## 5️⃣ One-Line Interview Answer ⭐
+
+> **Deadlock can be avoided by consistent lock ordering, using try-lock with timeout, minimizing nested locks, preferring high-level concurrency utilities, and keeping critical sections short.**
+
+---
+
+If you want, I can next explain:
+✅ **Deadlock vs Livelock vs Starvation** with diagrams
+✅ **Real-world Java examples of deadlock and how to fix them**
+
+Do you want me to do that?
 
 ---
 
@@ -7297,7 +10675,289 @@ Do you want me to do that?
 
 ---
 
+Here’s a clear and detailed comparison between **Spring Framework** and **Spring Boot**:
+
+---
+
+## 1️⃣ Definition
+
+| Feature    | Spring Framework                                                         | Spring Boot                                                                                                                   |
+| ---------- | ------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
+| Definition | A **comprehensive Java framework** for building enterprise applications. | A **project built on top of Spring** to simplify Spring application development with auto-configuration and embedded servers. |
+| Purpose    | Provides **core features** like DI, AOP, MVC, JDBC, Security, etc.       | Simplifies setup of Spring applications with **opinionated defaults**, reducing boilerplate.                                  |
+
+---
+
+## 2️⃣ Configuration
+
+| Feature       | Spring                                                           | Spring Boot                                                            |
+| ------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| Configuration | XML or Java-based configuration                                  | Convention over configuration, mostly `application.properties` or YAML |
+| Boilerplate   | High – manual dependency management, server setup, configuration | Low – auto-configuration, embedded server, starter dependencies        |
+
+---
+
+## 3️⃣ Server Management
+
+| Feature | Spring                                             | Spring Boot                                                            |
+| ------- | -------------------------------------------------- | ---------------------------------------------------------------------- |
+| Server  | Needs external server like Tomcat, Jetty, WebLogic | Embedded servers (Tomcat, Jetty, Undertow) → run as **standalone JAR** |
+
+---
+
+## 4️⃣ Dependency Management
+
+| Feature      | Spring                                       | Spring Boot                                                                                                        |
+| ------------ | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| Dependencies | Manually include Spring modules in `pom.xml` | Use **starter dependencies** like `spring-boot-starter-web`, which pull in all required dependencies automatically |
+
+---
+
+## 5️⃣ Project Setup
+
+| Feature | Spring                             | Spring Boot                                                                      |
+| ------- | ---------------------------------- | -------------------------------------------------------------------------------- |
+| Setup   | Complex, requires **manual setup** | Simple, can use **Spring Initializr** → auto-generates project with Maven/Gradle |
+| Startup | Requires server deployment         | `java -jar app.jar` → starts immediately                                         |
+
+---
+
+## 6️⃣ Auto-Configuration
+
+* **Spring**: No auto-configuration; everything must be manually configured.
+* **Spring Boot**: Provides **auto-configuration** for common use cases (e.g., database, MVC, security).
+
+---
+
+## 7️⃣ Opinionated Defaults
+
+* **Spring Boot** chooses defaults for:
+
+  * Embedded server (Tomcat)
+  * Logging (Logback)
+  * Database (H2 for tests)
+* **Spring** has no defaults → you must configure everything.
+
+---
+
+## 8️⃣ Microservices Support
+
+* **Spring**: Requires manual setup for REST, databases, messaging, etc.
+* **Spring Boot**: Ready for microservices → starters for REST (`spring-boot-starter-web`), data (`spring-boot-starter-data-jpa`), messaging (`spring-boot-starter-amqp`).
+
+---
+
+## 9️⃣ Summary Table
+
+| Aspect                 | Spring                        | Spring Boot                               |
+| ---------------------- | ----------------------------- | ----------------------------------------- |
+| Learning Curve         | Steeper                       | Easier                                    |
+| Project Initialization | Manual                        | Automated (Spring Initializr)             |
+| Deployment             | WAR on server                 | Standalone JAR with embedded server       |
+| Configuration          | XML/Java                      | Minimal, auto-configured                  |
+| Opinionated Defaults   | No                            | Yes                                       |
+| Ideal Use Case         | Large, legacy enterprise apps | Quick microservices, new apps, prototypes |
+
+---
+
+## 🔟 One-Line Interview Answer ⭐
+
+> **Spring is a comprehensive Java framework, whereas Spring Boot is an opinionated extension of Spring that simplifies development with auto-configuration, embedded servers, and starter dependencies.**
+
+---
+
+If you want, I can next explain:
+✅ **Spring vs Spring Boot vs Spring Cloud**
+✅ **How Spring Boot auto-configuration works internally**
+
+Do you want me to do that?
+
+---
+
 # 72.What is dependency injection and how is it implemented in Spring?
+
+---
+
+**Dependency Injection (DI)** is a core concept in Spring and a fundamental design pattern in **Inversion of Control (IoC)**. It allows objects to be **loosely coupled** by **injecting dependencies** instead of creating them internally.
+
+Here’s a detailed breakdown:
+
+---
+
+## 1️⃣ What Is Dependency Injection?
+
+> **Dependency Injection is a design pattern where an object’s dependencies are provided (injected) by an external framework or container rather than the object creating them itself.**
+
+### Example Without DI
+
+```java
+class Engine { }
+
+class Car {
+    private Engine engine = new Engine(); // tight coupling
+}
+```
+
+### Example With DI
+
+```java
+class Car {
+    private Engine engine;
+
+    public Car(Engine engine) { // dependency injected
+        this.engine = engine;
+    }
+}
+```
+
+---
+
+## 2️⃣ Advantages of DI
+
+1. **Loose Coupling** – Classes don’t create dependencies directly.
+2. **Easier Testing** – You can inject mocks in unit tests.
+3. **Flexibility & Maintainability** – Swap implementations without changing client code.
+4. **Separation of Concerns** – Objects focus on their own responsibilities.
+
+---
+
+## 3️⃣ Types of Dependency Injection in Spring
+
+| Type                      | Description                                                       | Example                             |
+| ------------------------- | ----------------------------------------------------------------- | ----------------------------------- |
+| **Constructor Injection** | Dependencies are provided through the constructor                 | `public Car(Engine engine)`         |
+| **Setter Injection**      | Dependencies are provided via setter methods                      | `setEngine(Engine engine)`          |
+| **Field Injection**       | Dependencies are injected directly into fields using `@Autowired` | `@Autowired private Engine engine;` |
+
+---
+
+## 4️⃣ Constructor Injection Example
+
+```java
+@Component
+class Engine { }
+
+@Component
+class Car {
+    private final Engine engine;
+
+    @Autowired
+    public Car(Engine engine) {
+        this.engine = engine;
+    }
+}
+```
+
+* Spring automatically finds a **bean of type `Engine`** and injects it into `Car`.
+
+---
+
+## 5️⃣ Setter Injection Example
+
+```java
+@Component
+class Car {
+    private Engine engine;
+
+    @Autowired
+    public void setEngine(Engine engine) {
+        this.engine = engine;
+    }
+}
+```
+
+---
+
+## 6️⃣ Field Injection Example
+
+```java
+@Component
+class Car {
+    @Autowired
+    private Engine engine;
+}
+```
+
+> ⚠ Field injection is **less recommended** because it’s harder to test and violates immutability.
+
+---
+
+## 7️⃣ How Spring Implements DI Internally
+
+1. **Spring Container (ApplicationContext)**
+
+   * Manages **beans** and their lifecycle.
+
+2. **Bean Definition**
+
+   * Spring reads configuration (`@Component`, `@Bean`, XML).
+
+3. **Wiring Dependencies**
+
+   * Spring resolves **dependencies by type (or by name with `@Qualifier`)**.
+
+4. **Injection**
+
+   * Spring injects dependencies into constructor, setter, or field using **reflection**.
+
+5. **Lifecycle Management**
+
+   * Spring manages initialization and destruction (`@PostConstruct`, `@PreDestroy`).
+
+---
+
+## 8️⃣ Example with XML Configuration (Legacy)
+
+```xml
+<bean id="engine" class="com.example.Engine"/>
+<bean id="car" class="com.example.Car">
+    <constructor-arg ref="engine"/>
+</bean>
+```
+
+* The container **injects `engine`** into `car`.
+
+---
+
+## 9️⃣ Real-World Example
+
+```java
+@Service
+class PaymentService {
+    private final PaymentRepository repo;
+
+    @Autowired
+    public PaymentService(PaymentRepository repo) {
+        this.repo = repo;
+    }
+
+    public void pay(Order order) {
+        repo.save(order);
+    }
+}
+```
+
+* `PaymentRepository` is injected automatically by Spring.
+* Makes **unit testing easy**:
+
+```java
+PaymentRepository mockRepo = mock(PaymentRepository.class);
+PaymentService service = new PaymentService(mockRepo);
+```
+
+---
+
+## 🔟 One-Line Interview Answer ⭐
+
+> **Dependency Injection is a design pattern where Spring injects required dependencies into a class at runtime, making code loosely coupled, testable, and maintainable.**
+
+---
+
+If you want, I can next explain:
+✅ **Difference between Dependency Injection and Inversion of Control**
+✅ **How Spring resolves dependencies internally (BeanFactory vs ApplicationContext)**
+
+Do you want me to explain that?
 
 ---
 
@@ -7305,7 +10965,274 @@ Do you want me to do that?
 
 ---
 
+In Spring, `@Component`, `@Service`, `@Repository`, and `@Controller` are **stereotype annotations** used to mark classes as **Spring-managed beans**, but they have **different semantic purposes** and **special behaviors** in certain cases.
+
+Here’s a detailed breakdown:
+
+---
+
+## 1️⃣ @Component
+
+* **Definition:** Generic stereotype for any Spring-managed bean.
+* **Purpose:** Marks a class as a **component** so Spring can **auto-detect it during classpath scanning**.
+* **Use Case:** When no specific stereotype fits (`utility classes`, `helpers`).
+
+```java
+@Component
+public class MyUtility {
+    public void doSomething() { }
+}
+```
+
+---
+
+## 2️⃣ @Service
+
+* **Definition:** Specialization of `@Component` for **service layer** classes.
+* **Purpose:** Indicates the class contains **business logic**.
+* **Use Case:** Service layer in **multi-tier architecture**.
+
+```java
+@Service
+public class PaymentService {
+    public void processPayment() { }
+}
+```
+
+* **Behavior:** Same as `@Component` but **semantic clarity** → easier to read and maintain.
+
+---
+
+## 3️⃣ @Repository
+
+* **Definition:** Specialization of `@Component` for **DAO (Data Access Object) layer**.
+* **Purpose:** Encapsulates **database operations**.
+* **Use Case:** Interacts with **JPA, JDBC, or ORM frameworks**.
+
+```java
+@Repository
+public class UserRepository {
+    public User findById(Long id) { }
+}
+```
+
+* **Special Behavior:** Spring performs **automatic exception translation**
+
+  * Converts database exceptions (like `SQLException`) into **Spring’s DataAccessException** hierarchy.
+
+---
+
+## 4️⃣ @Controller
+
+* **Definition:** Specialization of `@Component` for **presentation layer / MVC controllers**.
+* **Purpose:** Handles **HTTP requests** in Spring MVC.
+* **Use Case:** Web controllers in MVC or REST apps.
+
+```java
+@Controller
+public class HomeController {
+
+    @GetMapping("/home")
+    public String homePage() {
+        return "home";
+    }
+}
+```
+
+* **Behavior:** Works with **Spring MVC** to map requests to methods.
+
+> For REST controllers, use `@RestController` (combines `@Controller` + `@ResponseBody`).
+
+---
+
+## 5️⃣ Summary Table
+
+| Annotation    | Layer              | Purpose               | Special Behavior                                 |
+| ------------- | ------------------ | --------------------- | ------------------------------------------------ |
+| `@Component`  | Generic            | Generic bean          | None                                             |
+| `@Service`    | Service            | Business logic        | Semantic clarity                                 |
+| `@Repository` | DAO / Persistence  | Data access           | Exception translation (DB → DataAccessException) |
+| `@Controller` | Presentation / MVC | Handles HTTP requests | Works with Spring MVC, request mapping           |
+
+---
+
+## 6️⃣ Key Points
+
+* All **stereotypes** are detected during **component scanning**.
+* They are **all Spring beans**.
+* The **choice is mostly semantic**, but `@Repository` and `@Controller` have **additional framework-specific behavior**.
+* Improves **readability** and **layered architecture**.
+
+---
+
+## 7️⃣ One-Line Interview Answer ⭐
+
+> **`@Component` is a generic Spring bean, `@Service` marks business logic, `@Repository` marks DAO classes with exception translation, and `@Controller` marks web controllers for handling HTTP requests.**
+
+---
+
+If you want, I can next explain:
+✅ **Difference between @Controller and @RestController**
+✅ **How Spring handles exception translation in @Repository**
+
+Do you want me to explain that?
+
+---
+
 # 74.What is the role of @Autowired and how does it work?
+
+---
+
+In Spring, `@Autowired` is the primary annotation for **Dependency Injection**, allowing Spring to **automatically inject beans** into other beans. Here's a detailed explanation:
+
+---
+
+## 1️⃣ What is @Autowired?
+
+> `@Autowired` is used to **automatically wire Spring beans** by type (or optionally by name) into a class, eliminating the need for explicit setter calls or constructor arguments.
+
+It can be applied to:
+
+* **Fields**
+* **Constructors**
+* **Setter methods**
+* **Configuration methods (`@Bean`)**
+
+---
+
+## 2️⃣ How @Autowired Works Internally
+
+1. **Spring scans for beans**: During **component scanning**, Spring finds classes annotated with `@Component`, `@Service`, `@Repository`, `@Controller`, etc.
+2. **Creates bean definitions**: Spring registers all beans in the **ApplicationContext**.
+3. **Resolves dependencies**:
+
+   * By **type** (default)
+   * By **name** (if multiple beans of same type exist, use `@Qualifier`)
+4. **Injects dependencies**: Using **reflection**, Spring sets the bean into the field, constructor, or setter.
+
+> Spring performs **injection after the bean is instantiated** but **before it’s fully initialized**.
+
+---
+
+## 3️⃣ Types of Injection with @Autowired
+
+### 3.1 Field Injection
+
+```java
+@Component
+public class Car {
+    @Autowired
+    private Engine engine; // injected automatically
+}
+```
+
+**Pros:** Simple
+**Cons:** Hard to test, violates immutability
+
+---
+
+### 3.2 Constructor Injection (Recommended)
+
+```java
+@Component
+public class Car {
+    private final Engine engine;
+
+    @Autowired
+    public Car(Engine engine) {
+        this.engine = engine;
+    }
+}
+```
+
+**Pros:** Immutable, testable, required dependencies enforced
+**Cons:** Slightly more verbose
+
+---
+
+### 3.3 Setter Injection
+
+```java
+@Component
+public class Car {
+    private Engine engine;
+
+    @Autowired
+    public void setEngine(Engine engine) {
+        this.engine = engine;
+    }
+}
+```
+
+**Pros:** Optional dependencies can be injected
+**Cons:** Not immutable
+
+---
+
+## 4️⃣ Handling Multiple Beans of Same Type
+
+* Use **@Qualifier** to specify the bean name:
+
+```java
+@Component
+public class Car {
+    @Autowired
+    @Qualifier("v8Engine")
+    private Engine engine;
+}
+```
+
+---
+
+## 5️⃣ Optional Dependencies
+
+```java
+@Autowired(required = false)
+private Engine engine; // injection will be skipped if bean not found
+```
+
+---
+
+## 6️⃣ @Autowired with @Bean Methods
+
+```java
+@Configuration
+public class AppConfig {
+
+    @Bean
+    public Engine engine() {
+        return new Engine();
+    }
+
+    @Bean
+    public Car car(@Autowired Engine engine) {
+        return new Car(engine);
+    }
+}
+```
+
+---
+
+## 7️⃣ Common Rules
+
+1. Works **only within Spring-managed beans**.
+2. **Constructor injection** is preferred for required dependencies.
+3. **Field injection** uses reflection and may make testing harder.
+4. Can be combined with `@Qualifier` for **disambiguation**.
+
+---
+
+## 8️⃣ One-Line Interview Answer ⭐
+
+> **`@Autowired` tells Spring to automatically inject a matching bean into a class field, constructor, or setter by type, enabling dependency injection and loose coupling.**
+
+---
+
+If you want, I can next explain:
+✅ **Difference between @Autowired, @Inject, and @Resource**
+✅ **How Spring resolves circular dependencies with @Autowired**
+
+Do you want me to explain that?
 
 ---
 
@@ -7313,7 +11240,241 @@ Do you want me to do that?
 
 ---
 
+**Spring Boot auto-configuration** is one of its most powerful features. It **automatically configures your Spring application based on the dependencies present on the classpath**, reducing boilerplate setup. Let’s break it down:
+
+---
+
+## 1️⃣ What is Auto-Configuration?
+
+> Auto-configuration is a mechanism in Spring Boot that **guesses the configuration you need** and sets up beans, services, and defaults **without explicit configuration**.
+
+Example:
+
+* If `spring-boot-starter-web` is on the classpath, Spring Boot **auto-configures Tomcat, DispatcherServlet, Spring MVC beans, and JSON converters**.
+* If `spring-boot-starter-data-jpa` is on the classpath, it auto-configures **DataSource, EntityManagerFactory, and TransactionManager**.
+
+---
+
+## 2️⃣ How It Works Internally
+
+### Step 1: `@SpringBootApplication`
+
+```java
+@SpringBootApplication
+public class MyApp {
+    public static void main(String[] args) {
+        SpringApplication.run(MyApp.class, args);
+    }
+}
+```
+
+`@SpringBootApplication` includes:
+
+```java
+@EnableAutoConfiguration
+@ComponentScan
+@Configuration
+```
+
+* `@EnableAutoConfiguration` triggers **auto-configuration classes**.
+
+---
+
+### Step 2: Auto-Configuration Classes
+
+* Spring Boot maintains **`spring.factories`** files in `META-INF/`.
+* These files list **all auto-configuration classes**.
+* Example entry:
+
+```
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration,\
+org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+```
+
+---
+
+### Step 3: Conditional Loading
+
+* Each auto-configuration class uses **`@Conditional` annotations**:
+
+| Annotation                  | Purpose                                                         |
+| --------------------------- | --------------------------------------------------------------- |
+| `@ConditionalOnClass`       | Load bean only if a class is on the classpath                   |
+| `@ConditionalOnMissingBean` | Load bean only if no bean of same type exists                   |
+| `@ConditionalOnProperty`    | Load bean only if a property is set in `application.properties` |
+
+**Example:**
+
+```java
+@Configuration
+@ConditionalOnClass(DataSource.class)
+@ConditionalOnMissingBean(DataSource.class)
+public class DataSourceAutoConfiguration {
+    @Bean
+    public DataSource dataSource() {
+        // configure default DataSource
+    }
+}
+```
+
+---
+
+### Step 4: Bean Injection
+
+* Spring Boot scans the **auto-configuration classes**, evaluates conditions, and **registers beans into the context automatically**.
+* You can **override any bean** by defining your own bean of the same type.
+
+---
+
+## 3️⃣ Benefits
+
+1. **Less boilerplate** – no manual configuration for web, JPA, messaging, etc.
+2. **Opinionated defaults** – works out-of-the-box for common use cases.
+3. **Customizable** – override beans or disable specific auto-configurations.
+4. **Conditional loading** – only relevant beans are loaded.
+
+---
+
+## 4️⃣ Disabling Auto-Configuration
+
+* Use `exclude` in `@SpringBootApplication`:
+
+```java
+@SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
+public class MyApp { }
+```
+
+* Or in `application.properties`:
+
+```properties
+spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+```
+
+---
+
+## 5️⃣ Real-World Example
+
+* Dependency: `spring-boot-starter-web`
+* Auto-configuration classes loaded:
+
+  * `DispatcherServlet`
+  * `TomcatServletWebServerFactory` (embedded Tomcat)
+  * `Jackson ObjectMapper`
+  * `RequestMappingHandlerMapping`
+
+> You don’t need any XML or manual bean creation. Just define your `@RestController` and run.
+
+---
+
+## 6️⃣ One-Line Interview Answer ⭐
+
+> **Spring Boot auto-configuration automatically configures Spring beans based on classpath dependencies, properties, and existing beans, using conditional annotations to reduce boilerplate setup.**
+
+---
+
+If you want, I can next explain:
+✅ **How `@Conditional` annotations work internally in auto-configuration**
+✅ **Difference between auto-configuration, starter dependencies, and Spring configuration**
+
+Do you want me to explain that?
+
+---
+
 # 76.What are the starter dependencies in Spring Boot?
+
+---
+
+**Spring Boot starter dependencies** are a set of **convenience dependency descriptors** that simplify adding required libraries to a project. Instead of manually specifying dozens of Maven/Gradle dependencies, you can just include a **single starter**, and it will pull in all the required libraries for a specific functionality.
+
+---
+
+## 1️⃣ What Is a Starter?
+
+> A **starter is a pre-configured POM (or Gradle module)** that aggregates common dependencies for a particular use case.
+
+Example: `spring-boot-starter-web` includes:
+
+* Spring MVC (`spring-webmvc`)
+* Embedded Tomcat (`tomcat-embed-core`)
+* JSON support (Jackson)
+* Logging (Spring Boot default logging)
+
+---
+
+## 2️⃣ Why Use Starters?
+
+1. **Simplifies dependency management** – no need to manually add each library.
+2. **Ensures compatible versions** – all dependencies are tested to work together.
+3. **Quick project setup** – reduces boilerplate and configuration effort.
+
+---
+
+## 3️⃣ Common Spring Boot Starters
+
+| Starter                            | Purpose                                                      |
+| ---------------------------------- | ------------------------------------------------------------ |
+| `spring-boot-starter-web`          | Build web applications (Spring MVC + REST + embedded Tomcat) |
+| `spring-boot-starter-data-jpa`     | JPA/Hibernate integration with database support              |
+| `spring-boot-starter-security`     | Spring Security for authentication & authorization           |
+| `spring-boot-starter-test`         | Testing libraries (JUnit, Mockito, Spring Test)              |
+| `spring-boot-starter-actuator`     | Metrics, health checks, monitoring                           |
+| `spring-boot-starter-mail`         | Email sending support                                        |
+| `spring-boot-starter-cache`        | Caching support                                              |
+| `spring-boot-starter-amqp`         | RabbitMQ support                                             |
+| `spring-boot-starter-data-mongodb` | MongoDB integration                                          |
+| `spring-boot-starter-thymeleaf`    | Thymeleaf templating support                                 |
+
+---
+
+## 4️⃣ Example in Maven
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
+</dependencies>
+```
+
+* This single dependency automatically pulls in **all required transitive dependencies** for web and JPA development.
+
+---
+
+## 5️⃣ How Starters Work Internally
+
+1. Each starter POM has `<dependencyManagement>` to control versions.
+2. Lists **all relevant libraries** as `<dependencies>` inside the starter.
+3. When you include a starter, Maven/Gradle pulls in all those dependencies.
+4. Reduces **version conflicts** because Spring Boot manages compatible versions.
+
+---
+
+## 6️⃣ Key Points
+
+* Starters do **not contain code themselves**, only dependencies.
+* They promote **convention over configuration**.
+* You can also create **custom starters** for internal projects.
+
+---
+
+## 7️⃣ One-Line Interview Answer ⭐
+
+> **Spring Boot starter dependencies are pre-configured POMs that aggregate commonly used libraries for a specific functionality, simplifying dependency management and ensuring compatible versions.**
+
+---
+
+If you want, I can next explain:
+✅ **Difference between starter dependencies, auto-configuration, and regular Spring dependencies**
+✅ **How Spring Boot resolves starter dependencies internally**
+
+Do you want me to explain that?
 
 ---
 
@@ -7321,7 +11482,235 @@ Do you want me to do that?
 
 ---
 
+In Spring Boot, `@SpringBootApplication` is a **convenience annotation** that combines three important annotations into one. It is typically placed on the **main class** of a Spring Boot application.
+
+---
+
+## 1️⃣ Composition of @SpringBootApplication
+
+```java
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@EnableAutoConfiguration
+@ComponentScan
+@Configuration
+public @interface SpringBootApplication {
+}
+```
+
+So, it **combines**:
+
+1. **`@Configuration`**
+
+   * Marks the class as a **Spring configuration class**.
+   * Equivalent to an XML `<beans>` file.
+   * Allows defining `@Bean` methods.
+
+2. **`@EnableAutoConfiguration`**
+
+   * Enables **Spring Boot auto-configuration**.
+   * Automatically configures Spring beans based on **classpath dependencies**, existing beans, and properties.
+   * Uses **`spring.factories`** to load auto-configuration classes.
+
+3. **`@ComponentScan`**
+
+   * Enables **component scanning** in the package of the annotated class and sub-packages.
+   * Detects classes annotated with `@Component`, `@Service`, `@Repository`, `@Controller`, etc.
+   * Automatically registers them as Spring beans.
+
+---
+
+## 2️⃣ Usage Example
+
+```java
+@SpringBootApplication
+public class MyApp {
+    public static void main(String[] args) {
+        SpringApplication.run(MyApp.class, args);
+    }
+}
+```
+
+* Scans all components under `com.example` (or the package of `MyApp`).
+* Auto-configures beans like `DataSource`, `DispatcherServlet`, `Jackson ObjectMapper` if dependencies exist.
+* Acts as a **configuration class** to define additional beans.
+
+---
+
+## 3️⃣ Optional Customization
+
+* **Component scan base packages:**
+
+```java
+@SpringBootApplication(scanBasePackages = {"com.example.service", "com.example.controller"})
+```
+
+* **Exclude auto-configurations:**
+
+```java
+@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
+```
+
+---
+
+## 4️⃣ One-Line Interview Answer ⭐
+
+> **`@SpringBootApplication` is a meta-annotation that combines `@Configuration`, `@EnableAutoConfiguration`, and `@ComponentScan` to simplify Spring Boot application setup.**
+
+---
+
+If you want, I can next explain:
+✅ **How @EnableAutoConfiguration actually loads beans using spring.factories**
+✅ **Difference between @Configuration and @SpringBootApplication**
+
+Do you want me to explain that?
+
+---
+
 # 78.How does component scanning work in Spring Boot?
+
+---
+
+**Component scanning** in Spring Boot is the process by which the Spring container **automatically detects and registers beans** (classes annotated with `@Component`, `@Service`, `@Repository`, `@Controller`, etc.) into the **ApplicationContext**.
+
+Here’s a detailed explanation:
+
+---
+
+## 1️⃣ What Is Component Scanning?
+
+> Component scanning tells Spring **where to look for annotated classes** and register them as beans without manual configuration.
+
+* Reduces the need for XML `<bean>` definitions.
+* Works with annotations:
+
+  * `@Component` → generic bean
+  * `@Service` → business layer
+  * `@Repository` → DAO layer
+  * `@Controller` → MVC controller
+  * `@RestController` → REST controller
+
+---
+
+## 2️⃣ How It Works in Spring Boot
+
+1. Spring Boot enables component scanning **automatically** via:
+
+```java
+@SpringBootApplication
+```
+
+* `@SpringBootApplication` includes `@ComponentScan`.
+
+2. By default, **scans the package of the main application class and all sub-packages**.
+
+```java
+@SpringBootApplication
+public class MyApp { ... }
+```
+
+* If `MyApp` is in `com.example.app`, it scans:
+
+  * `com.example.app`
+  * `com.example.app.service`
+  * `com.example.app.repository`, etc.
+
+---
+
+## 3️⃣ Customizing Component Scan
+
+* **Specify packages explicitly**:
+
+```java
+@SpringBootApplication(scanBasePackages = {"com.example.service", "com.example.controller"})
+```
+
+* **Scan multiple packages**:
+
+```java
+@ComponentScan(basePackages = {"com.example.service", "com.example.repository"})
+```
+
+* **Exclude certain classes**:
+
+```java
+@ComponentScan(
+    basePackages = "com.example",
+    excludeFilters = @ComponentScan.Filter(type = FilterType.REGEX, pattern = "com.example.ignore.*")
+)
+```
+
+---
+
+## 4️⃣ Component Scanning Mechanism
+
+1. **Classpath scanning**
+
+   * Spring uses a **class path scanner** to look for classes under the specified package.
+2. **Annotation detection**
+
+   * Checks if a class is annotated with `@Component` or its specializations.
+3. **Bean registration**
+
+   * Registers the class as a bean in the **ApplicationContext**.
+4. **Dependency injection**
+
+   * Any dependencies of the bean are injected automatically using `@Autowired`.
+
+---
+
+## 5️⃣ Example
+
+```java
+package com.example.app.service;
+
+@Service
+public class UserService {
+    public void getUser() { }
+}
+
+package com.example.app.controller;
+
+@RestController
+public class UserController {
+
+    @Autowired
+    private UserService userService;
+
+    @GetMapping("/users")
+    public String users() {
+        userService.getUser();
+        return "OK";
+    }
+}
+```
+
+* No XML configuration required.
+* Spring Boot automatically registers `UserService` and `UserController` as beans.
+
+---
+
+## 6️⃣ Key Points
+
+* **Component scan is hierarchical** → scans sub-packages.
+* **Avoid scanning too many packages** → performance overhead.
+* **Works best with `@SpringBootApplication`**, which includes scanning by default.
+* **Special annotations like `@Repository`** also enable **exception translation** in addition to component scanning.
+
+---
+
+## 7️⃣ One-Line Interview Answer ⭐
+
+> **Component scanning in Spring Boot automatically detects classes annotated with @Component, @Service, @Repository, and @Controller within the main package and sub-packages, registering them as Spring beans for dependency injection.**
+
+---
+
+If you want, I can next explain:
+✅ **Difference between component scanning and bean definition via @Bean**
+✅ **How Spring resolves multiple beans of the same type during scanning**
+
+Do you want me to explain that?
 
 ---
 
@@ -7329,7 +11718,291 @@ Do you want me to do that?
 
 ---
 
+In Spring Boot, **profiles** are used to **segment application configuration** and beans for different environments (like `dev`, `test`, `prod`) so that the application can behave differently depending on the environment it’s running in.
+
+Here’s a detailed explanation:
+
+---
+
+## 1️⃣ What Are Spring Profiles?
+
+> A **Spring Profile** is a way to **group beans or configuration properties** under a logical name and activate them selectively at runtime.
+
+* Example profiles: `dev`, `test`, `prod`
+* Allows **environment-specific configurations** without changing the code.
+
+---
+
+## 2️⃣ How Profiles Work
+
+1. **Define profiles in beans** using `@Profile`:
+
+```java
+@Component
+@Profile("dev")
+public class DevDataSourceConfig implements DataSourceConfig {
+    // Bean for development environment
+}
+
+@Component
+@Profile("prod")
+public class ProdDataSourceConfig implements DataSourceConfig {
+    // Bean for production environment
+}
+```
+
+* Only the beans matching the **active profile** are loaded into the ApplicationContext.
+
+2. **Activate a profile**:
+
+* **In `application.properties` or `application.yml`:**
+
+```properties
+spring.profiles.active=dev
+```
+
+```yaml
+spring:
+  profiles:
+    active: dev
+```
+
+* **Via command line:**
+
+```bash
+java -jar myapp.jar --spring.profiles.active=prod
+```
+
+* **Programmatically:**
+
+```java
+SpringApplication app = new SpringApplication(MyApp.class);
+app.setAdditionalProfiles("test");
+app.run(args);
+```
+
+---
+
+## 3️⃣ Profile-Specific Properties
+
+* Spring Boot supports **profile-specific property files**:
+
+```
+application.properties         # default
+application-dev.properties     # for dev profile
+application-prod.properties    # for prod profile
+```
+
+* Spring Boot automatically **loads the properties for the active profile**.
+
+Example:
+
+```properties
+# application-dev.properties
+server.port=8081
+
+# application-prod.properties
+server.port=80
+```
+
+* Activate `dev` → runs on port `8081`.
+* Activate `prod` → runs on port `80`.
+
+---
+
+## 4️⃣ Combining Beans and Properties
+
+```java
+@Configuration
+@Profile("dev")
+public class DevConfig {
+    @Bean
+    public DataSource dataSource() {
+        // return H2 datasource
+    }
+}
+
+@Configuration
+@Profile("prod")
+public class ProdConfig {
+    @Bean
+    public DataSource dataSource() {
+        // return MySQL datasource
+    }
+}
+```
+
+* Profile ensures **only one DataSource bean is active** depending on the environment.
+
+---
+
+## 5️⃣ Default Profile
+
+* If no profile is specified, Spring Boot uses **`default`** profile.
+* Beans without `@Profile` annotation are **loaded in all profiles**.
+
+---
+
+## 6️⃣ Key Points
+
+1. Profiles help in **environment-specific bean and property management**.
+2. **`@Profile` annotation** controls which beans are loaded.
+3. **Profile-specific property files** allow separate configuration per environment.
+4. Spring Boot merges `application.properties` + `application-{profile}.properties`.
+
+---
+
+## 7️⃣ One-Line Interview Answer ⭐
+
+> **Spring Boot profiles allow grouping of beans and properties for different environments, enabling selective bean loading and configuration based on the active profile.**
+
+---
+
+If you want, I can next explain:
+✅ **How multiple profiles work together**
+✅ **How Spring resolves conflicting beans when multiple profiles are active**
+
+Do you want me to explain that?
+
+---
+
 # 80.What are beans in Spring? Lifecycle?
+
+---
+
+In Spring, **beans** are the core building blocks of a Spring application. They are **objects managed by the Spring IoC (Inversion of Control) container**, which handles their instantiation, configuration, and lifecycle. Let’s break it down:
+
+---
+
+## 1️⃣ What Is a Bean?
+
+> A **Spring bean** is any object that is **instantiated, assembled, and managed by the Spring container**.
+
+* Beans are typically declared using:
+
+  * **Annotations**: `@Component`, `@Service`, `@Repository`, `@Controller`, or `@Bean` (in configuration classes)
+  * **XML configuration** (legacy)
+
+**Example using annotation:**
+
+```java
+@Component
+public class UserService {
+    public void getUser() {
+        System.out.println("Fetching user...");
+    }
+}
+```
+
+---
+
+## 2️⃣ Bean Scopes
+
+* Beans in Spring can have different **scopes** which define their lifecycle and visibility:
+
+| Scope                 | Description                                  |
+| --------------------- | -------------------------------------------- |
+| `singleton` (default) | Only **one instance per Spring container**   |
+| `prototype`           | New instance **every time** it’s requested   |
+| `request`             | One instance per **HTTP request** (web apps) |
+| `session`             | One instance per **HTTP session**            |
+| `application`         | One instance per **ServletContext**          |
+| `websocket`           | One instance per **WebSocket session**       |
+
+**Example:**
+
+```java
+@Component
+@Scope("prototype")
+public class MyBean { }
+```
+
+---
+
+## 3️⃣ Bean Lifecycle in Spring
+
+Spring manages **bean creation, initialization, and destruction**. The lifecycle steps are:
+
+### Step 1: **Instantiation**
+
+* Spring creates the bean instance using **constructor** or **factory method**.
+
+### Step 2: **Populate Properties / Dependency Injection**
+
+* Inject dependencies using `@Autowired`, `@Value`, or XML configuration.
+
+### Step 3: **Bean Name Aware / Context Aware**
+
+* If bean implements `BeanNameAware`, `BeanFactoryAware`, or `ApplicationContextAware`, Spring injects relevant context info.
+
+### Step 4: **Bean Post-Processing (Before Initialization)**
+
+* Spring calls `BeanPostProcessor`’s `postProcessBeforeInitialization()` methods.
+
+### Step 5: **Initialization**
+
+* If bean implements `InitializingBean` → calls `afterPropertiesSet()`
+* Or custom initialization method defined by `@PostConstruct` or `init-method`
+
+### Step 6: **Bean Post-Processing (After Initialization)**
+
+* Spring calls `postProcessAfterInitialization()` methods from `BeanPostProcessor`.
+
+### Step 7: **Bean Ready to Use**
+
+* Bean is fully initialized and ready to serve requests.
+
+### Step 8: **Destruction**
+
+* For **singleton beans**, Spring calls:
+
+  * `DisposableBean.destroy()`
+  * Custom destroy method defined by `@PreDestroy` or `destroy-method`
+* **Prototype beans** are not managed for destruction; client is responsible.
+
+---
+
+## 4️⃣ Example Lifecycle Annotations
+
+```java
+@Component
+public class MyBean {
+
+    @PostConstruct
+    public void init() {
+        System.out.println("Bean is initialized");
+    }
+
+    @PreDestroy
+    public void cleanup() {
+        System.out.println("Bean is destroyed");
+    }
+}
+```
+
+---
+
+## 5️⃣ Diagram of Bean Lifecycle (Simplified)
+
+```
+Instantiation → Dependency Injection → BeanNameAware/ContextAware → 
+postProcessBeforeInitialization → @PostConstruct / afterPropertiesSet → 
+postProcessAfterInitialization → Bean Ready → @PreDestroy / destroy-method
+```
+
+---
+
+## 6️⃣ One-Line Interview Answer ⭐
+
+> **A Spring bean is an object managed by the Spring IoC container, and its lifecycle includes instantiation, dependency injection, initialization, post-processing, usage, and destruction.**
+
+---
+
+If you want, I can next explain:
+✅ **Difference between singleton and prototype bean lifecycle**
+✅ **How BeanPostProcessor works internally**
+
+Do you want me to explain that?
 
 ---
 
@@ -7337,7 +12010,222 @@ Do you want me to do that?
 
 ---
 
+In Spring, **`BeanFactory`** and **`ApplicationContext`** are two types of **IoC containers**, but they have different capabilities and use cases. Here’s a detailed comparison:
+
+---
+
+## 1️⃣ Definition
+
+| Container              | Definition                                                                                                                                                   |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **BeanFactory**        | The **basic IoC container** in Spring. It provides **core functionality** for dependency injection (DI) and manages beans.                                   |
+| **ApplicationContext** | A **more advanced container** that builds on BeanFactory. It provides **enterprise features** like event propagation, internationalization, and AOP support. |
+
+---
+
+## 2️⃣ Core Differences
+
+| Feature                         | BeanFactory                                                        | ApplicationContext                                                              |
+| ------------------------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------------------- |
+| **Type**                        | Basic IoC container                                                | Advanced IoC container (extends BeanFactory)                                    |
+| **Eager vs Lazy Loading**       | **Lazy initialization**: beans are created **only when requested** | **Eager initialization**: singleton beans are created **at startup** by default |
+| **Event Handling**              | No support                                                         | Supports **ApplicationEventPublisher** for events                               |
+| **Internationalization (i18n)** | Not supported                                                      | Supported via `MessageSource`                                                   |
+| **Bean Post-Processing**        | Supports `BeanPostProcessor`                                       | Supports `BeanPostProcessor` and other lifecycle callbacks                      |
+| **AOP Support**                 | Needs manual configuration                                         | Integrated support                                                              |
+| **Use Case**                    | Lightweight, memory-constrained environments                       | Most applications, especially web apps and enterprise apps                      |
+
+---
+
+## 3️⃣ Typical Implementations
+
+| Container          | Example Class                                                                                   |
+| ------------------ | ----------------------------------------------------------------------------------------------- |
+| BeanFactory        | `XmlBeanFactory` (deprecated in modern Spring)                                                  |
+| ApplicationContext | `ClassPathXmlApplicationContext`, `AnnotationConfigApplicationContext`, `WebApplicationContext` |
+
+---
+
+## 4️⃣ Example Usage
+
+### Using BeanFactory (Legacy)
+
+```java
+Resource resource = new ClassPathResource("beans.xml");
+BeanFactory factory = new XmlBeanFactory(resource);
+MyBean myBean = (MyBean) factory.getBean("myBean");
+```
+
+### Using ApplicationContext
+
+```java
+ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+MyBean myBean = context.getBean(MyBean.class);
+```
+
+* `ApplicationContext` **pre-instantiates singleton beans**, whereas `BeanFactory` creates them **lazily**.
+
+---
+
+## 5️⃣ When to Use Which
+
+* **BeanFactory**:
+
+  * Very lightweight
+  * Suitable for small apps or memory-constrained environments
+  * Rarely used in modern Spring
+
+* **ApplicationContext**:
+
+  * Recommended for almost all modern Spring applications
+  * Supports full Spring features: DI, events, i18n, AOP
+
+---
+
+## 6️⃣ One-Line Interview Answer ⭐
+
+> **`BeanFactory` is the basic Spring IoC container with lazy bean loading, while `ApplicationContext` is an advanced container that eagerly instantiates singleton beans and adds features like events, AOP, and internationalization.**
+
+---
+
+If you want, I can next explain:
+✅ **How ApplicationContext initializes beans internally**
+✅ **Difference between ClassPathXmlApplicationContext and AnnotationConfigApplicationContext**
+
+Do you want me to explain that?
+
+---
+
 # 82.How to deﬁne a custom scope?
+
+---
+
+In Spring, you can define a **custom bean scope** when the built-in scopes (`singleton`, `prototype`, `request`, `session`, etc.) don’t fit your requirements. A custom scope allows you to control **when a bean is created, stored, and destroyed**.
+
+Here’s a detailed explanation:
+
+---
+
+## 1️⃣ Steps to Define a Custom Scope
+
+### Step 1: Implement `org.springframework.beans.factory.config.Scope`
+
+```java
+import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.beans.factory.config.Scope;
+import java.util.concurrent.ConcurrentHashMap;
+
+public class MyCustomScope implements Scope {
+
+    private final ConcurrentHashMap<String, Object> beanMap = new ConcurrentHashMap<>();
+
+    @Override
+    public Object get(String name, ObjectFactory<?> objectFactory) {
+        return beanMap.computeIfAbsent(name, k -> objectFactory.getObject());
+    }
+
+    @Override
+    public Object remove(String name) {
+        return beanMap.remove(name);
+    }
+
+    @Override
+    public void registerDestructionCallback(String name, Runnable callback) {
+        // optional: handle bean destruction
+    }
+
+    @Override
+    public Object resolveContextualObject(String key) {
+        return null;
+    }
+
+    @Override
+    public String getConversationId() {
+        return "myCustomScope";
+    }
+}
+```
+
+* **`get`** → returns an existing bean or creates a new one.
+* **`remove`** → removes a bean from the scope.
+* **`registerDestructionCallback`** → optional destruction logic.
+* **`resolveContextualObject`** → optional context-specific objects (like request attributes).
+* **`getConversationId`** → unique ID for the scope.
+
+---
+
+### Step 2: Register the Custom Scope
+
+If you are using **Java configuration**:
+
+```java
+import org.springframework.beans.factory.config.CustomScopeConfigurer;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class ScopeConfig {
+
+    @Bean
+    public static CustomScopeConfigurer customScopeConfigurer() {
+        CustomScopeConfigurer configurer = new CustomScopeConfigurer();
+        configurer.addScope("myCustomScope", new MyCustomScope());
+        return configurer;
+    }
+}
+```
+
+* The **name `"myCustomScope"`** is used in `@Scope`.
+
+---
+
+### Step 3: Use the Custom Scope
+
+```java
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+@Component
+@Scope("myCustomScope")
+public class MyScopedBean {
+    public void show() {
+        System.out.println("Custom scoped bean instance: " + this);
+    }
+}
+```
+
+* Each time you get `MyScopedBean` from the context, **Spring uses your custom scope logic** to decide whether to return a new instance or reuse an existing one.
+
+---
+
+## 2️⃣ Example Use Cases
+
+* **Thread-local beans** → each thread gets its own bean.
+* **Workflow beans** → one instance per workflow/conversation.
+* **Cache-like scope** → create bean only once per user session or custom key.
+
+---
+
+## 3️⃣ Key Points
+
+1. Custom scopes must implement **`Scope` interface**.
+2. Beans in a custom scope are **managed according to your logic**.
+3. Always **register the scope** with Spring via `CustomScopeConfigurer`.
+4. Works with both **annotation-based beans** and **XML beans**.
+
+---
+
+## 4️⃣ One-Line Interview Answer ⭐
+
+> **A custom scope in Spring allows you to define how and when a bean is created, stored, and destroyed by implementing the `Scope` interface and registering it with the container.**
+
+---
+
+If you want, I can next explain:
+✅ **How request/session scopes work internally in Spring**
+✅ **How Spring resolves beans with custom scopes**
+
+Do you want me to explain that?
 
 ---
 
@@ -7345,7 +12233,224 @@ Do you want me to do that?
 
 ---
 
+**AOP (Aspect-Oriented Programming)** in Spring is a programming paradigm that allows you to **separate cross-cutting concerns** (like logging, security, transactions) from the main business logic, improving modularity and maintainability.
+
+---
+
+## 1️⃣ What is AOP?
+
+> **AOP allows you to define “aspects” that can be applied across multiple points in your application without modifying the business code directly.**
+
+**Key Terms:**
+
+| Term           | Description                                                              |
+| -------------- | ------------------------------------------------------------------------ |
+| **Aspect**     | A modularization of a concern (like logging or transaction management).  |
+| **Join Point** | A point during execution of a program, such as method call or exception. |
+| **Advice**     | Action taken at a join point (before, after, around).                    |
+| **Pointcut**   | Expression that matches join points where advice should be applied.      |
+| **Weaving**    | Process of applying aspects to the target objects.                       |
+
+---
+
+## 2️⃣ Types of Advice
+
+| Advice Type       | When It Executes                                         |
+| ----------------- | -------------------------------------------------------- |
+| `@Before`         | Before the target method executes                        |
+| `@After`          | After the target method executes (regardless of outcome) |
+| `@AfterReturning` | After successful execution of the method                 |
+| `@AfterThrowing`  | After method throws an exception                         |
+| `@Around`         | Wraps the method call (before and after)                 |
+
+---
+
+## 3️⃣ Spring AOP Example
+
+**Use-Case:** Logging execution time of service methods.
+
+### Step 1: Create an Aspect
+
+```java
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.springframework.stereotype.Component;
+
+@Aspect
+@Component
+public class LoggingAspect {
+
+    @Around("execution(* com.example.service.*.*(..))")
+    public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
+        long start = System.currentTimeMillis();
+
+        Object proceed = joinPoint.proceed(); // call the target method
+
+        long executionTime = System.currentTimeMillis() - start;
+        System.out.println(joinPoint.getSignature() + " executed in " + executionTime + "ms");
+        return proceed;
+    }
+}
+```
+
+* `@Around` advice wraps **all methods** in `com.example.service` package.
+* `joinPoint.proceed()` invokes the actual method.
+
+---
+
+### Step 2: Business Service
+
+```java
+@Service
+public class UserService {
+
+    public void getUser() {
+        // business logic
+        System.out.println("Fetching user...");
+    }
+}
+```
+
+* No logging code in the business service.
+* Logging is **separated via AOP**.
+
+---
+
+### Step 3: Output Example
+
+```
+Fetching user...
+UserService.getUser() executed in 15ms
+```
+
+---
+
+## 4️⃣ Real-World Use Cases
+
+1. **Logging** – log method execution, input/output, exceptions.
+2. **Transaction management** – `@Transactional` is implemented using AOP.
+3. **Security** – check authorization before method execution.
+4. **Caching** – wrap methods to cache results automatically.
+5. **Monitoring / Metrics** – track execution time, method calls, system usage.
+
+---
+
+## 5️⃣ Advantages of AOP
+
+* **Separation of Concerns:** Business logic is clean and separate from cross-cutting concerns.
+* **Reusability:** One aspect can be applied to multiple places.
+* **Maintainability:** Modifying an aspect doesn’t affect the core logic.
+
+---
+
+## 6️⃣ One-Line Interview Answer ⭐
+
+> **AOP in Spring allows separation of cross-cutting concerns like logging, transactions, and security by applying aspects at join points without modifying business logic.**
+
+---
+
+If you want, I can next explain:
+✅ **Difference between Spring AOP and AspectJ**
+✅ **How proxies are used internally for AOP in Spring**
+
+Do you want me to explain that?
+
+---
+
 # 84.Diﬀerence between cross-cutting concern and business logic?
+
+---
+
+In software design, especially when discussing **AOP (Aspect-Oriented Programming)**, it’s important to distinguish between **cross-cutting concerns** and **business logic**. Here’s the breakdown:
+
+---
+
+## 1️⃣ Business Logic
+
+> **Business logic** refers to the **core functionality of the application**—the code that implements the rules and operations that define how the business works.
+
+**Characteristics:**
+
+* Encapsulates the **primary goals** of the application.
+* Directly related to **use-case requirements**.
+* Should be **clean, focused, and testable**.
+
+**Example:**
+
+```java
+@Service
+public class OrderService {
+    public void placeOrder(Order order) {
+        // Validate order
+        // Deduct inventory
+        // Save order to database
+        System.out.println("Order placed for " + order.getId());
+    }
+}
+```
+
+* This is **business logic** because it implements the core operation: placing an order.
+
+---
+
+## 2️⃣ Cross-Cutting Concern
+
+> **Cross-cutting concerns** are aspects of a program that **affect multiple parts of the application**, but are **not part of the main business logic**.
+
+**Characteristics:**
+
+* Often **repetitive** across multiple modules.
+* Can **interfere with business logic** if implemented directly inside it.
+* Examples: logging, security, transactions, caching, exception handling, metrics.
+
+**Example Using AOP:**
+
+```java
+@Aspect
+@Component
+public class LoggingAspect {
+
+    @Before("execution(* com.example.service.*.*(..))")
+    public void logBeforeMethod(JoinPoint joinPoint) {
+        System.out.println("Executing method: " + joinPoint.getSignature());
+    }
+}
+```
+
+* Logging here is **cross-cutting** because it applies to **all service methods**, not just a specific business rule.
+
+---
+
+## 3️⃣ Key Differences
+
+| Feature             | Business Logic                                         | Cross-Cutting Concern                              |
+| ------------------- | ------------------------------------------------------ | -------------------------------------------------- |
+| **Purpose**         | Implements **core functionality**                      | Supports or enhances core functionality            |
+| **Scope**           | Usually **module-specific**                            | **Application-wide** (affects multiple modules)    |
+| **Code Location**   | Inside **service, DAO, controller classes**            | Ideally **separated via AOP/aspects**              |
+| **Examples**        | Placing orders, calculating salary, processing payment | Logging, security, transactions, caching, auditing |
+| **Maintainability** | Must remain **focused and clear**                      | Can be **modularized into reusable aspects**       |
+
+---
+
+## 4️⃣ Why Separate Them?
+
+* Mixing logging, security, or transaction code directly into business logic makes the code **messy and hard to maintain**.
+* Using **AOP** or other techniques keeps **business logic clean** and cross-cutting concerns modular.
+
+---
+
+## 5️⃣ One-Line Interview Answer ⭐
+
+> **Business logic is the core functionality of the application, while cross-cutting concerns are auxiliary features like logging, security, or transactions that affect multiple parts of the application and are best separated from business logic.**
+
+---
+
+If you want, I can next explain:
+✅ **How Spring AOP separates cross-cutting concerns from business logic internally using proxies**
+
+Do you want me to explain that?
 
 ---
 
@@ -7353,7 +12458,222 @@ Do you want me to do that?
 
 ---
 
+Implementing **custom annotations with AOP** in Spring allows you to apply **cross-cutting concerns** (like logging, security, or transactions) to specific methods or classes **without modifying their code directly**. Here’s a detailed step-by-step guide:
+
+---
+
+## 1️⃣ Step 1: Define a Custom Annotation
+
+Use `@Target` and `@Retention` to define where and how long the annotation should be available.
+
+```java
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Target({ElementType.METHOD, ElementType.TYPE}) // can be applied to methods or classes
+@Retention(RetentionPolicy.RUNTIME)             // available at runtime for reflection
+public @interface LogExecutionTime {
+}
+```
+
+* `@Target` → defines where the annotation can be applied (`METHOD`, `TYPE`, etc.)
+* `@Retention` → must be `RUNTIME` so AOP can access it at runtime
+
+---
+
+## 2️⃣ Step 2: Create an Aspect to Handle the Annotation
+
+Use `@Aspect` to define an AOP aspect, and `@Around` to wrap the annotated method execution.
+
+```java
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.springframework.stereotype.Component;
+
+@Aspect
+@Component
+public class LoggingAspect {
+
+    @Around("@annotation(com.example.annotations.LogExecutionTime)")
+    public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
+        long start = System.currentTimeMillis();
+
+        Object proceed = joinPoint.proceed(); // execute the target method
+
+        long executionTime = System.currentTimeMillis() - start;
+        System.out.println(joinPoint.getSignature() + " executed in " + executionTime + "ms");
+
+        return proceed;
+    }
+}
+```
+
+* `@Around("@annotation(...)")` → applies this advice to **all methods annotated with `@LogExecutionTime`**
+* `joinPoint.proceed()` → invokes the actual method
+
+---
+
+## 3️⃣ Step 3: Apply the Custom Annotation
+
+```java
+import org.springframework.stereotype.Service;
+
+@Service
+public class UserService {
+
+    @LogExecutionTime
+    public void getUserById(Long id) {
+        // business logic
+        System.out.println("Fetching user with id " + id);
+    }
+}
+```
+
+* Only methods annotated with `@LogExecutionTime` will trigger the logging aspect.
+
+---
+
+## 4️⃣ Step 4: Run the Application
+
+```java
+@SpringBootApplication
+public class MyApp {
+    public static void main(String[] args) {
+        ApplicationContext context = SpringApplication.run(MyApp.class, args);
+
+        UserService userService = context.getBean(UserService.class);
+        userService.getUserById(101L);
+    }
+}
+```
+
+**Console Output:**
+
+```
+Fetching user with id 101
+UserService.getUserById(..) executed in 12ms
+```
+
+---
+
+## 5️⃣ Key Points
+
+1. **Custom annotations** are markers to indicate where **cross-cutting concerns** should be applied.
+2. **Aspects** use **pointcut expressions** to intercept annotated methods.
+3. **@Around** advice is most flexible because it allows code **before and after** method execution.
+4. Works for **methods in Spring-managed beans**; Spring AOP uses **proxies** to weave aspects.
+
+---
+
+## 6️⃣ One-Line Interview Answer ⭐
+
+> **Custom annotations with AOP allow applying cross-cutting concerns to specific methods or classes by defining an annotation and creating an aspect that intercepts methods annotated with it.**
+
+---
+
+If you want, I can next explain:
+✅ **Difference between using @annotation pointcut and execution pointcut in AOP**
+✅ **How Spring AOP proxies intercept custom-annotated methods internally**
+
+Do you want me to explain that?
+
+---
+
 # 86.What is the use of @Transactional?
+
+---
+
+In Spring, `@Transactional` is an **annotation used to manage database transactions declaratively**, without manually coding transaction boundaries. It ensures that a set of operations either **complete successfully as a unit** or **roll back on failure**, maintaining **data integrity**.
+
+---
+
+## 1️⃣ Purpose of @Transactional
+
+* **Start a transaction** when a method is invoked.
+* **Commit** the transaction if the method completes successfully.
+* **Rollback** the transaction if an exception occurs (by default, only on `RuntimeException`).
+* Simplifies transaction management, especially in **Spring Data JPA or JDBC**.
+
+---
+
+## 2️⃣ Basic Usage
+
+```java
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+public class UserService {
+
+    @Transactional
+    public void createUser(User user) {
+        userRepository.save(user);  // insert into DB
+        accountRepository.save(user.getAccount()); // insert related account
+        // if any exception occurs here, both inserts are rolled back
+    }
+}
+```
+
+* Here, both `userRepository.save()` and `accountRepository.save()` are part of **one transaction**.
+* If an exception occurs during the second save, the first save is **rolled back automatically**.
+
+---
+
+## 3️⃣ Important Attributes of @Transactional
+
+| Attribute         | Description                                                                                   | Default                           |
+| ----------------- | --------------------------------------------------------------------------------------------- | --------------------------------- |
+| **propagation**   | Defines how transactions relate to each other (`REQUIRED`, `REQUIRES_NEW`, `MANDATORY`, etc.) | `REQUIRED`                        |
+| **isolation**     | Controls **transaction isolation level** (`READ_COMMITTED`, `REPEATABLE_READ`, etc.)          | `DEFAULT` (uses DB default)       |
+| **readOnly**      | Optimizes performance for read-only operations                                                | `false`                           |
+| **rollbackFor**   | Specify which exceptions should trigger rollback                                              | `RuntimeException` and subclasses |
+| **noRollbackFor** | Exceptions that **should not** trigger rollback                                               | none                              |
+
+**Example:**
+
+```java
+@Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = SQLException.class, readOnly = true)
+public void performReadOnlyTask() { ... }
+```
+
+---
+
+## 4️⃣ How It Works Internally
+
+1. Spring uses **AOP proxies** to wrap the method.
+2. Before method execution: **transaction starts**.
+3. Method executes.
+4. After execution:
+
+   * **Commit** if successful
+   * **Rollback** if exception occurs (matching `rollbackFor`)
+
+**Note:** `@Transactional` works **only on Spring-managed beans** and **methods called from outside the bean**. Internal self-invocation bypasses the proxy.
+
+---
+
+## 5️⃣ Real-World Use Cases
+
+* **Database operations** spanning multiple tables.
+* **Service layer methods** where multiple repository calls must succeed or fail together.
+* **Batch operations** or **financial transactions** where consistency is critical.
+
+---
+
+## 6️⃣ One-Line Interview Answer ⭐
+
+> **`@Transactional` in Spring is used to declaratively manage database transactions, ensuring that a group of operations either all succeed or are rolled back to maintain data integrity.**
+
+---
+
+If you want, I can next explain:
+✅ **Difference between propagation types in @Transactional**
+✅ **How Spring decides when to commit or roll back a transaction**
+
+Do you want me to explain that?
 
 ---
 
@@ -7361,7 +12681,211 @@ Do you want me to do that?
 
 ---
 
+In Spring, there are **two ways to manage transactions**: **programmatic** and **declarative**. Both achieve the same goal of ensuring **data integrity**, but they differ in **how transactions are defined and managed**.
+
+---
+
+## 1️⃣ Programmatic Transaction Management
+
+> Transactions are managed **explicitly in the code** using Spring’s `PlatformTransactionManager`.
+
+### How It Works:
+
+* You manually start, commit, and roll back transactions using the transaction API.
+* Fine-grained control over transaction boundaries.
+
+### Example:
+
+```java
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
+
+@Service
+public class UserService {
+
+    @Autowired
+    private PlatformTransactionManager transactionManager;
+
+    public void createUser(User user) {
+        TransactionDefinition def = new DefaultTransactionDefinition();
+        TransactionStatus status = transactionManager.getTransaction(def);
+
+        try {
+            userRepository.save(user);
+            accountRepository.save(user.getAccount());
+            transactionManager.commit(status); // commit transaction
+        } catch (Exception e) {
+            transactionManager.rollback(status); // rollback transaction
+            throw e;
+        }
+    }
+}
+```
+
+**Pros:**
+
+* Fine-grained control.
+* Useful for **complex scenarios**.
+
+**Cons:**
+
+* Leads to **boilerplate code**.
+* Harder to maintain.
+* Business logic and transaction management are **tightly coupled**.
+
+---
+
+## 2️⃣ Declarative Transaction Management
+
+> Transactions are managed **declaratively using annotations (`@Transactional`)** or XML configuration. Spring handles the transaction boundaries automatically using **AOP proxies**.
+
+### How It Works:
+
+```java
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+public class UserService {
+
+    @Transactional
+    public void createUser(User user) {
+        userRepository.save(user);
+        accountRepository.save(user.getAccount());
+        // rollback automatically if exception occurs
+    }
+}
+```
+
+**Pros:**
+
+* **Less code** and **more readable**.
+* **Separation of concerns**: business logic is clean.
+* Works well for **standard CRUD operations**.
+
+**Cons:**
+
+* Less control for **very complex transaction scenarios**.
+* Works only with **Spring-managed beans** and **proxy-aware calls**.
+
+---
+
+## 3️⃣ Key Differences
+
+| Feature             | Programmatic                                  | Declarative                                                  |
+| ------------------- | --------------------------------------------- | ------------------------------------------------------------ |
+| **Definition**      | Transactions managed **manually in code**     | Transactions managed **automatically using annotations/AOP** |
+| **Code Complexity** | High, requires explicit begin/commit/rollback | Low, use `@Transactional`                                    |
+| **Coupling**        | Tight coupling with business logic            | Loose coupling; separate from business logic                 |
+| **Flexibility**     | Very flexible, can handle complex scenarios   | Limited to standard use-cases                                |
+| **Maintenance**     | Harder                                        | Easier                                                       |
+| **AOP Required**    | No                                            | Yes (Spring uses proxies internally)                         |
+
+---
+
+## 4️⃣ One-Line Interview Answer ⭐
+
+> **Programmatic transaction management requires manually coding transaction boundaries, while declarative transaction management uses annotations or XML to let Spring automatically handle transactions using AOP.**
+
+---
+
+If you want, I can next explain:
+✅ **Propagation and isolation levels in declarative transactions**
+✅ **How Spring handles rollback rules internally**
+
+Do you want me to explain that?
+
+---
+
 # 88.Explain propagation types in transaction management.
+
+---
+
+In Spring, **transaction propagation** defines **how a transactional method should behave when it is called by another transactional method**. It determines whether to **create a new transaction, join an existing one, or execute without a transaction**.
+
+Spring provides **seven propagation types** via the `propagation` attribute of `@Transactional`.
+
+---
+
+## 1️⃣ Propagation Types
+
+| Propagation       | Description                                                                                                                             | Example Scenario                                                           |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| **REQUIRED**      | **Default**. If a transaction exists, join it; otherwise, create a new one.                                                             | Method A calls Method B. If A is transactional, B joins A’s transaction.   |
+| **REQUIRES_NEW**  | Always create a **new transaction**, suspending the existing one if present.                                                            | Logging method should commit independently even if main transaction fails. |
+| **SUPPORTS**      | If a transaction exists, join it; otherwise, execute **non-transactionally**.                                                           | Read-only methods that can work with or without a transaction.             |
+| **NOT_SUPPORTED** | Execute **non-transactionally**, suspending any existing transaction.                                                                   | Non-critical background task that should not be rolled back.               |
+| **MANDATORY**     | Must run within an existing transaction; throws exception if none exists.                                                               | Enforce that certain business logic always runs within a transaction.      |
+| **NEVER**         | Must run **outside of a transaction**; throws exception if a transaction exists.                                                        | Logging or auditing that should not be part of a transaction.              |
+| **NESTED**        | Run within a **nested transaction** if a parent exists; otherwise behaves like REQUIRED. Uses **savepoints** to rollback independently. | Partial rollback of a method without affecting the outer transaction.      |
+
+---
+
+## 2️⃣ Example Usage
+
+```java
+@Service
+public class UserService {
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void createUser(User user) {
+        userRepository.save(user);
+        createAuditLog(user);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void createAuditLog(User user) {
+        auditRepository.save("Created user: " + user.getId());
+    }
+}
+```
+
+**Explanation:**
+
+* `createUser()` uses **REQUIRED** → joins existing transaction or starts new.
+* `createAuditLog()` uses **REQUIRES_NEW** → executes in a **separate transaction**, so even if `createUser()` fails and rolls back, the audit log **still commits**.
+
+---
+
+## 3️⃣ Visual Representation
+
+```
+Parent Tx: createUser() [REQUIRED]
+   |
+   +-- Child Tx: createAuditLog() [REQUIRES_NEW] → separate transaction
+```
+
+* **REQUIRED**: joins parent transaction.
+* **REQUIRES_NEW**: suspends parent, runs in a new transaction.
+* **NESTED**: parent active → creates a savepoint; rollback affects only nested block.
+
+---
+
+## 4️⃣ Key Points
+
+1. Default propagation is **REQUIRED**.
+2. Propagation is important for **nested method calls** to control commit/rollback behavior.
+3. **REQUIRES_NEW** is useful for independent operations like logging or auditing.
+4. **NESTED** requires a **JDBC 3.0+ compliant DataSource** for savepoints.
+5. **SUPPORTS**, **NOT_SUPPORTED**, **MANDATORY**, **NEVER** provide flexibility for conditional transactional behavior.
+
+---
+
+## 5️⃣ One-Line Interview Answer ⭐
+
+> **Transaction propagation in Spring defines how a method participates in existing transactions or starts a new one, controlling commit and rollback behavior across nested transactional calls.**
+
+---
+
+If you want, I can next explain:
+✅ **Transaction isolation levels and how they prevent issues like dirty reads or phantom reads**
+✅ **How Spring decides when to commit or roll back transactions**
+
+Do you want me to explain that?
 
 ---
 
@@ -7369,7 +12893,293 @@ Do you want me to do that?
 
 ---
 
+In Spring, **circular dependencies** occur when **two or more beans depend on each other**, either directly or indirectly. Spring has mechanisms to **detect and resolve simple circular dependencies** for **singleton beans** using **constructor injection** or **setter/field injection**. Here’s a detailed explanation:
+
+---
+
+## 1️⃣ What is a Circular Dependency?
+
+* **Direct circular dependency:**
+
+```text
+A → B → A
+```
+
+* **Indirect circular dependency:**
+
+```text
+A → B → C → A
+```
+
+* This can lead to **infinite loops** during bean creation if not handled properly.
+
+---
+
+## 2️⃣ How Spring Handles Circular Dependencies
+
+### a) **Singleton Beans**
+
+* Spring can **resolve circular dependencies** **automatically** for singleton beans using **setter/field injection**.
+* It uses a **three-level caching mechanism** internally:
+
+| Cache                                                 | Purpose                                                        |
+| ----------------------------------------------------- | -------------------------------------------------------------- |
+| **Singleton Objects (`singletonObjects`)**            | Fully initialized beans                                        |
+| **Early Singleton Objects (`earlySingletonObjects`)** | Partially initialized beans (before dependencies are injected) |
+| **Singleton Factories (`singletonFactories`)**        | Factories to create early references for proxying              |
+
+**Process:**
+
+1. Spring starts creating bean **A**.
+2. It notices bean **A** depends on **B**, so it starts creating **B**.
+3. **B** depends on **A**, but **A** is not fully initialized yet.
+
+   * Spring puts **a reference of A** in `earlySingletonObjects`.
+4. Spring injects this **early reference** into **B**.
+5. After **B** is fully created, Spring injects **B** into **A**.
+6. Both beans are now fully initialized. ✅
+
+* This works **only for setter/field injection**, not constructor injection.
+
+---
+
+### b) **Constructor Injection**
+
+* Circular dependencies **cannot be resolved automatically** with **constructor injection**, because Spring **needs a fully created object** to pass into the constructor.
+* Example:
+
+```java
+@Component
+public class A {
+    private final B b;
+    public A(B b) { this.b = b; }
+}
+
+@Component
+public class B {
+    private final A a;
+    public B(A a) { this.a = a; }
+}
+```
+
+* This will cause **`BeanCurrentlyInCreationException`**.
+* **Solution:** Use **setter injection** or **`@Lazy`** annotation.
+
+---
+
+## 3️⃣ Ways to Solve Circular Dependencies
+
+1. **Use Setter Injection** instead of constructor injection.
+2. **Use `@Lazy` annotation** to lazily initialize one of the beans:
+
+```java
+@Component
+public class A {
+    private final B b;
+    public A(@Lazy B b) { this.b = b; }
+}
+```
+
+3. **Refactor design** to remove circular dependency:
+
+   * Introduce a **third bean** to break the cycle.
+   * Combine responsibilities differently to avoid tight coupling.
+
+---
+
+## 4️⃣ Key Points
+
+* Spring **automatically resolves circular dependencies** for **singleton beans with setter/field injection**.
+* **Constructor injection cannot handle circular dependencies** without `@Lazy`.
+* Using `@Lazy` or refactoring is recommended for **cleaner design**.
+* Circular dependencies in **prototype beans** **cannot be resolved automatically**, because Spring does not cache prototype beans.
+
+---
+
+## 5️⃣ One-Line Interview Answer ⭐
+
+> **Spring handles circular dependencies for singleton beans using setter/field injection by exposing early bean references, but constructor injection requires `@Lazy` or design refactoring to break the cycle.**
+
+---
+
+If you want, I can next explain:
+✅ **How Spring internally uses three-level caching (`singletonObjects`, `earlySingletonObjects`, `singletonFactories`) to resolve circular dependencies**
+
+Do you want me to explain that?
+
+---
+
 # 90.What is the diﬀerence between @Value, @ConﬁgurationProperties, and Environment?
+
+---
+
+In Spring, `@Value`, `@ConfigurationProperties`, and `Environment` are three ways to **access configuration properties**, but they serve different purposes and use cases. Here’s a detailed comparison:
+
+---
+
+## 1️⃣ `@Value`
+
+* **Purpose:** Injects **individual property values** into a Spring bean.
+* **Syntax:** SpEL (Spring Expression Language) or property placeholder `${}`.
+* **Use Case:** When you need **single or few properties**.
+
+**Example:**
+
+```java
+@Component
+public class MyService {
+
+    @Value("${app.name}")
+    private String appName;
+
+    @Value("${app.timeout:5000}") // default value if property is missing
+    private int timeout;
+
+    public void printConfig() {
+        System.out.println(appName + " - " + timeout);
+    }
+}
+```
+
+**Pros:**
+
+* Simple for **injecting single properties**.
+* Supports **default values** and expressions.
+
+**Cons:**
+
+* Not suitable for **large sets of related properties**.
+* Harder to maintain when many properties are needed.
+
+---
+
+## 2️⃣ `@ConfigurationProperties`
+
+* **Purpose:** Bind a **group of related properties** to a **POJO** automatically.
+* **Syntax:** Prefix-based binding.
+* **Use Case:** When you have **many related properties** and want **type-safe binding**.
+
+**Example:**
+
+`application.properties`:
+
+```properties
+app.name=MyApp
+app.timeout=5000
+app.url=http://localhost
+```
+
+POJO:
+
+```java
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
+
+@Component
+@ConfigurationProperties(prefix = "app")
+public class AppProperties {
+
+    private String name;
+    private int timeout;
+    private String url;
+
+    // getters and setters
+}
+```
+
+Usage:
+
+```java
+@Service
+public class MyService {
+    private final AppProperties appProperties;
+
+    public MyService(AppProperties appProperties) {
+        this.appProperties = appProperties;
+    }
+
+    public void printConfig() {
+        System.out.println(appProperties.getName() + " - " + appProperties.getTimeout());
+    }
+}
+```
+
+**Pros:**
+
+* **Type-safe** configuration.
+* Works well for **grouped properties**.
+* Cleaner and more maintainable than multiple `@Value`.
+
+**Cons:**
+
+* Slightly more setup than `@Value`.
+* Mainly used in **Spring Boot applications**.
+
+---
+
+## 3️⃣ `Environment`
+
+* **Purpose:** Programmatically access properties **from any source**, not limited to `application.properties`.
+* **Use Case:** When you need **dynamic property resolution** or **conditional logic**.
+
+**Example:**
+
+```java
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
+
+@Component
+public class MyService {
+
+    private final Environment env;
+
+    public MyService(Environment env) {
+        this.env = env;
+    }
+
+    public void printConfig() {
+        String appName = env.getProperty("app.name");
+        int timeout = Integer.parseInt(env.getProperty("app.timeout", "5000"));
+        System.out.println(appName + " - " + timeout);
+    }
+}
+```
+
+**Pros:**
+
+* Access any property **dynamically** at runtime.
+* Can work with **profiles**, system environment variables, and property sources.
+
+**Cons:**
+
+* Not type-safe (manual parsing needed).
+* Harder to maintain for **large sets of properties**.
+
+---
+
+## 4️⃣ Key Differences
+
+| Feature              | @Value                 | @ConfigurationProperties           | Environment                 |
+| -------------------- | ---------------------- | ---------------------------------- | --------------------------- |
+| **Binding**          | Single property        | Group of properties (prefix-based) | Dynamic programmatic access |
+| **Type-Safety**      | Limited                | Strongly typed                     | Weak (manual conversion)    |
+| **Best For**         | Few values             | Many related properties            | Runtime/dynamic access      |
+| **Setup Complexity** | Simple                 | Moderate                           | Simple                      |
+| **Profiles Support** | Yes (via placeholders) | Yes                                | Yes                         |
+
+---
+
+## 5️⃣ One-Line Interview Answer ⭐
+
+> **`@Value` injects single properties, `@ConfigurationProperties` binds groups of properties to a POJO (type-safe), and `Environment` provides programmatic access to properties at runtime.**
+
+---
+
+If you want, I can next explain:
+✅ **When to choose @Value vs @ConfigurationProperties in Spring Boot projects**
+✅ **How profiles and property sources affect all three approaches**
+
+Do you want me to explain that?
 
 ---
 
@@ -7377,7 +13187,292 @@ Do you want me to do that?
 
 ---
 
+In Spring, **`RestTemplate`** and **`WebClient`** are two ways to make HTTP requests, but they differ in **design, capabilities, and usage**. Here’s a detailed comparison:
+
+---
+
+## 1️⃣ RestTemplate
+
+* **Synchronous HTTP client**.
+* Part of **Spring MVC** (classic approach).
+* Executes HTTP calls **blocking the calling thread** until the response is received.
+
+### Example:
+
+```java
+import org.springframework.web.client.RestTemplate;
+
+@RestController
+public class UserController {
+
+    private final RestTemplate restTemplate = new RestTemplate();
+
+    @GetMapping("/user/{id}")
+    public User getUser(@PathVariable Long id) {
+        String url = "https://api.example.com/users/" + id;
+        return restTemplate.getForObject(url, User.class);
+    }
+}
+```
+
+**Pros:**
+
+* Simple and familiar for **synchronous calls**.
+* Supports all HTTP methods (`GET`, `POST`, `PUT`, `DELETE`).
+* Easy to integrate with existing Spring MVC projects.
+
+**Cons:**
+
+* **Blocking** calls → poor scalability under high load.
+* No **reactive support**.
+* Officially **deprecated in future versions** in favor of `WebClient`.
+
+---
+
+## 2️⃣ WebClient
+
+* **Reactive, non-blocking HTTP client**.
+* Part of **Spring WebFlux**.
+* Can handle **asynchronous and streaming requests** efficiently.
+
+### Example (Non-blocking):
+
+```java
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
+
+@RestController
+public class UserController {
+
+    private final WebClient webClient = WebClient.create("https://api.example.com");
+
+    @GetMapping("/user/{id}")
+    public Mono<User> getUser(@PathVariable Long id) {
+        return webClient.get()
+                .uri("/users/{id}", id)
+                .retrieve()
+                .bodyToMono(User.class); // returns reactive Mono
+    }
+}
+```
+
+* `.bodyToMono(User.class)` → returns a **reactive publisher**.
+* Can be integrated with **reactive streams** for **high-concurrency, non-blocking apps**.
+
+**Pros:**
+
+* **Non-blocking** → scalable under heavy load.
+* Supports reactive streams (`Mono`, `Flux`).
+* Handles streaming, WebSockets, and functional endpoints.
+* Flexible and modern alternative to `RestTemplate`.
+
+**Cons:**
+
+* Slightly **more complex** than `RestTemplate` for simple cases.
+* Requires knowledge of **Project Reactor**.
+
+---
+
+## 3️⃣ Key Differences
+
+| Feature              | RestTemplate              | WebClient                                  |
+| -------------------- | ------------------------- | ------------------------------------------ |
+| **Type**             | Blocking                  | Non-blocking / Reactive                    |
+| **Thread Usage**     | Each call blocks a thread | Efficient, does not block threads          |
+| **Reactive Support** | No                        | Yes (Mono, Flux)                           |
+| **Performance**      | Less scalable under load  | Highly scalable for concurrent requests    |
+| **Future**           | Deprecated                | Recommended for new projects               |
+| **Streaming / SSE**  | Limited                   | Fully supported                            |
+| **Error Handling**   | `try-catch`               | Reactive operators (`onErrorResume`, etc.) |
+
+---
+
+## 4️⃣ When to Use
+
+* **RestTemplate:** Simple, synchronous calls in existing Spring MVC apps.
+* **WebClient:** New projects, reactive microservices, high-concurrency apps, streaming APIs.
+
+---
+
+## 5️⃣ One-Line Interview Answer ⭐
+
+> **`RestTemplate` is a synchronous, blocking HTTP client, while `WebClient` is a non-blocking, reactive HTTP client suitable for modern scalable applications.**
+
+---
+
+If you want, I can next explain:
+✅ **How to migrate from RestTemplate to WebClient in Spring Boot**
+✅ **Examples of WebClient with error handling, retries, and streaming**
+
+Do you want me to explain that?
+
+---
+
 # 92.What is reactive programming in Spring?
+
+---
+
+**Reactive programming in Spring** is a **non-blocking, asynchronous, event-driven programming model** designed to handle **high concurrency** with **efficient resource usage**. It is mainly implemented using **Spring WebFlux** and **Project Reactor**.
+
+---
+
+## 1️⃣ Why Reactive Programming?
+
+Traditional (imperative) Spring MVC:
+
+* **Blocking I/O**
+* One request = one thread
+* Threads wait during DB/API calls ❌
+* Poor scalability under high load
+
+Reactive Spring:
+
+* **Non-blocking I/O**
+* Few threads handle many requests
+* Threads are **never blocked**
+* Better scalability & performance ✅
+
+---
+
+## 2️⃣ Core Concepts
+
+### 🔹 Non-Blocking
+
+Threads don’t wait for results. They register callbacks and continue doing other work.
+
+### 🔹 Asynchronous
+
+Results are produced **later**, not immediately.
+
+### 🔹 Event-Driven
+
+Data flows as **events** (onNext, onError, onComplete).
+
+### 🔹 Backpressure
+
+Consumers control how much data they can handle, preventing overload.
+
+---
+
+## 3️⃣ Reactive Stack in Spring
+
+| Layer              | Technology              |
+| ------------------ | ----------------------- |
+| Reactive Framework | **Spring WebFlux**      |
+| Reactive Library   | **Project Reactor**     |
+| Reactive Types     | `Mono<T>`, `Flux<T>`    |
+| Reactive Servers   | Netty, Undertow         |
+| Reactive DB        | R2DBC, MongoDB Reactive |
+
+---
+
+## 4️⃣ Mono and Flux
+
+### 🔹 Mono
+
+Represents **0 or 1 value**
+
+```java
+Mono<User> userMono = userService.getUserById(1L);
+```
+
+### 🔹 Flux
+
+Represents **0 to N values**
+
+```java
+Flux<User> usersFlux = userService.getAllUsers();
+```
+
+---
+
+## 5️⃣ Example: Reactive REST API
+
+```java
+@RestController
+public class UserController {
+
+    @GetMapping("/users/{id}")
+    public Mono<User> getUser(@PathVariable Long id) {
+        return userService.findById(id);
+    }
+
+    @GetMapping("/users")
+    public Flux<User> getUsers() {
+        return userService.findAll();
+    }
+}
+```
+
+* No blocking
+* Thread is released immediately
+* Response is sent when data is ready
+
+---
+
+## 6️⃣ WebClient Example (Reactive HTTP Call)
+
+```java
+WebClient webClient = WebClient.create();
+
+public Mono<User> getUser(Long id) {
+    return webClient.get()
+        .uri("https://api.example.com/users/{id}", id)
+        .retrieve()
+        .bodyToMono(User.class);
+}
+```
+
+---
+
+## 7️⃣ Backpressure Example
+
+```java
+Flux.range(1, 100)
+    .limitRate(10)
+    .subscribe(System.out::println);
+```
+
+* Consumer requests data in **chunks**
+* Prevents memory overflow
+
+---
+
+## 8️⃣ Reactive vs Traditional Spring MVC
+
+| Feature           | Spring MVC         | Spring WebFlux           |
+| ----------------- | ------------------ | ------------------------ |
+| Programming Model | Imperative         | Reactive                 |
+| I/O               | Blocking           | Non-Blocking             |
+| Thread Model      | Thread-per-request | Event loop               |
+| Scalability       | Limited            | High                     |
+| Use Case          | Simple CRUD        | High-concurrency systems |
+
+---
+
+## 9️⃣ When to Use Reactive Spring?
+
+✅ High traffic APIs
+✅ Streaming data (Kafka, SSE, WebSockets)
+✅ Microservices calling multiple APIs
+❌ Simple CRUD apps
+❌ Blocking DB drivers (JPA/Hibernate)
+
+---
+
+## 🔟 Common Interview One-Liner ⭐
+
+> **Reactive programming in Spring is a non-blocking, asynchronous programming model using Spring WebFlux and Project Reactor to build highly scalable applications.**
+
+---
+
+If you want, I can also explain:
+✅ **Backpressure in depth**
+✅ **Spring MVC vs WebFlux architecture**
+✅ **Reactive DB (R2DBC) vs JPA**
+✅ **Common mistakes in reactive programming**
+
+Just tell me 👍
 
 ---
 
@@ -7385,7 +13480,285 @@ Do you want me to do that?
 
 ---
 
+In **Spring Reactive (WebFlux / Project Reactor)**, **`Mono`** and **`Flux`** are the two core reactive types. The key difference is **how many elements they can emit**.
+
+---
+
+## 1️⃣ Mono vs Flux – Core Difference
+
+| Aspect             | **Mono**                    | **Flux**                  |
+| ------------------ | --------------------------- | ------------------------- |
+| Number of elements | **0 or 1**                  | **0 to N (many)**         |
+| Use case           | Single result               | Multiple results / stream |
+| Equivalent         | `Optional<T>` / `Future<T>` | `Stream<T>`               |
+| Terminal signals   | onComplete / onError        | onComplete / onError      |
+| Common in          | `findById()`                | `findAll()`               |
+
+---
+
+## 2️⃣ Mono Explained
+
+### 🔹 Definition
+
+`Mono<T>` represents a **single asynchronous value** or **no value**.
+
+### 🔹 Example
+
+```java
+Mono<User> userMono = userService.findById(1L);
+```
+
+### 🔹 REST Controller Example
+
+```java
+@GetMapping("/users/{id}")
+public Mono<User> getUser(@PathVariable Long id) {
+    return userService.findById(id);
+}
+```
+
+### 🔹 Use Mono when:
+
+* Fetching a **single record**
+* Returning a **status/result**
+* Calling a **single external API**
+
+---
+
+## 3️⃣ Flux Explained
+
+### 🔹 Definition
+
+`Flux<T>` represents **multiple asynchronous values** (a stream).
+
+### 🔹 Example
+
+```java
+Flux<User> usersFlux = userService.findAll();
+```
+
+### 🔹 REST Controller Example
+
+```java
+@GetMapping("/users")
+public Flux<User> getUsers() {
+    return userService.findAll();
+}
+```
+
+### 🔹 Use Flux when:
+
+* Returning a **list of items**
+* Streaming data (Kafka, SSE)
+* Handling continuous data streams
+
+---
+
+## 4️⃣ Emission Example
+
+```java
+Mono.just("A");          // A
+Flux.just("A", "B", "C"); // A, B, C
+```
+
+---
+
+## 5️⃣ Error Handling Difference
+
+```java
+Mono.error(new RuntimeException("Error"));
+Flux.error(new RuntimeException("Error"));
+```
+
+Both support reactive error handling:
+
+```java
+.onErrorResume(e -> Mono.empty());
+.onErrorResume(e -> Flux.empty());
+```
+
+---
+
+## 6️⃣ Blocking (Not Recommended, but for Understanding)
+
+```java
+User user = userMono.block(); // blocks thread ❌
+List<User> users = usersFlux.collectList().block(); // blocks ❌
+```
+
+> Blocking defeats the purpose of reactive programming.
+
+---
+
+## 7️⃣ Real-World Example
+
+### Fetch user + orders
+
+```java
+Mono<User> user = userService.findById(1L);
+Flux<Order> orders = orderService.findByUserId(1L);
+```
+
+* User → `Mono`
+* Orders → `Flux`
+
+---
+
+## 8️⃣ Interview One-Liner ⭐
+
+> **Mono represents 0 or 1 asynchronous value, while Flux represents 0 to N asynchronous values in reactive programming.**
+
+---
+
+## 9️⃣ Common Mistake ⚠️
+
+❌ Using `Flux` for single results
+❌ Blocking (`.block()`) inside reactive pipelines
+
+---
+
+If you want, I can next explain:
+✅ **Mono vs Optional vs CompletableFuture**
+✅ **Cold vs Hot publishers**
+✅ **Backpressure in Flux**
+
+Just tell me 👍
+
+---
+
 # 94.What is Spring WebFlux?
+
+---
+
+**Spring WebFlux** is Spring’s **reactive, non-blocking web framework** designed to build **highly scalable and high-concurrency applications** using the **Reactive Streams specification**.
+
+---
+
+## 1️⃣ What Problem Does WebFlux Solve?
+
+Traditional **Spring MVC**:
+
+* Blocking I/O (Servlet-based)
+* One request → one thread
+* Threads wait for DB/API calls ❌
+* Limited scalability under heavy load
+
+**Spring WebFlux**:
+
+* Non-blocking I/O
+* Event-loop based execution
+* Handles many requests with fewer threads ✅
+* Ideal for microservices & streaming systems
+
+---
+
+## 2️⃣ Core Technologies Behind WebFlux
+
+| Layer            | Technology                    |
+| ---------------- | ----------------------------- |
+| Reactive library | **Project Reactor**           |
+| Reactive types   | `Mono`, `Flux`                |
+| Servers          | **Netty** (default), Undertow |
+| Spec             | Reactive Streams              |
+| Client           | `WebClient`                   |
+
+---
+
+## 3️⃣ Programming Models in WebFlux
+
+### 🔹 1. Annotation-Based (Similar to MVC)
+
+```java
+@RestController
+public class UserController {
+
+    @GetMapping("/users/{id}")
+    public Mono<User> getUser(@PathVariable Long id) {
+        return userService.findById(id);
+    }
+
+    @GetMapping("/users")
+    public Flux<User> getUsers() {
+        return userService.findAll();
+    }
+}
+```
+
+---
+
+### 🔹 2. Functional Style
+
+```java
+RouterFunction<ServerResponse> route =
+    RouterFunctions.route(GET("/users"),
+        request -> ServerResponse.ok()
+            .body(userService.findAll(), User.class));
+```
+
+---
+
+## 4️⃣ Execution Model (How WebFlux Works)
+
+* Uses **event-loop threads** (like Node.js)
+* Requests handled by **few threads**
+* No thread blocking
+* Results returned asynchronously
+
+---
+
+## 5️⃣ WebFlux vs Spring MVC
+
+| Feature      | Spring MVC         | Spring WebFlux |
+| ------------ | ------------------ | -------------- |
+| I/O          | Blocking           | Non-blocking   |
+| Thread Model | Thread per request | Event loop     |
+| Server       | Tomcat             | Netty          |
+| Return Types | `ResponseEntity`   | `Mono`, `Flux` |
+| Scalability  | Moderate           | High           |
+
+---
+
+## 6️⃣ Database Support
+
+| Blocking          | Reactive           |
+| ----------------- | ------------------ |
+| JPA / Hibernate ❌ | R2DBC ✅            |
+| JDBC ❌            | MongoDB Reactive ✅ |
+
+> ⚠️ Using blocking DB drivers defeats WebFlux benefits.
+
+---
+
+## 7️⃣ When to Use WebFlux?
+
+✅ High concurrency systems
+✅ Streaming APIs (Kafka, SSE, WebSockets)
+✅ Microservices calling many external APIs
+❌ Simple CRUD apps
+❌ Blocking libraries
+
+---
+
+## 8️⃣ Interview One-Liner ⭐
+
+> **Spring WebFlux is a reactive, non-blocking web framework built on Project Reactor to create scalable, high-concurrency applications.**
+
+---
+
+## 9️⃣ Common Mistakes ⚠️
+
+* Mixing **blocking code** inside WebFlux
+* Using JPA with WebFlux
+* Calling `.block()` in controllers
+
+---
+
+If you want, I can next explain:
+✅ **Spring MVC vs WebFlux architecture**
+✅ **Event loop & backpressure in WebFlux**
+✅ **How Netty works in WebFlux**
+
+Just tell me 👍
 
 ---
 
@@ -7393,7 +13766,361 @@ Do you want me to do that?
 
 ---
 
+Securing a **REST API using Spring Security** typically involves **authentication**, **authorization**, and **request filtering**. In modern Spring Boot applications, this is most commonly done using **JWT (stateless security)**.
+
+Below is a **clear, interview-ready explanation with practical examples**.
+
+---
+
+## 1️⃣ Core Security Concepts
+
+| Concept        | Purpose                  |
+| -------------- | ------------------------ |
+| Authentication | Who the user is          |
+| Authorization  | What the user can access |
+| Stateless      | No server-side session   |
+| Token-based    | JWT / OAuth2             |
+
+---
+
+## 2️⃣ Common Ways to Secure REST APIs
+
+1. **Basic Authentication** (Not recommended for production)
+2. **JWT Token-based Authentication** ✅ (Most common)
+3. **OAuth2 / OpenID Connect** (Enterprise apps)
+4. **API Key-based security**
+
+---
+
+## 3️⃣ Typical JWT-Based Security Flow
+
+```text
+Client → Login (username/password)
+Server → Validates credentials
+Server → Generates JWT
+Client → Sends JWT in Authorization header
+Server → Validates JWT for every request
+```
+
+---
+
+## 4️⃣ Add Required Dependencies
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt</artifactId>
+</dependency>
+```
+
+---
+
+## 5️⃣ Security Configuration (Spring Boot 3+)
+
+```java
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+            .csrf(csrf -> csrf.disable())
+            .sessionManagement(session ->
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/auth/**").permitAll()
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .anyRequest().authenticated()
+            );
+
+        return http.build();
+    }
+}
+```
+
+---
+
+## 6️⃣ User Authentication
+
+### UserDetailsService
+
+```java
+@Service
+public class CustomUserDetailsService implements UserDetailsService {
+
+    @Override
+    public UserDetails loadUserByUsername(String username) {
+        return userRepository.findByUsername(username)
+            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
+}
+```
+
+---
+
+## 7️⃣ Password Encoding
+
+```java
+@Bean
+public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+}
+```
+
+* Passwords are stored **hashed**, not plain text
+
+---
+
+## 8️⃣ JWT Filter
+
+```java
+@Component
+public class JwtFilter extends OncePerRequestFilter {
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain)
+            throws ServletException, IOException {
+
+        String authHeader = request.getHeader("Authorization");
+
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            // validate token & set authentication
+        }
+
+        filterChain.doFilter(request, response);
+    }
+}
+```
+
+Register the filter:
+
+```java
+http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+```
+
+---
+
+## 9️⃣ Role-Based Authorization
+
+```java
+@PreAuthorize("hasRole('ADMIN')")
+@GetMapping("/admin/data")
+public String adminData() {
+    return "Admin content";
+}
+```
+
+Enable method security:
+
+```java
+@EnableMethodSecurity
+```
+
+---
+
+## 🔟 CORS Configuration (Important for Frontend)
+
+```java
+http.cors(cors -> cors.configurationSource(request -> {
+    CorsConfiguration config = new CorsConfiguration();
+    config.addAllowedOrigin("*");
+    config.addAllowedMethod("*");
+    config.addAllowedHeader("*");
+    return config;
+}));
+```
+
+---
+
+## 1️⃣1️⃣ Exception Handling
+
+```java
+http.exceptionHandling(ex -> ex
+    .authenticationEntryPoint((req, res, e) ->
+        res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized"))
+);
+```
+
+---
+
+## 1️⃣2️⃣ Interview One-Liner ⭐
+
+> **A REST API is secured using Spring Security by implementing stateless authentication with JWT, role-based authorization, and request filters.**
+
+---
+
+## 1️⃣3️⃣ Best Practices ✅
+
+* Use **HTTPS**
+* Use **JWT expiration & refresh tokens**
+* Avoid storing secrets in code
+* Disable CSRF for stateless APIs
+* Avoid `.permitAll()` globally
+
+---
+
+## 1️⃣4️⃣ Common Interview Follow-Ups
+
+* Difference between **JWT and OAuth2**
+* How `SecurityFilterChain` works
+* Stateless vs stateful authentication
+* Refresh token vs access token
+
+---
+
+If you want, I can next explain:
+✅ **JWT vs OAuth2 in depth**
+✅ **Spring Security filter chain flow**
+✅ **How authentication works internally**
+
+Just tell me 👍
+
+---
+
 # 96.Diﬀerence between permitAll() and authenticated()?
+
+---
+
+In **Spring Security**, `permitAll()` and `authenticated()` are **authorization rules** that control **who can access an endpoint**.
+
+---
+
+## 1️⃣ `permitAll()`
+
+### 🔹 Meaning
+
+* Allows **anyone** to access the endpoint
+* **No authentication required**
+* Works for:
+
+  * Anonymous users
+  * Authenticated users
+
+### 🔹 Example
+
+```java
+.authorizeHttpRequests(auth -> auth
+    .requestMatchers("/login", "/public/**").permitAll()
+)
+```
+
+### 🔹 Use Cases
+
+* Login / signup APIs
+* Public health checks
+* Swagger UI
+* Static resources
+
+### 🔹 Key Point
+
+> Spring Security **does not check authentication** at all.
+
+---
+
+## 2️⃣ `authenticated()`
+
+### 🔹 Meaning
+
+* Endpoint requires the user to be **logged in**
+* **Authentication is mandatory**
+* Authorization depends only on authentication, **not roles**
+
+### 🔹 Example
+
+```java
+.authorizeHttpRequests(auth -> auth
+    .requestMatchers("/user/**").authenticated()
+)
+```
+
+### 🔹 Use Cases
+
+* User profile APIs
+* Business APIs
+* Any secured REST endpoint
+
+### 🔹 Key Point
+
+> User must have a **valid authentication token/session**.
+
+---
+
+## 3️⃣ Side-by-Side Comparison
+
+| Feature                 | `permitAll()` | `authenticated()` |
+| ----------------------- | ------------- | ----------------- |
+| Authentication required | ❌ No          | ✅ Yes             |
+| Anonymous access        | ✅ Allowed     | ❌ Not allowed     |
+| Role check              | ❌ No          | ❌ No              |
+| Typical use             | Public APIs   | Protected APIs    |
+
+---
+
+## 4️⃣ What Happens Internally?
+
+* `permitAll()`:
+
+  * Security filter chain **skips authentication checks**
+* `authenticated()`:
+
+  * Spring Security checks:
+
+    * JWT / session / basic auth
+    * Authentication object in `SecurityContext`
+
+---
+
+## 5️⃣ Example: JWT-based REST API
+
+```java
+.authorizeHttpRequests(auth -> auth
+    .requestMatchers("/auth/login").permitAll()
+    .requestMatchers("/api/**").authenticated()
+)
+```
+
+---
+
+## 6️⃣ Common Mistakes ⚠️
+
+❌ Using `permitAll()` on sensitive APIs
+❌ Assuming `authenticated()` checks roles
+✔ Use `hasRole()` or `hasAuthority()` for role-based access
+
+---
+
+## 7️⃣ Interview One-Liner ⭐
+
+> **`permitAll()` allows unrestricted access without authentication, whereas `authenticated()` allows access only to authenticated users.**
+
+---
+
+## 8️⃣ Related Methods You Should Know
+
+```java
+hasRole("ADMIN")
+hasAuthority("READ_PRIVILEGE")
+denyAll()
+anonymous()
+```
+
+---
+
+If you want, I can next explain:
+✅ `hasRole()` vs `hasAuthority()`
+✅ Spring Security authorization flow
+✅ Method-level vs URL-level security
+
+Just tell me 👍
 
 ---
 
@@ -7401,7 +14128,317 @@ Do you want me to do that?
 
 ---
 
+**CSRF (Cross-Site Request Forgery)** is a **security attack** where a malicious website tricks an authenticated user’s browser into sending **unauthorized requests** to a trusted application.
+
+---
+
+## 1️⃣ What is CSRF?
+
+### 🔹 How the attack works
+
+1. User logs into **bank.com**
+2. Browser stores **session cookie**
+3. User visits **malicious.com**
+4. Malicious site sends a request to **bank.com/transfer**
+5. Browser automatically attaches cookies
+6. Server thinks request is legitimate ❌
+
+➡️ Result: Unauthorized action executed
+
+---
+
+## 2️⃣ When CSRF Is a Risk
+
+CSRF affects applications that:
+
+* Use **cookies/session-based authentication**
+* Trust browser-sent credentials automatically
+* Have **state-changing operations** (POST, PUT, DELETE)
+
+---
+
+## 3️⃣ Why REST APIs Often Disable CSRF
+
+* REST APIs are usually:
+
+  * **Stateless**
+  * Secured via **JWT / OAuth2**
+  * Tokens sent in **Authorization headers**, not cookies
+
+➡️ CSRF protection is **not required** for pure REST APIs.
+
+---
+
+## 4️⃣ CSRF Handling in Spring Security
+
+### 🔹 Default Behavior
+
+* CSRF is **enabled by default** in Spring Security
+* Spring expects a **CSRF token** for:
+
+  * POST
+  * PUT
+  * DELETE
+  * PATCH
+
+---
+
+## 5️⃣ Disable CSRF (JWT / REST APIs)
+
+```java
+@Bean
+public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http
+        .csrf(csrf -> csrf.disable())
+        .authorizeHttpRequests(auth -> auth
+            .anyRequest().authenticated()
+        );
+    return http.build();
+}
+```
+
+✅ Common for **stateless REST APIs**
+
+---
+
+## 6️⃣ Enable CSRF (Session-based Web Apps)
+
+### 🔹 HTML Form Example
+
+```html
+<form method="post" action="/transfer">
+    <input type="hidden" name="_csrf" value="${_csrf.token}">
+    <button type="submit">Transfer</button>
+</form>
+```
+
+### 🔹 Spring Automatically:
+
+* Generates CSRF token
+* Stores it in session
+* Validates it per request
+
+---
+
+## 7️⃣ CSRF Token Repository
+
+```java
+http.csrf(csrf -> csrf
+    .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+);
+```
+
+* Stores token in **cookie**
+* Useful for **SPA (Angular/React)** apps
+
+---
+
+## 8️⃣ CSRF vs JWT Security
+
+| Feature       | CSRF Protection | JWT   |
+| ------------- | --------------- | ----- |
+| Uses cookies  | ✅ Yes           | ❌ No  |
+| Stateless     | ❌ No            | ✅ Yes |
+| REST friendly | ❌               | ✅     |
+| CSRF needed   | ✅               | ❌     |
+
+---
+
+## 9️⃣ Interview One-Liner ⭐
+
+> **CSRF is an attack that exploits browser-trusted credentials, and in Spring Security it is handled using CSRF tokens or disabled for stateless JWT-based REST APIs.**
+
+---
+
+## 🔟 Best Practices ✅
+
+* Enable CSRF for **session-based apps**
+* Disable CSRF for **JWT-based REST APIs**
+* Never mix **cookies + JWT** without CSRF protection
+* Use HTTPS always
+
+---
+
+## 🔥 Common Interview Follow-Up Questions
+
+* Why CSRF is not needed for JWT?
+* Difference between CSRF and XSS?
+* What is SameSite cookie?
+
+---
+
+If you want, I can also explain:
+✅ **CSRF vs CORS**
+✅ **JWT + Cookie security pitfalls**
+✅ **Spring Security filter chain for CSRF**
+
+Just tell me 👍
+
+---
+
 # 98.What is AuthenticationManager?
+
+---
+
+In **Spring Security**, **`AuthenticationManager`** is a **core interface responsible for authenticating users**. It decides **whether provided credentials are valid or not**.
+
+---
+
+## 1️⃣ What is AuthenticationManager?
+
+### 🔹 Definition
+
+`AuthenticationManager`:
+
+* Takes an **Authentication object** (username, password, token)
+* Delegates authentication to appropriate **AuthenticationProvider**
+* Returns a **fully authenticated Authentication object** if successful
+* Throws an exception if authentication fails
+
+### 🔹 Interface
+
+```java
+public interface AuthenticationManager {
+    Authentication authenticate(Authentication authentication)
+            throws AuthenticationException;
+}
+```
+
+---
+
+## 2️⃣ Authentication Flow (High-Level)
+
+```text
+Client → Username/Password
+        ↓
+AuthenticationManager
+        ↓
+AuthenticationProvider
+        ↓
+UserDetailsService + PasswordEncoder
+        ↓
+Authentication Success / Failure
+```
+
+---
+
+## 3️⃣ Authentication Object
+
+Before authentication:
+
+```java
+UsernamePasswordAuthenticationToken
+(principal=username, credentials=password, authenticated=false)
+```
+
+After authentication:
+
+```java
+UsernamePasswordAuthenticationToken
+(principal=UserDetails, authorities, authenticated=true)
+```
+
+---
+
+## 4️⃣ Default Implementation
+
+### 🔹 ProviderManager
+
+* Default implementation of `AuthenticationManager`
+* Holds **list of AuthenticationProviders**
+* Tries each provider until authentication succeeds
+
+```text
+ProviderManager
+ ├── DaoAuthenticationProvider
+ ├── JwtAuthenticationProvider
+ └── CustomAuthenticationProvider
+```
+
+---
+
+## 5️⃣ Example: Using AuthenticationManager (Login API)
+
+```java
+@RestController
+public class AuthController {
+
+    private final AuthenticationManager authenticationManager;
+
+    public AuthController(AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
+    }
+
+    @PostMapping("/login")
+    public String login(@RequestBody LoginRequest request) {
+        Authentication authentication =
+            new UsernamePasswordAuthenticationToken(
+                request.getUsername(),
+                request.getPassword()
+            );
+
+        authenticationManager.authenticate(authentication);
+        return "Login Successful";
+    }
+}
+```
+
+---
+
+## 6️⃣ Exposing AuthenticationManager Bean (Spring Boot 3+)
+
+```java
+@Bean
+public AuthenticationManager authenticationManager(
+        AuthenticationConfiguration config) throws Exception {
+    return config.getAuthenticationManager();
+}
+```
+
+---
+
+## 7️⃣ AuthenticationManager vs AuthenticationProvider
+
+| Feature         | AuthenticationManager | AuthenticationProvider    |
+| --------------- | --------------------- | ------------------------- |
+| Role            | Orchestrator          | Performs actual auth      |
+| Responsibility  | Delegates auth        | Validates credentials     |
+| Implementations | ProviderManager       | DaoAuthenticationProvider |
+
+---
+
+## 8️⃣ When is AuthenticationManager Used?
+
+* Login endpoints
+* JWT token validation
+* OAuth2 login
+* Custom authentication mechanisms
+
+---
+
+## 9️⃣ Interview One-Liner ⭐
+
+> **AuthenticationManager is the core Spring Security component that authenticates credentials by delegating to AuthenticationProviders and returns an authenticated Authentication object.**
+
+---
+
+## 🔟 Common Exceptions
+
+* `BadCredentialsException`
+* `UsernameNotFoundException`
+* `DisabledException`
+* `LockedException`
+
+---
+
+## 🔥 Follow-up Topics (if you want)
+
+* AuthenticationManager vs SecurityContext
+* How JWT authentication uses AuthenticationManager
+* Custom AuthenticationProvider implementation
+* Spring Security filter chain execution
+
+Just tell me 👍
 
 ---
 
@@ -7409,7 +14446,414 @@ Do you want me to do that?
 
 ---
 
+Implementing **custom authentication in Spring Security** means defining **how credentials are validated** (not just username/password) and plugging that logic into Spring Security’s **authentication flow**.
+
+Below is a **step-by-step, interview-ready explanation** with a **real-world example**.
+
+---
+
+## 1️⃣ When Do You Need Custom Authentication?
+
+You need custom authentication when:
+
+* Login is **not username/password**
+* Authentication via:
+
+  * OTP
+  * API Key
+  * JWT
+  * LDAP
+  * External service
+* Multi-factor authentication
+* Custom credential format
+
+---
+
+## 2️⃣ Core Components Involved
+
+| Component                | Responsibility            |
+| ------------------------ | ------------------------- |
+| `Authentication`         | Holds credentials         |
+| `AuthenticationProvider` | Validates credentials     |
+| `AuthenticationManager`  | Delegates authentication  |
+| `SecurityContext`        | Stores authenticated user |
+
+---
+
+## 3️⃣ Step-by-Step Implementation
+
+### 🔹 Step 1: Create Custom Authentication Token
+
+```java
+public class ApiKeyAuthenticationToken extends AbstractAuthenticationToken {
+
+    private final String apiKey;
+
+    public ApiKeyAuthenticationToken(String apiKey) {
+        super(null);
+        this.apiKey = apiKey;
+        setAuthenticated(false);
+    }
+
+    public ApiKeyAuthenticationToken(String apiKey, Collection<? extends GrantedAuthority> authorities) {
+        super(authorities);
+        this.apiKey = apiKey;
+        setAuthenticated(true);
+    }
+
+    @Override
+    public Object getCredentials() {
+        return apiKey;
+    }
+
+    @Override
+    public Object getPrincipal() {
+        return apiKey;
+    }
+}
+```
+
+---
+
+### 🔹 Step 2: Create Custom AuthenticationProvider
+
+```java
+@Component
+public class ApiKeyAuthenticationProvider implements AuthenticationProvider {
+
+    @Override
+    public Authentication authenticate(Authentication authentication) {
+        String apiKey = authentication.getCredentials().toString();
+
+        if (!"SECRET_API_KEY".equals(apiKey)) {
+            throw new BadCredentialsException("Invalid API Key");
+        }
+
+        List<GrantedAuthority> authorities =
+            List.of(new SimpleGrantedAuthority("ROLE_USER"));
+
+        return new ApiKeyAuthenticationToken(apiKey, authorities);
+    }
+
+    @Override
+    public boolean supports(Class<?> authType) {
+        return ApiKeyAuthenticationToken.class.isAssignableFrom(authType);
+    }
+}
+```
+
+---
+
+### 🔹 Step 3: Create Custom Authentication Filter
+
+```java
+@Component
+public class ApiKeyAuthFilter extends OncePerRequestFilter {
+
+    private final AuthenticationManager authenticationManager;
+
+    public ApiKeyAuthFilter(AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
+    }
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain)
+            throws ServletException, IOException {
+
+        String apiKey = request.getHeader("X-API-KEY");
+
+        if (apiKey != null) {
+            Authentication authRequest =
+                new ApiKeyAuthenticationToken(apiKey);
+
+            Authentication authResult =
+                authenticationManager.authenticate(authRequest);
+
+            SecurityContextHolder.getContext().setAuthentication(authResult);
+        }
+
+        filterChain.doFilter(request, response);
+    }
+}
+```
+
+---
+
+### 🔹 Step 4: Register Filter in Security Configuration
+
+```java
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http,
+                                           ApiKeyAuthFilter apiKeyAuthFilter)
+            throws Exception {
+
+        http
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> auth
+                .anyRequest().authenticated()
+            )
+            .addFilterBefore(apiKeyAuthFilter,
+                UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
+    }
+}
+```
+
+---
+
+## 4️⃣ How the Flow Works (Internally)
+
+```text
+Request
+ ↓
+Custom Filter
+ ↓
+AuthenticationManager
+ ↓
+AuthenticationProvider
+ ↓
+Authenticated Token
+ ↓
+SecurityContext
+```
+
+---
+
+## 5️⃣ Custom Username/Password Authentication (Common Case)
+
+Instead of API Key, you can:
+
+* Extend `DaoAuthenticationProvider`
+* Override `additionalAuthenticationChecks()`
+* Plug in custom validation logic
+
+---
+
+## 6️⃣ Best Practices ✅
+
+* Keep authentication **stateless** (JWT/API keys)
+* Use `OncePerRequestFilter`
+* Never store raw credentials
+* Always implement `supports()` correctly
+* Clear `SecurityContext` on failure
+
+---
+
+## 7️⃣ Common Mistakes ⚠️
+
+❌ Putting logic in controller
+❌ Skipping AuthenticationManager
+❌ Not setting authenticated token
+❌ Mixing filter logic and provider logic
+
+---
+
+## 8️⃣ Interview One-Liner ⭐
+
+> **Custom authentication in Spring Security is implemented by creating a custom AuthenticationToken, AuthenticationProvider, and filter, and registering them in the security filter chain.**
+
+---
+
+## 🔥 Follow-up Topics You Should Be Ready For
+
+* Difference between `AuthenticationProvider` and `UserDetailsService`
+* Where JWT validation fits
+* SecurityContext lifecycle
+* How Spring chooses the AuthenticationProvider
+
+If you want, I can also explain:
+✅ **JWT custom authentication end-to-end**
+✅ **OTP-based authentication**
+✅ **OAuth2 custom grant flow**
+
+Just tell me 👍
+
+---
+
 # 100. What are ﬁlters and interceptors?
+
+---
+
+In Spring (and Java web apps), **Filters** and **Interceptors** are used to **intercept requests**, but they operate at **different levels** of the request lifecycle and serve different purposes.
+
+---
+
+## 1️⃣ Filters
+
+### 🔹 What is a Filter?
+
+* Part of **Servlet specification**
+* Works at **container level** (before Spring)
+* Intercepts **HTTP requests and responses**
+* Applies to **all resources** (Servlets, JSP, static content)
+
+### 🔹 Common Uses
+
+* Authentication / Authorization (e.g., Spring Security filters)
+* Logging
+* Request/response modification
+* CORS handling
+* Compression
+
+### 🔹 Example
+
+```java
+@Component
+public class LoggingFilter implements Filter {
+
+    @Override
+    public void doFilter(ServletRequest request,
+                         ServletResponse response,
+                         FilterChain chain)
+            throws IOException, ServletException {
+
+        System.out.println("Request received");
+        chain.doFilter(request, response);
+        System.out.println("Response sent");
+    }
+}
+```
+
+---
+
+## 2️⃣ Interceptors
+
+### 🔹 What is an Interceptor?
+
+* Part of **Spring MVC**
+* Works at **framework level**
+* Intercepts **controller requests only**
+* Has access to **HandlerMethod**
+
+### 🔹 Common Uses
+
+* Logging controller execution
+* Authentication checks
+* Auditing
+* Locale changes
+* Measuring execution time
+
+### 🔹 Example
+
+```java
+@Component
+public class LoggingInterceptor implements HandlerInterceptor {
+
+    @Override
+    public boolean preHandle(HttpServletRequest request,
+                             HttpServletResponse response,
+                             Object handler) {
+
+        System.out.println("Before Controller");
+        return true;
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request,
+                                HttpServletResponse response,
+                                Object handler,
+                                Exception ex) {
+        System.out.println("After Request Completion");
+    }
+}
+```
+
+Register interceptor:
+
+```java
+@Configuration
+public class WebConfig implements WebMvcConfigurer {
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new LoggingInterceptor());
+    }
+}
+```
+
+---
+
+## 3️⃣ Execution Order
+
+```text
+Client
+ ↓
+Filter (Before)
+ ↓
+DispatcherServlet
+ ↓
+Interceptor (preHandle)
+ ↓
+Controller
+ ↓
+Interceptor (postHandle / afterCompletion)
+ ↓
+Filter (After)
+ ↓
+Client
+```
+
+---
+
+## 4️⃣ Key Differences
+
+| Feature              | Filter         | Interceptor              |
+| -------------------- | -------------- | ------------------------ |
+| Belongs to           | Servlet API    | Spring MVC               |
+| Executes             | Before Spring  | After DispatcherServlet  |
+| Works on             | All requests   | Controller requests only |
+| Access to controller | ❌ No           | ✅ Yes                    |
+| Dependency Injection | ❌ Limited      | ✅ Full support           |
+| Typical use          | Security, CORS | Business-related logic   |
+
+---
+
+## 5️⃣ When to Use What?
+
+✅ **Use Filter when**:
+
+* Working with security
+* Modifying request/response
+* Handling CORS
+* Pre-processing all requests
+
+✅ **Use Interceptor when**:
+
+* Controller-level logic
+* Request logging
+* Validation
+* Auditing
+
+---
+
+## 6️⃣ Interview One-Liner ⭐
+
+> **Filters work at the servlet container level and intercept all requests, while interceptors work at the Spring MVC level and intercept controller requests.**
+
+---
+
+## 7️⃣ Bonus: Spring Security Filters
+
+* Spring Security is implemented using a **chain of filters**
+* Example: `OncePerRequestFilter`, `UsernamePasswordAuthenticationFilter`
+
+---
+
+## 🔥 Common Follow-ups
+
+* Filter vs AOP
+* Interceptor vs Aspect
+* Filter order in Spring Security
+* Can interceptor block request? (Yes, via `false` return)
+
+If you want, I can explain any of these next 👍
 
 ---
 
