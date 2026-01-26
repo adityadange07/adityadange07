@@ -1,25 +1,44 @@
-# HR & General Interview Questions (Deep Dive)
+# HR & General Interview Questions (Complete 10 Questions)
 
-## 1. STAR Method (Behavioral Questions)
-For questions like "Tell me about a challenge...", always use **STAR**:
-- **S (Situation):** Set the scene. "During the Black Friday sale, our payment service latency spiked."
-- **T (Task):** "My task was to identify the bottleneck and restore stability."
-- **A (Action):** "I analyzed the thread dumps and found database connection exhaustion. I implemented a Connection Pool (HikariCP) tuning strategy and added a Cache layer (Redis) for frequent read data."
-- **R (Result):** " latency dropped by 60%, and we handled 2x traffic without errors."
+## 1. Tell me about yourself.
+Start with: "I am a [Role] with X years of experience specializing in [Tech Stack]."
+Middle: "In my current role at X, I built..." (Highlight impact).
+End: "I am looking for new challenges in [Area] which is why I'm here."
 
-## 2. Salary Negotiation
-**Never give a number first.**
-- "I am flexible and looking for a competitive market rate matching my experience and the value I bring."
-- **Research:** Know the range for your role/location (e.g., Glassdoor, Levels.fyi).
-- **Justification:** Use your skills (Cloud, Microservices) as leverage.
+## 2. Explain your current project architecture and flow.
+Whiteboard it. "We use Microservices architecture. User -> React UI -> API Gateway -> Auth Service -> Business Services -> DB. We use Kafka for async communication."
 
-## 3. "Why should we hire you?"
-Connect their **Problem** with your **Solution**.
-"I see you are migrating to Microservices. In my last project, I led the migration of a legacy Monolith to Kubernetes, solving the exact Distributed Transaction issues you might face. I can hit the ground running."
+## 3. Roles and Responsibilities in your project.
+- Developing REST APIs.
+- Designing Data Models.
+- Optimized XYZ performance by X%.
+- Code Reviews & Mentoring.
+- Production Support.
 
-## 4. Strengths & Weaknesses
-- **Strength:** Adaptability. "I moved from Java 8 to Kotlin/Go in a month for a project."
-- **Weakness:** "I sometimes focus too much on details. I am learning to time-box my tasks to balance perfectionism with speed." (Turn it into a positive learning curve).
+## 4. Challenges faced in your project and how you solved them?
+**Situation:** System slowed down during load.
+**Task:** Identify cause.
+**Action:** Found N+1 query issue. Implemented Caching (Redis) and Batch Fetching.
+**Result:** 50% Latency reduction.
 
-## 5. Handling Deadlines
-"I prioritize using **Eisenhower Matrix** (Urgent vs Important). If a deadline is at risk, I communicate early to stakeholders and propose a scope reduction (MVP) to deliver core value on time."
+## 5. Agile Methodology.
+We follow **Scrum**.
+- **Sprints:** 2 weeks.
+- **Daily Standup:** Status check.
+- **Sprint Planning:** Estimating JIRA tickets.
+- **Retrospective:** Improvements.
+
+## 6. Day-to-day activities.
+Code (50%), Meetings/Standup (10%), Code Review (20%), Design/Documentation (10%), Support (10%).
+
+## 7. Why did you leave your previous company?
+"I learned a lot, but I am looking for more exposure to [New Tech/Scale] which your company offers." (Never badmouth previous employer).
+
+## 8. How do you handle conflicts in the team?
+"I focus on the issue, not the person. I initiate a 1-on-1 discussion to understand their perspective. We look at data/facts to decide the best technical approach."
+
+## 9. Introduction.
+Similar to "Tell me about yourself", but keep it shorter (1 minute pitch).
+
+## 10. Deployment process in your project.
+Commit to Git -> Jenkins triggers Build -> Run Tests -> SonarQube -> Build Docker Image -> Push to Nexus -> Deploy to Dev K8s (Auto) -> QA/Prod (Manual Approval).

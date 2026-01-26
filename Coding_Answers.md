@@ -1,263 +1,387 @@
-# Coding Interview Questions & Answers (Loop vs Stream)
+# Coding Interview Questions & Solutions (Stream vs Iterative)
 
-## 1. Find the first non-repeated character in a string
+## 1. Find the first non-repeated character in a string.
+**Detailed Explanation**: Count frequency of each char. Return the first one with count 1.
 
-**Approach 1: Traditional (HashMap + Loop)**
+**Approach 1: Java 8 Streams**
 ```java
-public char firstUniqCharLoop(String s) {
-    Map<Character, Integer> counts = new LinkedHashMap<>(); // Preserves insertion order
-    for (char c : s.toCharArray()) {
-        counts.put(c, counts.getOrDefault(c, 0) + 1);
-    }
-    for (Map.Entry<Character, Integer> entry : counts.entrySet()) {
-        if (entry.getValue() == 1) return entry.getKey();
-    }
-    throw new RuntimeException("No unique char");
-}
+String input = "swiss";
+
+Character result = input.chars()           
+    .mapToObj(c -> (char) c)               
+    .collect(Collectors.groupingBy(Function.identity(), LinkedHashMap::new, Collectors.counting()))
+    .entrySet().stream()
+    .filter(entry -> entry.getValue() == 1L)
+    .map(Map.Entry::getKey)
+    .findFirst().orElse(null);
+
+System.out.println(result); // w
 ```
 
-**Approach 2: Java 8 Stream API**
+**Approach 2: Iterative (For Loop)**
 ```java
-public char firstUniqCharStream(String s) {
-    return s.chars()      // IntStream
-        .mapToObj(c -> (char)c)
-        .collect(Collectors.groupingBy(Function.identity(), LinkedHashMap::new, Collectors.counting()))
-        .entrySet().stream()
-        .filter(entry -> entry.getValue() == 1)
-        .map(Map.Entry::getKey)
-        .findFirst()
-        .orElseThrow(() -> new RuntimeException("No unique char"));
+String input = "swiss";
+Map<Character, Integer> map = new LinkedHashMap<>(); // Maintains order
+
+// Count Frequencies
+for (char c : input.toCharArray()) {
+    map.put(c, map.getOrDefault(c, 0) + 1);
 }
-```
 
-## 2. Check if two strings are anagrams
-
-**Approach 1: Traditional (Sorting)**
-```java
-public boolean isAnagramTraditional(String s1, String s2) {
-    if (s1.length() != s2.length()) return false;
-    char[] c1 = s1.toCharArray();
-    char[] c2 = s2.toCharArray();
-    Arrays.sort(c1);
-    Arrays.sort(c2);
-    return Arrays.equals(c1, c2);
-}
-```
-
-**Approach 2: Java 8 Stream API (Grouping & Counting)**
-```java
-public boolean isAnagramStream(String s1, String s2) {
-    if (s1.length() != s2.length()) return false;
-    
-    Map<Character, Long> map1 = s1.chars().mapToObj(c -> (char)c)
-        .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-        
-    Map<Character, Long> map2 = s2.chars().mapToObj(c -> (char)c)
-        .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-        
-    return map1.equals(map2);
-}
-```
-
-## 3. Find the second largest number in an array
-
-**Approach 1: Traditional (Loop)**
-```java
-public int findSecondLargestLoop(int[] arr) {
-    int max = Integer.MIN_VALUE, secondMax = Integer.MIN_VALUE;
-    for (int num : arr) {
-        if (num > max) {
-            secondMax = max;
-            max = num;
-        } else if (num > secondMax && num != max) {
-            secondMax = num;
-        }
-    }
-    return secondMax;
-}
-```
-
-**Approach 2: Java 8 Stream API**
-```java
-public int findSecondLargestStream(int[] arr) {
-    return Arrays.stream(arr)
-        .distinct()
-        .boxed()
-        .sorted(Comparator.reverseOrder())
-        .skip(1)
-        .findFirst()
-        .orElseThrow(() -> new RuntimeException("Array too small"));
-}
-```
-
-## 4. Count occurrence of each character
-
-**Approach 1: Traditional (HashMap)**
-```java
-public Map<Character, Integer> countCharsLoop(String str) {
-    Map<Character, Integer> map = new HashMap<>();
-    for (char c : str.toCharArray()) {
-        map.put(c, map.getOrDefault(c, 0) + 1);
-    }
-    return map;
-}
-```
-
-**Approach 2: Java 8 Stream API**
-```java
-public Map<Character, Long> countCharsStream(String str) {
-    return str.chars()
-        .mapToObj(c -> (char)c)
-        .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-}
-```
-
-## 5. Reverse a string
-
-**Approach 1: Traditional (StringBuilder / Two Pointers)**
-```java
-public String reverseLoop(String str) {
-    char[] chars = str.toCharArray();
-    int left = 0, right = chars.length - 1;
-    while (left < right) {
-        char temp = chars[left];
-        chars[left++] = chars[right];
-        chars[right--] = temp;
-    }
-    return new String(chars);
-}
-```
-
-**Approach 2: Java 8 Stream API**
-```java
-public String reverseStream(String str) {
-    return Stream.of(str.split(""))
-        .reduce((a, b) -> b + a)
-        .orElse("");
-}
-```
-
-## 6. Sort a List of Employees by Salary
-
-**Approach 1: Traditional (Collections.sort)**
-```java
-public void sortEmployeesLoop(List<Employee> employees) {
-    Collections.sort(employees, new Comparator<Employee>() {
-        @Override
-        public int compare(Employee e1, Employee e2) {
-            return Double.compare(e2.getSalary(), e1.getSalary()); // Descending
-        }
-    });
-}
-```
-
-**Approach 2: Java 8 Stream API**
-```java
-public List<Employee> sortEmployeesStream(List<Employee> employees) {
-    return employees.stream()
-        .sorted(Comparator.comparingDouble(Employee::getSalary).reversed())
-        .collect(Collectors.toList());
-}
-```
-
-## 7. Find Common Elements in Two Arrays
-
-**Approach 1: Traditional (HashSet)**
-```java
-public void findCommonLoop(int[] arr1, int[] arr2) {
-    Set<Integer> set = new HashSet<>();
-    for (int i : arr1) set.add(i);
-    for (int i : arr2) {
-        if (set.contains(i)) {
-            System.out.println(i);
-        }
+// Find First
+for (Map.Entry<Character, Integer> entry : map.entrySet()) {
+    if (entry.getValue() == 1) {
+        System.out.println(entry.getKey());
+        break;
     }
 }
 ```
 
-**Approach 2: Java 8 Stream API**
+---
+
+## 2. Check if two strings are anagrams.
+**Detailed Explanation**: "listen" and "silent" are anagrams.
+
+**Approach 1: Java 8 Streams (Sorting)**
 ```java
-public void findCommonStream(int[] arr1, int[] arr2) {
-    List<Integer> list1 = Arrays.stream(arr1).boxed().collect(Collectors.toList());
-    Arrays.stream(arr2)
-        .filter(list1::contains)
-        .distinct()
-        .forEach(System.out::println);
+String s1 = "listen", s2 = "silent";
+
+boolean isAnagram = Stream.of(s1.split("")).sorted().collect(Collectors.joining())
+    .equals(Stream.of(s2.split("")).sorted().collect(Collectors.joining()));
+```
+
+**Approach 2: Iterative (Frequency Array)**
+```java
+if (s1.length() != s2.length()) return false;
+int[] count = new int[256]; // Assuming ASCII
+
+for (int i = 0; i < s1.length(); i++) {
+    count[s1.charAt(i)]++;
+    count[s2.charAt(i)]--;
+}
+
+boolean isAnagram = true;
+for (int c : count) {
+    if (c != 0) { isAnagram = false; break; }
 }
 ```
 
-## 8. Remove Duplicates from List
+---
 
-**Approach 1: Traditional (Set)**
+## 3. Find the second largest number in an array/list.
+**Detailed Explanation**: Skip the largest, take the next.
+
+**Approach 1: Java 8 Streams**
 ```java
-public List<Integer> removeDuplicatesLoop(List<Integer> list) {
-    return new ArrayList<>(new HashSet<>(list)); // Note: Loss of order unless LinkedHashSet used
-}
+List<Integer> list = Arrays.asList(10, 20, 35, 20, 35, 5);
+Integer second = list.stream().distinct()
+    .sorted(Comparator.reverseOrder()).skip(1).findFirst().orElse(null);
 ```
 
-**Approach 2: Java 8 Stream API**
+**Approach 2: Iterative (One Pass)**
 ```java
-public List<Integer> removeDuplicatesStream(List<Integer> list) {
-    return list.stream().distinct().collect(Collectors.toList());
-}
-```
+int largest = Integer.MIN_VALUE;
+int secondLargest = Integer.MIN_VALUE;
 
-## 9. Find Longest String in List
-
-**Approach 1: Traditional (Loop)**
-```java
-public String longestStringLoop(List<String> list) {
-    String longest = "";
-    for (String s : list) {
-        if (s.length() > longest.length()) {
-            longest = s;
-        }
+for (int num : list) {
+    if (num > largest) {
+        secondLargest = largest;
+        largest = num;
+    } else if (num > secondLargest && num != largest) {
+        secondLargest = num;
     }
-    return longest;
+}
+System.out.println(secondLargest);
+```
+
+---
+
+## 4. Count occurrence of each character in a string.
+
+**Approach 1: Java 8 Streams**
+```java
+String input = "banana";
+Map<String, Long> counts = Arrays.stream(input.split(""))
+    .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+```
+
+**Approach 2: Iterative**
+```java
+String input = "banana";
+Map<Character, Integer> map = new HashMap<>();
+
+for (char c : input.toCharArray()) {
+    if (map.containsKey(c)) {
+        map.put(c, map.get(c) + 1);
+    } else {
+        map.put(c, 1);
+    }
+}
+System.out.println(map);
+```
+
+---
+
+## 5. Reverse a string/sentence.
+
+**Approach 1: Java 8 Streams (Sentence)**
+```java
+String str = "Hello World";
+String reversed = Arrays.stream(str.split(" "))
+    .reduce((first, second) -> second + " " + first).orElse("");
+```
+
+**Approach 2: Iterative (String)**
+```java
+String str = "Hello";
+String params = "";
+for (int i = str.length() - 1; i >= 0; i--) {
+    params += str.charAt(i); // Not recommended for large strings (Use StringBuilder)
 }
 ```
 
-**Approach 2: Java 8 Stream API**
+---
+
+## 6. Fibonacci Series.
+**Detailed Explanation**: 0, 1, 1, 2, 3, 5...
+
+**Approach 1: Java 8 Streams**
 ```java
-public String longestStringStream(List<String> list) {
-    return list.stream()
-        .max(Comparator.comparingInt(String::length))
-        .orElse("");
+Stream.iterate(new int[]{0, 1}, t -> new int[]{t[1], t[0] + t[1]})
+    .limit(10)
+    .map(t -> t[0])
+    .forEach(System.out::println);
+```
+
+**Approach 2: Iterative**
+```java
+int n = 10, first = 0, second = 1;
+for (int i = 0; i < n; i++) {
+    System.out.print(first + " ");
+    int next = first + second;
+    first = second;
+    second = next;
 }
 ```
 
-## 10. Check if number is Prime
+---
 
-**Approach 1: Traditional (Loop)**
+## 7. Check if a string is a Palindrome.
+
+**Approach 1: Java 8 Streams**
 ```java
-public boolean isPrimeLoop(int n) {
-    if (n <= 1) return false;
+String s = "madam";
+boolean isPal = IntStream.range(0, s.length() / 2)
+    .noneMatch(i -> s.charAt(i) != s.charAt(s.length() - i - 1));
+```
+
+**Approach 2: Iterative (Two Pointers)**
+```java
+String s = "madam";
+boolean isPal = true;
+int i = 0, j = s.length() - 1;
+while (i < j) {
+    if (s.charAt(i) != s.charAt(j)) {
+        isPal = false;
+        break;
+    }
+    i++; j--;
+}
+```
+
+---
+
+## 8. Sort a list of objects based on a field.
+
+**Approach 1: Java 8 Streams**
+```java
+List<Emp> sorted = list.stream()
+    .sorted(Comparator.comparing(Emp::getSalary))
+    .collect(Collectors.toList());
+```
+
+**Approach 2: Collections.sort (Pre-Java 8 style)**
+```java
+Collections.sort(list, new Comparator<Emp>() {
+    @Override
+    public int compare(Emp e1, Emp e2) {
+        return Double.compare(e1.getSalary(), e2.getSalary());
+    }
+});
+```
+
+---
+
+## 9. Merge two lists.
+
+**Approach 1: Java 8 Streams**
+```java
+List<Integer> merged = Stream.concat(l1.stream(), l2.stream())
+    .collect(Collectors.toList());
+```
+
+**Approach 2: Iterative**
+```java
+List<Integer> merged = new ArrayList<>(l1);
+merged.addAll(l2); // Internally iterates
+```
+
+---
+
+## 10. Find common elements between two arrays.
+
+**Approach 1: Java 8 Streams**
+```java
+List<Integer> common = list1.stream()
+    .filter(list2::contains).collect(Collectors.toList());
+```
+
+**Approach 2: Iterative**
+```java
+List<Integer> common = new ArrayList<>();
+for (Integer num : list1) {
+    if (list2.contains(num)) {
+        common.add(num);
+    }
+}
+```
+
+---
+
+## 11. Pattern printing (Star pattern).
+**Detailed Explanation**: Prints a triangle. Best done iteratively.
+
+**Approach 1: Iterative**
+```java
+for(int i=1; i<=5; i++) {
+    for(int j=1; j<=i; j++) {
+        System.out.print("*");
+    }
+    System.out.println();
+}
+```
+*(Stream approach is overly complex for nested loops printing, not recommended).*
+
+---
+
+## 12. Remove duplicates from a list.
+
+**Approach 1: Java 8 Streams**
+```java
+List<Integer> unique = list.stream().distinct().collect(Collectors.toList());
+```
+
+**Approach 2: Iterative (Set)**
+```java
+Set<Integer> set = new HashSet<>();
+List<Integer> unique = new ArrayList<>();
+for (Integer num : list) {
+    if (set.add(num)) {
+        unique.add(num);
+    }
+}
+```
+
+---
+
+## 13. Find the longest string in a list.
+
+**Approach 1: Java 8 Streams**
+```java
+String longest = list.stream()
+    .max(Comparator.comparingInt(String::length)).orElse("");
+```
+
+**Approach 2: Iterative**
+```java
+String longest = "";
+for (String str : list) {
+    if (str.length() > longest.length()) {
+        longest = str;
+    }
+}
+```
+
+---
+
+## 14. Prime numbers between 1 to 100.
+
+**Approach 1: Java 8 Streams**
+```java
+List<Integer> primes = IntStream.rangeClosed(2, 100)
+    .filter(n -> IntStream.range(2, (int)Math.sqrt(n) + 1).noneMatch(i -> n % i == 0))
+    .boxed().collect(Collectors.toList());
+```
+
+**Approach 2: Iterative**
+```java
+for (int n = 2; n <= 100; n++) {
+    boolean isPrime = true;
     for (int i = 2; i <= Math.sqrt(n); i++) {
-        if (n % i == 0) return false;
+        if (n % i == 0) { isPrime = false; break; }
     }
-    return true;
+    if (isPrime) System.out.println(n);
 }
 ```
 
-**Approach 2: Java 8 Stream API**
+---
+
+## 15. Move all zeros to the end of the array.
+
+**Approach 1: Iterative (Best)**
 ```java
-public boolean isPrimeStream(int n) {
-    return n > 1 && IntStream.rangeClosed(2, (int) Math.sqrt(n))
-        .noneMatch(i -> n % i == 0);
+int[] arr = {0, 1, 0, 3, 12};
+int index = 0;
+for (int num : arr) {
+    if (num != 0) arr[index++] = num;
 }
+while (index < arr.length) arr[index++] = 0;
+```
+*(Stream not suitable for in-place array modification).*
+
+---
+
+## 16. Valid Parentheses problem.
+
+**Approach 1: Iterative (Stack)**
+```java
+Stack<Character> stack = new Stack<>();
+for (char c : s.toCharArray()) {
+    if (c == '(') stack.push(')');
+    // ... checks ...
+}
+return stack.isEmpty();
 ```
 
-## 11. Sum of numbers in List
+---
 
-**Approach 1: Traditional**
+## 17. Find missing number in an array.
+
+**Approach 1: Arithmetic (Best)**
 ```java
+int total = n * (n + 1) / 2;
 int sum = 0;
-for(int i : list) sum += i;
+for (int num : arr) sum += num;
+return total - sum;
 ```
 
-**Approach 2: Stream API**
+---
+
+## 18. Singleton Class
+*(Design Pattern - Code provided in Design Patterns file)*.
+
+---
+
+## 19. Find maximum number of occurrences of a substring.
+**Approach 1: String Split**
 ```java
-int sum = list.stream().mapToInt(Integer::intValue).sum();
-// OR
-int sum = list.stream().reduce(0, Integer::sum);
+int count = str.split(sub, -1).length - 1;
+```
+**Approach 2: Iterative**
+```java
+int count = 0, idx = 0;
+while ((idx = str.indexOf(sub, idx)) != -1) {
+    count++;
+    idx += sub.length();
+}
 ```
