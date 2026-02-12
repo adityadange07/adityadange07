@@ -2863,3 +2863,319 @@ GC works based on the **Generational Hypothesis**: "Most objects die young."
 
 ---
 
+## 141. How to analyze heap dump?
+
+**Answer:**
+A **Heap Dump** is a snapshot of the Java memory (Heap) at a specific moment.
+*   **Tools:** Eclipse Memory Analyzer (MAT), VisualVM, jhat.
+*   **Analysis:**
+    1.  **Dominator Tree:** Find largest objects retaining memory.
+    2.  **Histogram:** Count of instances per class (e.g., millions of String objects?).
+    3.  **Leak Suspects Report:** Automated report identifying potential leaks.
+    4.  **Path to GC Roots:** Why is an object being kept alive?
+
+---
+
+## 142. What is memory leak in Java?
+
+**Answer:**
+A **Memory Leak** in Java occurs when objects are **no longer needed** by the application but are **still referenced** (often unintentionally), preventing the Garbage Collector from removing them.
+*   **Unintentional References:** Static collections (HashMap, List), Unclosed Resources (Streams, Connections), Listener/Callback registration without deregistration.
+*   **Result:** `OutOfMemoryError: Java heap space`.
+
+---
+
+## 143. How to detect memory leak?
+
+**Answer:**
+1.  **Monitor Heap Usage:** Check visuals in **JConsole** or **VisualVM**. A healthy app has a "sawtooth" pattern (memory rises, GC drops it). A leak shows memory consistently rising until the crash.
+2.  **Verbose GC:** Enable GC logging (`-Xlog:gc*`) to see if full GCs are failing to reclaim memory.
+3.  **Heap Dump Comparison:** Take two dumps (one at start, one later) and compare instance counts.
+
+---
+
+## 144. What is JVisualVM / JConsole?
+
+**Answer:**
+Both are monitoring tools provided with the JDK (up to JDK 8, VisualVM separate later).
+*   **JConsole:** Uses JMX (Java Management Extensions) to monitor Memory, Threads, Classes, and MBeans. Good for quick, high-level checks.
+*   **VisualVM (jvisualvm):** More powerful "All-in-One". It integrates profiling, thread dumps, heap dumps, and plugins. It provides a better visual interface for CPU and Memory profiling.
+
+---
+
+## 145. What is JProfiler?
+
+**Answer:**
+**JProfiler** is a popular, commercial, third-party Java Profiler (alternatives: YourKit, Java Flight Recorder).
+*   **Features:** Deep analysis of CPU hotspots, Memory allocations, Database connections (JDBC/JPA/Hibernate), Threads, and Deadlocks.
+*   **Advantage:** Much more detailed and user-friendly than free tools. Capable of remote profiling production servers with low overhead.
+
+---
+
+## 146. What is thread dump?
+
+**Answer:**
+A **Thread Dump** is a snapshot of the state of all threads in the JVM at a specific moment.
+*   **Content:** Thread Name, ID, State (RUNNABLE, BLOCKED, WAITING, TIMED_WAITING), Stack Trace (method calls).
+*   **Command:** `jstack <pid>`, `kill -3 <pid>` (Linux), or via VisualVM.
+
+---
+
+## 147. How to analyze thread dump?
+
+**Answer:**
+Analyze top-down looking for:
+1.  **BLOCKED Threads:** Threads waiting to acquire a lock held by another thread.
+2.  **Deadlock:** Two threads cyclically waiting for each other (Dump usually says "Found one Java-level deadlock").
+3.  **High CPU:** Look for RUNNABLE threads executing complex code.
+4.  **Tools:** `fastthread.io`, TDA (Thread Dump Analyzer), Samurai.
+
+---
+
+## 148. What causes high CPU usage in Java app?
+
+**Answer:**
+1.  **Infinite Loops:** `while(true)` without sleep.
+2.  **Complex Algorithms:** O(n^2) or worse on large datasets.
+3.  **GC Thrashing:** Frequent Full GCs because heap is too small (CPU spent on GC, not app logic).
+4.  **Heavy Serialization/Deserialization.**
+5.  **Context Switching:** Too many threads competing for CPU.
+
+---
+
+## 149. What is OutOfMemoryError types?
+
+**Answer:**
+`java.lang.OutOfMemoryError` has several messages:
+1.  **Java heap space:** Heap is full. Solution: Increase `-Xmx` or fix leak.
+2.  **GC Overhead limit exceeded:** GC is spending 98% of time reclaiming < 2% of heap. Solution: Check for leaks/inefficient code.
+3.  **Metaspace:** Metadata area full (too many classes). Solution: Increase `-XX:MaxMetaspaceSize`.
+4.  **Request size bytes for reason. Out of swap space?**: Native memory issue.
+5.  **StackOverflowError:** Deep recursion (technically separate error, but related to memory/stack limit `-Xss`).
+
+---
+
+## 150. How to tune JVM parameters?
+
+**Answer:**
+Key JVM flags for tuning:
+*   **Heap Size:** `-Xms<size>` (Initial), `-Xmx<size>` (Max). Best practice: Set them equal to avoid resizing overhead.
+*   **Stack Size:** `-Xss<size>` (Per-thread stack size).
+*   **Metaspace:** `-XX:MaxMetaspaceSize=<size>`.
+*   **GC Logging:** `-Xlog:gc*` (Java 9+).
+*   **Heap Dump:** `-XX:+HeapDumpOnOutOfMemoryError` (Essential for post-mortem analysis).
+*   **GC Algorithm:** `-XX:+UseG1GC` (Recommended mostly).
+
+---
+
+## 151. What is JIT compiler?
+
+**Answer:**
+The **JIT (Just-In-Time) Compiler** improves performance by compiling bytecode into native machine code at **runtime**.
+*   **Process:**
+    1.  The JVM initially interprets the bytecode.
+    2.  It monitors ("profiles") the code to find "Hot Spots" (frequently executed methods/loops).
+    3.  The JIT compiler compiles these hot spots into optimized native code.
+    4.  Subsequent calls execute the native code directly, bypassing the interpreter.
+
+---
+
+## 152. What is escape analysis?
+
+**Answer:**
+**Escape Analysis** is an optimization technique used by the JIT compiler to determine the scope of a new object.
+*   **Scope:** If an object is created in a method and *never escapes* that method (e.g., not returned, not assigned to a static field), it is considered "local".
+*   **Result (Stack Allocation):** The JIT may allocate this object on the **Stack** instead of the Heap. This reduces GC pressure significantly.
+*   **Result (Scalar Replacement):** It might break the object into its primitive fields and store them in registers.
+
+---
+
+## 153. What is biased locking?
+
+**Answer:**
+**Biased Locking** is an optimization for synchronized blocks that are accessed by only **one thread** most of the time.
+*   **Concept:** The JVM "biases" the lock towards the first thread that acquires it.
+*   **Benefit:** Subsequent lock acquisitions by the *same* thread are extremely cheap (no atomic CAS operations).
+*   **Revocation:** If another thread tries to acquire the lock, the bias is revoked, and it upgrades to a normal lightweight lock.
+*   **Status:** Deprecated in Java 15 due to complexity and cost of revocation.
+
+---
+
+## 154. What is lock elision?
+
+**Answer:**
+**Lock Elision** (or Lock Coarsening) involves removing unnecessary synchronization.
+*   **Elision:** If Escape Analysis proves a lock object is local to a thread and never shared, the JIT removes the `synchronized` block entirely (e.g., using `StringBuffer` inside a method).
+*   **Coarsening:** If the JIT sees repeated lock/unlock on the same object (e.g., inside a loop), it merges them into a single larger lock block.
+
+---
+
+## 155. What is safepoint?
+
+**Answer:**
+A **Safepoint** is a point in execution where the state of the JVM is consistent and known, allowing the JVM to perform maintenance tasks.
+*   **Tasks:** Garbage Collection, JIT Deoptimization, Thread Dump, Revoking Biased Locks.
+*   **Mechanism:** All application threads are paused (suspended) at a safe point before the JVM operation begins.
+*   **Location:** Method exit, Loop back-edge.
+
+---
+
+## 156. What is stop-the-world event?
+
+**Answer:**
+A **Stop-The-World (STW)** event is a pause where all application threads are suspended by the JVM.
+*   **Reason:** Usually triggered by **Garbage Collection** (specifically Major/Full GC) or other Safepoint operations.
+*   **Impact:** The application becomes unresponsive during this time. Minimizing STW pauses is a primary goal of Low-Latency GCs (ZGC, Shenandoah).
+
+---
+
+## 157. What is inline caching?
+
+**Answer:**
+**Inline Caching** is an optimization for **Dynamic Dispatch** (virtual method calls).
+*   **Concept:** The JVM caches the result of a method lookup (target method address) at the call site.
+*   **Morphic:** If the call site always invokes the same implementation (e.g., `list.add` is always `ArrayList.add`), the JIT "inlines" the call, replacing the lookup with a direct call or the method body itself.
+*   **Polymorphic:** If it calls different implementations, it falls back to a slower lookup.
+
+---
+
+## 158. What is AOT compilation?
+
+**Answer:**
+**AOT (Ahead-Of-Time) Compilation** compiles Java classes to native code **before** the application starts (at build time).
+*   **Pros:** faster startup time (no JIT warmup needed), lower memory footprint.
+*   **Cons:** Less peak performance than JIT (JIT can optimize based on runtime data which AOT lacks).
+*   **Tool:** `jaotc` (Experimental in JDK 9, Removed in JDK 17). GraalVM Native Image is the modern successor.
+
+---
+
+## 159. What is GraalVM?
+
+**Answer:**
+**GraalVM** is a high-performance JDK distribution designed to accelerate execution of applications written in Java and other languages.
+*   **Key Feature (Native Image):** Compiles Java apps into standalone native binaries (AOT). Instant startup, low memory. Ideal for Microservices/Serverless.
+*   **Polyglot:** Allows mixing languages (Java, JS, Python, R) in the same runtime.
+*   **Graal Compiler:** A new JIT compiler written in Java (can be used in standard HotSpot via `-XX:+UseJVMCICompiler`).
+
+---
+
+## 160. What is Java Flight Recorder?
+
+**Answer:**
+**JFR (Java Flight Recorder)** is a profiling and event collection framework built into the JVM.
+*   **Low Overhead:** Designed to run continuously in production (< 1% performance impact).
+*   **Data:** Captures GC events, Method execution, I/O latency, Thread stalls, Exceptions, CPU usage.
+*   **Analysis:** Recordings (`.jfr` files) are analyzed using **Java Mission Control (JMC)**.
+
+
+---
+
+## 161. How to improve startup time?
+
+**Answer:**
+1.  **Class Data Sharing (CDS):** Share loaded class metadata between JVM processes to reduce loading time.
+2.  **AOT Compilation:** Use `GraalVM Native Image` for instant startup.
+3.  **Lazy Loading:** Initialize beans/resources only when needed (e.g., Spring `@Lazy`).
+4.  **Reduce Classpath Scanning:** Limit the packages scanned by frameworks like Spring.
+5.  **Minimize Static Initializers:** Avoid heavy logic in `static {}` blocks.
+
+---
+
+## 162. How to reduce GC pause time?
+
+**Answer:**
+1.  **Choice of GC:** Use Low-Latency collectors like **ZGC** or **Shenandoah** (sub-millisecond pauses).
+2.  **Heap Size:** A very large heap might increase pause time in older GCs (G1 handles this better).
+3.  **Reduce Allocation Rate:** Create fewer temporary objects (Reuse buffers, Flyweight pattern). Less garbage = Less frequent GC.
+4.  **Object Pooling:** (Use with caution) Reuse expensive objects (e.g., DB Connections) to avoid churn.
+
+---
+
+## 163. How to optimize large collections?
+
+**Answer:**
+1.  **Sizing:** Always set **initial capacity** to avoid resizing overhead (array copying). `new ArrayList<>(10000)`.
+2.  **Primitive Collections:** Use library like **Eclipse Collections** or **FastUtil** to avoid Auto-boxing overhead (saving generic `Integer` wrappers).
+3.  **Off-Heap:** Store massive data in **DirectByteBuffer** or memory-mapped files to avoid GC overhead entirely.
+
+---
+
+## 164. When to use primitive collections?
+
+**Answer:**
+Use **Primitive Collections** (e.g., `IntList` instead of `List<Integer>`) when dealing with **large datasets** (millions of items).
+*   **Memory:** `int` takes 4 bytes. `Integer` object takes ~24 bytes (Header + int + Ref). A `List<Integer>` has huge overhead.
+*   **Performance:** Avoids CPU cost of **Autoboxing/Unboxing**.
+*   **Libraries:** **Eclipse Collections**, **Trove**, **FastUtil**.
+
+---
+
+## 165. How to design memory-efficient objects?
+
+**Answer:**
+1.  **Object Header:** Remember every object in Java has a header (~12-16 bytes). Small objects have high overhead.
+2.  **Primitives:** Use primitives (`int`, `long`) over wrappers (`Integer`, `Long`).
+3.  **Arrays vs Objects:** Arrays have lower overhead than `ArrayList`.
+4.  **Flyweight Pattern:** Share common instances (like `Boolean.TRUE`, `Integer.valueOf(1)`).
+
+---
+
+## 166. How to reduce object creation?
+
+**Answer:**
+1.  **String Concatenation:** Use `StringBuilder` explicitly in loops, or `String.format` (be careful with regex).
+2.  **Reuse Mutable Objects:** Reuse `StringBuilder`, buffers, or arrays instead of creating new ones.
+3.  **Singleton:** Use singletons for stateless service classes.
+4.  **Canonicalization:** Intern strings/objects if they are duplicates.
+
+---
+
+## 167. How to optimize multi-threaded performance?
+
+**Answer:**
+1.  **Minimize Locking:** Use `java.util.concurrent` (ConcurrentHashMap) instead of `synchronized` collections.
+2.  **Lock Granularity:** Use **Striped Locking** (e.g., LongAdder) to reduce contention.
+3.  **Non-Blocking Algos:** Use **CAS** (Compare-And-Swap) via `AtomicInteger` for counters.
+4.  **False Sharing:** Pad variables (`@Contended`) to prevent cache line ping-pong between threads.
+
+---
+
+## 168. What are common production performance issues?
+
+**Answer:**
+1.  **Slow Database Queries:** Missing indexes, N+1 problem.
+2.  **Memory Leaks:** Unclosed resources, static collections growing indefinitely.
+3.  **Thread Pool Exhaustion:** All threads blocked waiting for external service/DB.
+4.  **CPU Spikes:** Infinite loops, excessive GC, or extensive crypto/regex operations.
+
+---
+
+## 169. What metrics do you monitor in production?
+
+**Answer:**
+Use the **RED** (Rate, Errors, Duration) or **USE** (Utilization, Saturation, Errors) method.
+1.  **Latency:** Response time (Average, p95, p99).
+2.  **Throughput:** Requests per second (RPS).
+3.  **Error Rate:** Percentage of 5xx/4xx errors.
+4.  **Saturation:** CPU Usage, Memory Usage, Disk I/O, Thread Pool active count.
+
+---
+
+## 170. How do you perform load testing?
+
+**Answer:**
+**Load Testing** simulates real-world usage to check system behavior.
+*   **Tools:** **JMeter**, **Gatling**, **Locust**, **K6**.
+*   **Types:**
+    *   **Load Test:** Expected normal load.
+    *   **Stress Test:** Push beyond limits to find breaking point.
+    *   **Soak Test:** Run for long duration (24h+) to find memory leaks.
+    *   **Spike Test:** Sudden burst of traffic.
+
+---
+
+
+
+---
+
+
