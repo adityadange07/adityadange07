@@ -2133,6 +2133,7 @@ System.out.println(t.getState()); // RUNNABLE
 ## 97. Runnable vs Callable.
 
 **Answer:**
+
 | Feature | Runnable | Callable |
 | :--- | :--- | :--- |
 | **Return Type** | `void`. Cannot return a result. | `V`. Returns a result (Generic). |
@@ -2618,6 +2619,7 @@ JVM memory is divided into 5 parts:
 ## 123. What is Heap vs Stack?
 
 **Answer:**
+
 | Feature | Heap (Memory) | Stack (Memory) |
 | :--- | :--- | :--- |
 | **Storage** | Objects and Instance Variables. | Local Variables and Method Calls. |
@@ -3192,6 +3194,7 @@ Use the **RED** (Rate, Errors, Duration) or **USE** (Utilization, Saturation, Er
 ## 173. Constructor vs Setter injection?
 
 **Answer:**
+
 | Feature | Constructor Injection | Setter Injection |
 | :--- | :--- | :--- |
 | **Use Case** | **Mandatory** dependencies. | **Optional** dependencies. |
@@ -3229,6 +3232,7 @@ Field Injection (`@Autowired` directly on field) is generally **discouraged**.
 ## 176. BeanFactory vs ApplicationContext?
 
 **Answer:**
+
 | Feature | BeanFactory | ApplicationContext |
 | :--- | :--- | :--- |
 | **Type** | Basic IoC Container. | Advanced IoC Container (Extends BeanFactory). |
@@ -3466,6 +3470,7 @@ A **Join Point** is a point during the execution of a program, such as the **exe
 ## 198. Proxy-based AOP vs AspectJ?
 
 **Answer:**
+
 | Feature | Spring AOP | AspectJ |
 | :--- | :--- | :--- |
 | **Weaving** | **Runtime** (Proxy). | **Compile-time** / Load-time / Post-compile. |
@@ -4037,6 +4042,7 @@ Spring MVC is request-driven, designed around a central servlet that dispatches 
 ## 247. Filter vs Interceptor difference?
 
 **Answer:**
+
 | Feature | Filter (Servlet) | Interceptor (Spring) |
 | :--- | :--- | :--- |
 | **Level** | **Low-level** (Servlet Container). | **High-level** (Spring Context). |
@@ -4112,6 +4118,7 @@ Use `MultipartFile` to handle uploaded files.
 ## 254. Difference between JPA and Hibernate?
 
 **Answer:**
+
 | Feature | JPA | Hibernate |
 | :--- | :--- | :--- |
 | **Type** | Specification (Interface). | Implementation (Provider). |
@@ -4740,6 +4747,7 @@ The Hibernate **Event System** is a more granular alternative to Interceptors.
 ## 312. Microservices vs monolith?
 
 **Answer:**
+
 | Feature | Monolith | Microservices |
 | :--- | :--- | :--- |
 | **Structure** | Single codebase, single deployment unit (WAR/JAR). | Multiple codebases, multiple deployment units. |
@@ -5166,6 +5174,7 @@ Handling distributed transactions (transactions spanning multiple services/DBs) 
 ## 352. REST vs SOAP?
 
 **Answer:**
+
 | Feature | REST | SOAP |
 | :--- | :--- | :--- |
 | **Protocol** | Architectural Style (uses HTTP). | Protocol. |
@@ -5301,6 +5310,7 @@ Since APIs evolve, versioning is crucial to avoid breaking changes.
 ## 363. REST vs gRPC?
 
 **Answer:**
+
 | Feature | REST | gRPC |
 | :--- | :--- | :--- |
 | **Protocol** | HTTP/1.1 (mostly). | HTTP/2 (Binary). |
@@ -5404,6 +5414,7 @@ A **Messaging System** allows different software systems to communicate and exch
 ## 372. Kafka vs RabbitMQ?
 
 **Answer:**
+
 | Feature | Kafka | RabbitMQ |
 | :--- | :--- | :--- |
 | **Model** | Distributed Streaming Platform (Log-based). | Message Broker (Queue-based). |
@@ -5603,6 +5614,7 @@ Redis persists in-memory data to disk using two methods:
 ## 391. Redis vs Memcached?
 
 **Answer:**
+
 | Feature | Redis | Memcached |
 | :--- | :--- | :--- |
 | **Data Types** | Rich (String, List, Set, Hash, etc.). | Simple Key-Value (String only). |
