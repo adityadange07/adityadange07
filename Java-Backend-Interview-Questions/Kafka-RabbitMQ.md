@@ -94,3 +94,52 @@ A **Consumer Group** is a set of consumers that cooperate to consume data from a
 **Exactly-Once Semantics (EOS)** guarantees that each message is delivered and processed exactly once, even in the event of failures.
 *   **Kafka:** Achieved using **Idempotent Producer** (`enable.idempotence=true`) and **Transactional API** (atomic write across multi-partitions).
 *   **Difficulty:** Standard messaging is usually "At-least-once".
+
+---
+
+## 381. What is message ordering?
+
+**Answer:**
+**Message Ordering** ensures that messages are consumed in the exact order they were produced.
+*   **Kafka:** Order is guaranteed **only within a Partition**, not across the entire topic. To guarantee total order, use a single partition (sacrifices scalability).
+*   **RabbitMQ:** Order is guaranteed for a single queue consumer.
+
+---
+
+## 382. What is Kafka retention policy?
+
+**Answer:**
+**Retention Policy** determines how long Kafka keeps messages before deleting them.
+*   **Time-based:** `log.retention.hours` (e.g., 168 hours = 7 days).
+*   **Size-based:** `log.retention.bytes` (e.g., 1GB).
+*   **Compaction:** Instead of deleting, keep only the **latest value** for each key (useful for restoring state).
+
+---
+
+## 383. What is dead letter queue?
+
+**Answer:**
+A **Dead Letter Queue (DLQ)** is a service-level queue where messages are sent if they cannot be processed successfully after a maximum number of retries.
+*   **Purpose:** Allows developers to investigate "poison pill" messages (malformed data) without blocking the main processing queue.
+*   **Process:** Alerts are usually set up on the DLQ to notify the team.
+
+---
+
+## 384. What is RabbitMQ exchange types?
+
+**Answer:**
+**Exchanges** route messages to queues based on rules.
+1.  **Direct:** Routes to queues with an exact matching **binding key**.
+2.  **Fanout:** Broadcasts to **all** bound queues (ignores keys).
+3.  **Topic:** Routes based on pattern matching (wildcards `*` like `logs.*.error`).
+4.  **Headers:** Routes based on message headers instead of routing keys.
+
+---
+
+## 385. What is at-least-once vs at-most-once delivery?
+
+**Answer:**
+*   **At-most-once:** Fire and forget. Message might be lost, but never duplicated. (Fastest).
+*   **At-least-once:** Message is guaranteed to be delivered, but might be duplicated.
+    *   *Requirement:* Consumer must be **Idempotent** (handling duplicates safely).
+*   **Exactly-once:** Guarantees no loss and no duplicates. Hardest to achieve (requires transactional support like Kafka Streams).

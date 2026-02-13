@@ -2133,7 +2133,6 @@ System.out.println(t.getState()); // RUNNABLE
 ## 97. Runnable vs Callable.
 
 **Answer:**
-
 | Feature | Runnable | Callable |
 | :--- | :--- | :--- |
 | **Return Type** | `void`. Cannot return a result. | `V`. Returns a result (Generic). |
@@ -2619,7 +2618,6 @@ JVM memory is divided into 5 parts:
 ## 123. What is Heap vs Stack?
 
 **Answer:**
-
 | Feature | Heap (Memory) | Stack (Memory) |
 | :--- | :--- | :--- |
 | **Storage** | Objects and Instance Variables. | Local Variables and Method Calls. |
@@ -3194,7 +3192,6 @@ Use the **RED** (Rate, Errors, Duration) or **USE** (Utilization, Saturation, Er
 ## 173. Constructor vs Setter injection?
 
 **Answer:**
-
 | Feature | Constructor Injection | Setter Injection |
 | :--- | :--- | :--- |
 | **Use Case** | **Mandatory** dependencies. | **Optional** dependencies. |
@@ -3232,7 +3229,6 @@ Field Injection (`@Autowired` directly on field) is generally **discouraged**.
 ## 176. BeanFactory vs ApplicationContext?
 
 **Answer:**
-
 | Feature | BeanFactory | ApplicationContext |
 | :--- | :--- | :--- |
 | **Type** | Basic IoC Container. | Advanced IoC Container (Extends BeanFactory). |
@@ -3470,7 +3466,6 @@ A **Join Point** is a point during the execution of a program, such as the **exe
 ## 198. Proxy-based AOP vs AspectJ?
 
 **Answer:**
-
 | Feature | Spring AOP | AspectJ |
 | :--- | :--- | :--- |
 | **Weaving** | **Runtime** (Proxy). | **Compile-time** / Load-time / Post-compile. |
@@ -4042,7 +4037,6 @@ Spring MVC is request-driven, designed around a central servlet that dispatches 
 ## 247. Filter vs Interceptor difference?
 
 **Answer:**
-
 | Feature | Filter (Servlet) | Interceptor (Spring) |
 | :--- | :--- | :--- |
 | **Level** | **Low-level** (Servlet Container). | **High-level** (Spring Context). |
@@ -4118,7 +4112,6 @@ Use `MultipartFile` to handle uploaded files.
 ## 254. Difference between JPA and Hibernate?
 
 **Answer:**
-
 | Feature | JPA | Hibernate |
 | :--- | :--- | :--- |
 | **Type** | Specification (Interface). | Implementation (Provider). |
@@ -4747,7 +4740,6 @@ The Hibernate **Event System** is a more granular alternative to Interceptors.
 ## 312. Microservices vs monolith?
 
 **Answer:**
-
 | Feature | Monolith | Microservices |
 | :--- | :--- | :--- |
 | **Structure** | Single codebase, single deployment unit (WAR/JAR). | Multiple codebases, multiple deployment units. |
@@ -5174,7 +5166,6 @@ Handling distributed transactions (transactions spanning multiple services/DBs) 
 ## 352. REST vs SOAP?
 
 **Answer:**
-
 | Feature | REST | SOAP |
 | :--- | :--- | :--- |
 | **Protocol** | Architectural Style (uses HTTP). | Protocol. |
@@ -5310,7 +5301,6 @@ Since APIs evolve, versioning is crucial to avoid breaking changes.
 ## 363. REST vs gRPC?
 
 **Answer:**
-
 | Feature | REST | gRPC |
 | :--- | :--- | :--- |
 | **Protocol** | HTTP/1.1 (mostly). | HTTP/2 (Binary). |
@@ -5414,7 +5404,6 @@ A **Messaging System** allows different software systems to communicate and exch
 ## 372. Kafka vs RabbitMQ?
 
 **Answer:**
-
 | Feature | Kafka | RabbitMQ |
 | :--- | :--- | :--- |
 | **Model** | Distributed Streaming Platform (Log-based). | Message Broker (Queue-based). |
@@ -5499,7 +5488,56 @@ A **Consumer Group** is a set of consumers that cooperate to consume data from a
 
 ---
 
-## 381. What is Redis?
+## 381. What is message ordering?
+
+**Answer:**
+**Message Ordering** ensures that messages are consumed in the exact order they were produced.
+*   **Kafka:** Order is guaranteed **only within a Partition**, not across the entire topic. To guarantee total order, use a single partition (sacrifices scalability).
+*   **RabbitMQ:** Order is guaranteed for a single queue consumer.
+
+---
+
+## 382. What is Kafka retention policy?
+
+**Answer:**
+**Retention Policy** determines how long Kafka keeps messages before deleting them.
+*   **Time-based:** `log.retention.hours` (e.g., 168 hours = 7 days).
+*   **Size-based:** `log.retention.bytes` (e.g., 1GB).
+*   **Compaction:** Instead of deleting, keep only the **latest value** for each key (useful for restoring state).
+
+---
+
+## 383. What is dead letter queue?
+
+**Answer:**
+A **Dead Letter Queue (DLQ)** is a service-level queue where messages are sent if they cannot be processed successfully after a maximum number of retries.
+*   **Purpose:** Allows developers to investigate "poison pill" messages (malformed data) without blocking the main processing queue.
+*   **Process:** Alerts are usually set up on the DLQ to notify the team.
+
+---
+
+## 384. What is RabbitMQ exchange types?
+
+**Answer:**
+**Exchanges** route messages to queues based on rules.
+1.  **Direct:** Routes to queues with an exact matching **binding key**.
+2.  **Fanout:** Broadcasts to **all** bound queues (ignores keys).
+3.  **Topic:** Routes based on pattern matching (wildcards `*` like `logs.*.error`).
+4.  **Headers:** Routes based on message headers instead of routing keys.
+
+---
+
+## 385. What is at-least-once vs at-most-once delivery?
+
+**Answer:**
+*   **At-most-once:** Fire and forget. Message might be lost, but never duplicated. (Fastest).
+*   **At-least-once:** Message is guaranteed to be delivered, but might be duplicated.
+    *   *Requirement:* Consumer must be **Idempotent** (handling duplicates safely).
+*   **Exactly-once:** Guarantees no loss and no duplicates. Hardest to achieve (requires transactional support like Kafka Streams).
+
+---
+
+## 386. What is Redis?
 
 **Answer:**
 **Redis (Remote Dictionary Server)** is an open-source, in-memory data structure store.
@@ -5511,7 +5549,7 @@ A **Consumer Group** is a set of consumers that cooperate to consume data from a
 
 ---
 
-## 382. What data structures Redis supports?
+## 387. What data structures Redis supports?
 
 **Answer:**
 Redis is not just a Key-Value store; it supports complex data structures:
@@ -5524,7 +5562,7 @@ Redis is not just a Key-Value store; it supports complex data structures:
 
 ---
 
-## 383. What is TTL?
+## 388. What is TTL?
 
 **Answer:**
 **TTL (Time To Live)** is a setting that defines how long a key should exist in the cache before it is automatically deleted (expired).
@@ -5533,7 +5571,7 @@ Redis is not just a Key-Value store; it supports complex data structures:
 
 ---
 
-## 384. What is cache eviction policy?
+## 389. What is cache eviction policy?
 
 **Answer:**
 When Redis memory is full, the **Eviction Policy** determines which keys to remove to make space for new data.
@@ -5546,7 +5584,7 @@ When Redis memory is full, the **Eviction Policy** determines which keys to remo
 
 ---
 
-## 385. What is cache aside pattern?
+## 390. What is cache aside pattern?
 
 **Answer:**
 **Cache Aside (Lazy Loading)** is the most common caching strategy.
@@ -5557,161 +5595,102 @@ When Redis memory is full, the **Eviction Policy** determines which keys to remo
 
 ---
 
-## 386. What is Write-Through vs Write-Back?
+
+## 391. What is write-through caching?
 
 **Answer:**
-*   **Write-Through:** Application writes to the Cache and the DB *simultaneously*.
-    *   *Pro:* Consistency. *Con:* Slower write latency.
-*   **Write-Back (Write-Behind):** Application writes *only* to Cache. The Cache writes to DB asynchronously later.
-    *   *Pro:* Fast writes. *Con:* Data loss risk if cache crashes before syncing.
+**Write-Through** ensures data consistency by writing data to the cache and the database **simultaneously**.
+*   **Pro:** Data in cache is always up-to-date (Strong Consistency).
+*   **Con:** Higher write latency (2 writes). Good for read-heavy systems.
 
 ---
 
-## 387. What is Cache Penetration?
+## 392. What is write-behind caching?
 
 **Answer:**
-**Cache Penetration** occurs when a client repeatedly requests data that **does not exist** in either the Cache or the DB.
-*   **Problem:** Every request hits the DB (bypassing cache), potentially Crashing it.
+**Write-Behind (Write-Back)** writes data *only* to the cache initially. The cache asynchronously syncs data to the DB later.
+*   **Pro:** extremely fast writes.
+*   **Con:** Risk of data loss if cache crashes before syncing. Eventual Consistency.
+
+---
+
+## 393. What is cache penetration?
+
+**Answer:**
+**Cache Penetration** occurs when a client requests data that **does not exist** in Cache OR Database.
+*   **Impact:** Requests bypass cache and hit DB, potentially crashing it.
 *   **Solution:**
-    *   Cache `null` values (with short TTL).
-    *   Use **Bloom Filters** to check if data *might* exist before ensuring DB call.
+    1.  Cache empty results (`null`) with short TTL.
+    2.  Use **Bloom Filters**.
 
 ---
 
-## 388. What is Cache Breakdown?
+## 394. What is cache breakdown?
 
 **Answer:**
-**Cache Breakdown (Hot Key Expiration)** happens when a **single hot key** (accessed frequently) expires.
-*   **Problem:** Suddenly, thousands of concurrent requests hit the DB simultaneously to reload that one key.
+**Cache Breakdown** (Hotspot Invalid) happens when a **hot key** expires, and massive concurrent requests hit the DB simultaneously.
 *   **Solution:**
-    *   Use Mutex Locks (only 1 thread loads data).
-    *   "Logical Expiration": Store expiry time in value, and reload asynchronously before it physically expires.
+    1.  Mutex Locks (Only 1 thread queries DB).
+    2.  Logical Expiry (Soft TTL).
 
 ---
 
-## 389. What is Cache Avalanche?
+## 395. What is cache avalanche?
 
 **Answer:**
-**Cache Avalanche** occurs when **many keys expire at the same time** (or Redis crashes).
-*   **Problem:** Massive spike in DB load as all keys need reloading.
+**Cache Avalanche** occurs when **many keys expire at the same time**.
+*   **Impact:** DB spike/outage.
 *   **Solution:**
-    *   Add random jitter to TTLs (so they don't all expire at once).
-    *   Use Redis Cluster (High Availability).
+    1.  Add random jitter to TTL.
+    2.  Redis Cluster (High Availability).
 
 ---
 
-## 390. RDB vs AOF (Redis Persistence)?
+## 396. How to handle distributed cache?
 
 **Answer:**
-Redis persists in-memory data to disk using two methods:
-1.  **RDB (Redis Database):** Periodic "snapshots" of the dataset at intervals (e.g., every 5 mins).
-    *   *Pro:* Faster startup, compact. *Con:* Potential data loss of last 5 mins.
-2.  **AOF (Append Only File):** Logs every write operation received.
-    *   *Pro:* Durable (1s data loss max). *Con:* Larger file size, slower restart.
+**Distributed Cache** spreads data across multiple nodes (Sharding).
+*   **Challenge:** How to know which node holds key "user:123"?
+*   **Solution:** Consistent Hashing (partitions keys to nodes with minimal movement when nodes add/remove).
 
 ---
 
-## 391. Redis vs Memcached?
+## 397. What is Redis clustering?
 
 **Answer:**
-
-| Feature | Redis | Memcached |
-| :--- | :--- | :--- |
-| **Data Types** | Rich (String, List, Set, Hash, etc.). | Simple Key-Value (String only). |
-| **Persistence** | Yes (RDB, AOF). | No (In-memory only). |
-| **Replication** | Master-Slave replication. | No native replication. |
-| **Threads** | Single-threaded. | Multi-threaded. |
-| **Use Case** | Complex caching, Message Broker, DB. | Simple, high-throughput string caching. |
+**Redis Cluster** is a distributed implementation of Redis.
+*   **Sharding:** Data partitioned into 16,384 hash slots.
+*   **Nodes:** Automatic failover (Master-Slave).
+*   **Client:** Connects to any node; redirected to correct node.
 
 ---
 
-## 392. What is Redis Sentinel?
+## 398. What is pub/sub in Redis?
 
 **Answer:**
-**Redis Sentinel** provides high availability for Redis.
-*   **Role:** Monitoring. It checks if Master and Slave instances are working.
-*   **Failover:** If the Master goes down, Sentinel automatically promotes a Slave to be the new Master.
-*   **Notification:** Alerts system administrators or other applications about the failure.
+**Pub/Sub** allows messages to be broadcast to multiple consumers.
+*   **Channels:** Publisher sends to `channel_name`. Subscribers listen to `channel_name`.
+*   **Decoupled:** Publisher doesn't know subscribers.
+*   **Fire-and-Forget:** No persistence (unlike Kafka).
 
 ---
 
-## 393. What is Redis Clustering?
+## 399. How to implement distributed locking in Redis?
 
 **Answer:**
-**Redis Cluster** provides a way to run a Redis installation where data is automatically sharded across multiple Redis nodes.
-*   **Sharding:** Data is split into 16,384 "hash slots". Each node holds a subset of these slots.
-*   **Scalability:** Allows horizontal scaling (adding more nodes) to handle more data and traffic.
-*   **No Central Proxy:** Clients connect directly to any node, which redirects them to the correct node if needed.
+To ensure mutual exclusion across distributed services:
+*   **Simple:** `SET lock_key unique_id NX PX 10000` (Set if Not Exists, Expiry 10s).
+*   **Redlock:** Algorithm for running dist-lock on Redis Cluster (more robust).
 
 ---
 
-## 394. What is Pub/Sub in Redis?
+## 400. When not to use cache?
 
 **Answer:**
-**Publish/Subscribe** is a messaging pattern in Redis.
-*   **Mechanism:** Senders (Publishers) send messages to channels, without knowing who will receive them. Receivers (Subscribers) listen to channels.
-*   **Ephemeral:** Messages are **fire-and-forget**. If a subscriber is offline, it misses the message (unlike Kafka).
-*   **Use Case:** Real-time chat, notifications.
-
----
-
-## 395. How to implement distributed locking in Redis?
-
-**Answer:**
-To ensure only one service instance performs a critical task (e.g., generating a report):
-*   **Simple:** `SET lock:report 1 NX EX 10` (Set if Not Exists, Expire in 10s).
-*   **Redlock Algorithm:** For distributed Redis (safer).
-    1.  Acquire lock in N/2 + 1 nodes.
-    2.  Check time elapsed (must be < TTL).
-
----
-
-## 396. When NOT to use cache?
-
-**Answer:**
-1.  **Data changes frequently:** Cache invalidation overhead outweighs read benefits.
-2.  **Consistency is critical:** Stale data is unacceptable (e.g., Bank balance).
-3.  **Data is rarely read:** No point caching data that is read once a week.
-4.  **Complex Queries:** Redis is not a search engine (unless using RediSearch module).
-
----
-
-## 397. What is Redis Pipelining?
-
-**Answer:**
-**Pipelining** allows a client to send multiple commands to the server without waiting for the replies individually.
-*   **Benefit:** Reduces RTT (Round Trip Time). Instead of 10 network calls for 10 commands, you do 1 network call.
-*   **Throughput:** Massive performance improvement for batch operations.
-
----
-
-## 398. What is Redis Single-threaded model?
-
-**Answer:**
-Redis uses a **single-threaded** event loop (Reactor pattern) to handle file events (requests).
-*   **Why fast?** It runs in-memory (no disk I/O blocking) and uses non-blocking I/O multiplexing.
-*   **Implication:** Avoid O(N) commands (like `KEYS *`) on large datasets, as they block the entire server for everyone.
-
----
-
-## 399. What is Geo-spatial data in Redis?
-
-**Answer:**
-Redis supports **Geo-spatial** data types (`GEOADD`, `GEORADIUS`).
-*   **Function:** Store longitude/latitude pairs.
-*   **Query:** "Find all users within 5km of this point" or "Calculate distance between two cities".
-*   **Implementation:** Internally uses Sorted Sets (ZSet) with Geohash.
-
----
-
-## 400. What is a Bloom Filter?
-
-**Answer:**
-A **Bloom Filter** is a probabilistic data structure used to test whether an element is a member of a set.
-*   **Properties:**
-    1.  **False Positive:** Might say "Yes" when element is not there.
-    2.  **False Negative:** Never says "No" if element is there (100% accurate on "No").
-*   **Use Case:** Rapidly check if a username is taken, or preventing **Cache Penetration** (check bloom filter before DB).
+1.  **Strong Consistency Required:** e.g., Bank balance during transfer.
+2.  **Rapidly Changing Data:** If data changes faster than it is read.
+3.  **One-off Reads:** Data read only once.
+4.  **Complex Queries:** Redis isn't a SQL engine.
 
 ---
 
@@ -9248,3 +9227,2920 @@ Testing **SAGA** or widespread transactions is complex.
 *   **Focus:** Consistency and Compensation.
 *   **Scenario:** Order Service -> Payment Service -> Inventory Service.
 *   **Failure Test:** Simulate Payment failure and assert that Inventory is restored (Compensation triggered).
+
+---
+
+## 761. What is blue-green testing?
+
+**Answer:**
+**Blue-Green Deployment** is a technique that reduces downtime and risk by running two identical production environments called Blue and Green.
+*   **Blue:** Current live environment.
+*   **Green:** New version of the application.
+*   **Testing:** Run tests on Green. Once satisfied, switch the router/load balancer to point to Green.
+*   **Rollback:** Switch back to Blue instantly if issues arise.
+
+---
+
+## 762. What is API mocking?
+
+**Answer:**
+**API Mocking** creates a simulated version of an API that mimics the behavior of the real API.
+*   **Use Case:**
+    *   Testing when the real API is unavailable or under development.
+    *   Simulating edge cases (timeouts, errors) that are hard to trigger in real systems.
+    *   Reducing costs/latency of third-party API calls.
+*   **Tools:** WireMock, Postman Mock Servers, Mockoon.
+
+---
+
+## 763. What is security testing?
+
+**Answer:**
+**Security Testing** uncovers vulnerabilities, threats, and risks in the software.
+*   **Goal:** Prevent malicious attacks and ensure data integrity/confidentiality.
+*   **Types:**
+    *   **Vulnerability Scanning:** Automated checks for known issues.
+    *   **Security Scanning:** Network and system weakness checks.
+    *   **Risk Assessment:** Analyzing security risks.
+
+---
+
+## 764. What is penetration testing?
+
+**Answer:**
+**Penetration Testing (Pen Test)** is a simulated cyberattack against your system to check for exploitable vulnerabilities.
+*   **Manual vs Automated:** often a mix of both.
+*   **Phases:** Reconnaissance, Scanning, Exploitation, Maintaining Access, Analysis.
+*   **Outcome:** A report detailing security gaps to be fixed.
+
+---
+
+## 765. What is static code analysis?
+
+**Answer:**
+**Static Code Analysis** (SAST - Static Application Security Testing) analyzes source code **without executing it**.
+*   **Purpose:** Find bugs, security vulnerabilities, code smells, and non-compliance with coding standards early.
+*   **Tools:** SonarQube, Checkstyle, SpotBugs, PMD.
+*   **Timing:** Usually runs in the CI/CD pipeline.
+
+---
+
+## 766. What is dynamic testing?
+
+**Answer:**
+**Dynamic Testing** (DAST - Dynamic Application Security Testing) analyzes the application **while it is running**.
+*   **Purpose:** Find runtime issues like memory leaks, performance bottlenecks, and security vulnerabilities that only appear during execution.
+*   **Includes:** Unit tests, integration tests, system tests, and acceptance tests.
+
+---
+
+## 767. What is acceptance testing?
+
+**Answer:**
+**Acceptance Testing (UAT - User Acceptance Testing)** determines if the system meets the business requirements and is ready for delivery.
+*   **Audience:** Performed by the client or end-users.
+*   **Focus:** Functionality and usability from a user's perspective, not technical implementation.
+*   **Types:** Alpha Testing (internal), Beta Testing (external users).
+
+---
+
+## 768. What is user story testing?
+
+**Answer:**
+**User Story Testing** verifies that a specific feature (User Story) meets its **Acceptance Criteria**.
+*   **Process:**
+    1.  Developer writes code for the story.
+    2.  QA/Dev writes tests based on the "Given-When-Then" criteria.
+    3.  Story is "Done" only when all acceptance tests pass.
+
+---
+
+## 769. What is performance bottleneck detection?
+
+**Answer:**
+A **Bottleneck** is a point in the system that limits overall performance (e.g., slow DB query, high CPU usage).
+*   **Detection Steps:**
+    1.  **Load Test:** Apply stress to the system.
+    2.  **Monitor:** Watch metrics (CPU, Memory, Disk I/O, Network, Latency).
+    3.  **Analyze:** Identify the component with the highest latency or resource consumption.
+    4.  **Profile:** Use profiling tools to find the exact code/query causing the issue.
+
+---
+
+## 770. What is profiling in testing?
+
+**Answer:**
+**Profiling** is a form of dynamic analysis that measures the complexity of the code in terms of:
+*   **Memory Usage:** (e.g., Memory Leaks, high object creation).
+*   **CPU Usage:** (e.g., inefficient algorithms, loops).
+*   **Thread Execution:** (e.g., deadlocks, contention).
+*   **Tools:** JProfiler, VisualVM, YourKit.
+
+---
+
+## 771. How to test multi-threaded code?
+
+**Answer:**
+Testing **Multi-threaded code** is difficult due to non-determinism (race conditions).
+*   **Approaches:**
+    *   **Stress Testing:** Run the test thousands of times to catch rare race conditions ().
+    *   **CountDownLatch:** Use latches to force threads to wait for each other and run simultaneously.
+    *   **Tools:**  or  (Java Concurrency Stress tests).
+    *   **Avoid:**  in tests (flaky).
+
+---
+
+## 772. What is stress testing?
+
+**Answer:**
+**Stress Testing** evaluates system stability under **extreme** conditions (beyond normal operational limits).
+*   **Goal:** Determine the "Breaking Point" of the system.
+*   **Example:** Sending 10x the expected traffic until the server crashes or becomes unresponsive to see how it recovers.
+
+---
+
+## 773. What is soak testing?
+
+**Answer:**
+**Soak Testing (Endurance Testing)** involves running a system at a significant load for an **extended period** (e.g., 24-48 hours).
+*   **Goal:** Detect issues that only appear over time, such as:
+    *   Memory Leaks.
+    *   Database connection pool exhaustion.
+    *   Log file accumulation filling up disk space.
+
+---
+
+## 774. What is test strategy document?
+
+**Answer:**
+A **Test Strategy Document** is a high-level plan defining the testing approach for the software development cycle.
+*   **Components:**
+    *   **Scope:** What will be tested (and what won't).
+    *   **Types:** Unit, Integration, E2E, Performance, Security.
+    *   **Tools:** JUnit, Selenium, JMeter.
+    *   **Environment:** Dev, QA, Staging, Prod.
+    *   **Risks:** Potential blockers.
+
+---
+
+## 775. What is quality gate?
+
+**Answer:**
+A **Quality Gate** is a set of criteria that must be met before software can move from one stage of the pipeline to another.
+*   **Example (SonarQube Quality Gate):**
+    *   Code Coverage > 80%.
+    *   No Critical Bugs.
+    *   No Security Vulnerabilities.
+    *   Technical Debt Ratio < 5%.
+*   **Result:** If the gate fails, the build fails.
+
+---
+
+## 776. What is test automation framework?
+
+**Answer:**
+A **Test Automation Framework** is a set of guidelines, coding standards, and tools used to create and run automated tests.
+*   **Types:**
+    *   **Linear:** Record and Playback.
+    *   **Modular:** Scripts broken into small, independent modules.
+    *   **Data-Driven:** Test logic is separated from test data (reads from CSV/Excel).
+    *   **Keyword-Driven:** Uses keywords (Action words) to define tests.
+    *   **Hybrid:** Combination of the above.
+
+---
+
+## 777. What is cross-browser testing?
+
+**Answer:**
+**Cross-Browser Testing** ensures that a web application works correctly across different web browsers (Chrome, Firefox, Safari, Edge) and OS combinations.
+*   **Goal:** Consistent behavior and UI rendering.
+*   **Tools:** Selenium Grid, BrowserStack, Sauce Labs.
+
+---
+
+## 778. What is mobile API testing?
+
+**Answer:**
+**Mobile API Testing** focuses on the backend APIs that power mobile applications.
+*   **Specific Challenges:**
+    *   **Network:** Testing on slow/unstable networks (latency, packet loss).
+    *   **Battery:** Efficient API calls to save battery.
+    *   **Versioning:** Supporting older versions of the app on older APIs.
+    *   **Device Fragmentation:** Different screen sizes/OS affecting data payload requirements.
+
+---
+
+## 779. What is contract-first development?
+
+**Answer:**
+**Contract-First Development** involves defining the API contract (e.g., OpenAPI/Swagger YAML) **before** writing any code.
+*   **Process:**
+    1.  Define API spec (endpoints, request/response models).
+    2.  Review and agree with frontend/mobile teams.
+    3.  Generate code (interfaces/DTOs) from the spec.
+    4.  Implement the logic.
+*   **Benefit:** Parallel development (Frontend can mock based on contract while Backend builds it).
+
+---
+
+## 780. What is shift-left testing?
+
+**Answer:**
+**Shift-Left Testing** is the practice of moving testing **earlier** in the software development lifecycle (SDLC).
+*   **Traditional:** Requirements -> Design -> Code -> **Test**.
+*   **Shift-Left:** Requirements -> **Test Design** -> Code + **Unit Test**.
+*   **Goal:** Find and fix defects early when they are cheaper to fix.
+
+---
+
+## 781. What is Spring Security?
+
+**Answer:**
+**Spring Security** is a powerful and highly customizable authentication and access-control framework for Java applications.
+*   **Key Features:**
+    *   **Authentication:** Verifying identity (Login).
+    *   **Authorization:** Verifying permissions (Roles/Authority).
+    *   **Protection:** Against common attacks (CSRF, Session Fixation).
+*   **Core:** Based on Servlet Filters (FilterChain).
+
+---
+
+## 782. What is authentication vs authorization?
+
+**Answer:**
+*   **Authentication (AuthN):** "Who are you?"
+    *   Verifying the identity of a user (e.g., Login with Username/Password, OTP, Bio-metrics).
+    *   *Examples:* 401 Unauthorized.
+*   **Authorization (AuthZ):** "What are you allowed to do?"
+    *   Verifying if the authenticated user has permission to access a resource.
+    *   *Examples:* 403 Forbidden (Admin vs User roles).
+
+---
+
+## 783. What is JWT?
+
+**Answer:**
+**JWT (JSON Web Token)** is a compact URL-safe means of representing claims to be transferred between two parties.
+*   **Structure:**
+    *   **Header:** Algo type (HS256).
+    *   **Payload:** Data (User ID, Role, Expiry).
+    *   **Signature:** Hash of Header + Payload + Secret Key.
+*   **Stateless:** Server doesn't store session; validates token signature.
+
+---
+
+## 784. What is OAuth2?
+
+**Answer:**
+**OAuth 2.0** is an industry-standard protocol for **Authorization**.
+*   **Goal:** Allow a third-party application to access user data on another service (e.g., Google, Facebook) **without sharing the password**.
+*   **Roles:**
+    1.  **Resource Owner:** User.
+    2.  **Client:** The App trying to access data.
+    3.  **Authorization Server:** Google/FB (issues tokens).
+    4.  **Resource Server:** API hosting the data.
+
+---
+
+## 785. What is OpenID Connect?
+
+**Answer:**
+**OpenID Connect (OIDC)** is an identity layer built **on top of OAuth 2.0**.
+*   **Goal:** **Authentication**. (OAuth is for Authorization, OIDC adds Authentication).
+*   **Mechanism:** It returns an  (JWT) along with the OAuth .
+*   **Use Case:** "Sign in with Google".
+
+---
+
+## 786. What is CSRF?
+
+**Answer:**
+**CSRF (Cross-Site Request Forgery)** is an attack that forces an authenticated user to execute unwanted actions on a web application they are currently logged into.
+*   **Scenario:** User logs into Bank A. User visits Malicious Site B. Site B sends a hidden form POST request to Bank A to transfer money. Bank A accepts it because User's session cookie is sent automatically.
+*   **Prevention:** Synchronizer Token Pattern (CSRF Token) - a random token required for state-changing requests (POST/PUT/DELETE).
+
+---
+
+## 787. What is CORS?
+
+**Answer:**
+**CORS (Cross-Origin Resource Sharing)** is a browser security mechanism that restricts web pages from making requests to a different domain than the one that served the web page.
+*   **Default:** Browsers block cross-origin AJAX requests (Same-Origin Policy).
+*   **Server Config:** The server must explicitly allow the origin via headers:
+    *
+    *
+
+---
+
+## 788. What is XSS?
+
+**Answer:**
+**XSS (Cross-Site Scripting)** allows attackers to inject malicious scripts into web pages viewed by other users.
+*   **Types:**
+    *   **Stored XSS:** Script saved in DB (e.g., comment section) and shown to everyone.
+    *   **Reflected XSS:** Script in URL query param, executed immediately.
+*   **Impact:** Stealing session cookies (), redirecting users.
+*   **Prevention:** Escaping/Sanitizing user input (e.g., converting  to ).
+
+---
+
+## 789. What is SQL Injection?
+
+**Answer:**
+**SQL Injection (SQLi)** occurs when an attacker interferes with the queries an application makes to its database.
+*   **Mechanism:** Injecting malicious SQL code via input fields.
+*   **Example:** Inputting  in a login field might bypass authentication:
+    (Always True).
+
+---
+
+## 790. How to prevent SQL injection?
+
+**Answer:**
+1.  **Prepared Statements (Parameterized Queries):** The DB treats input as data, not executable code. (Best Defense).
+    *   *Java:*  or JPA/Hibernate (uses parameters by default).
+2.  **Input Validation:** Whitelist allowed characters.
+3.  **Least Privilege:** DB user should have limited permissions.
+4.  **ORM:** Use Hibernate/JPA which handles escaping automatically.
+
+---
+
+## 791. What is password hashing?
+
+**Answer:**
+**Password Hashing** is the process of converting a plain-text password into a fixed-length string of characters (hash) using a mathematical algorithm.
+*   **One-way:** You cannot convert the hash back to the password.
+*   **Purpose:** Protect user passwords if the database is compromised.
+*   **Salting:** Adding random data to the password before hashing to prevent **Rainbow Table** attacks.
+
+---
+
+## 792. What is bcrypt?
+
+**Answer:**
+**BCrypt** is a popular password hashing function designed to be **slow**.
+*   **Adaptive:** You can configure the "work factor" (cost) to make it slower as computers get faster.
+*   **Why Slow?** To make Brute-Force and Dictionary attacks computationally expensive.
+*   **Format:** Integrating the salt and hash in the output string .
+
+---
+
+## 793. What is role-based access control?
+
+**Answer:**
+**RBAC (Role-Based Access Control)** restricts network access based on the roles of individual users within an enterprise.
+*   **Concept:**
+    *   **User:** Assigned one or more Roles (e.g., , ).
+    *   **Permission:** Assigned to Roles (e.g., , ).
+    *   **Access:** Granted if the User has the required Role.
+
+---
+
+## 794. What is method-level security?
+
+**Answer:**
+**Method-Level Security** protects individual service layer methods (Java functions) rather than just HTTP endpoints.
+*   **Spring Security:** Enabled via .
+*   **Annotations:**
+    *   : Check before method execution.
+    *   : Check after method execution (can access return value).
+    *   : Legacy annotation for simple role checks.
+
+---
+
+## 795. What is @PreAuthorize?
+
+**Answer:**
+is a Spring Security annotation that uses **SpEL (Spring Expression Language)** to enforce access control before a method is entered.
+*   **Example:**
+
+*   **Power:** Allows complex logic (e.g., checking if the user owns the data).
+
+---
+
+## 796. What is security filter chain?
+
+**Answer:**
+The **Security Filter Chain** is the heart of Spring Security's web infrastructure.
+*   **Mechanism:** When a request comes in, it passes through a chain of Servlet Filters.
+*   **Filters:**
+    1.  : Loads user details.
+    2.  : Handles form login.
+    3.  : Handles Basic Auth.
+    4.  : Final check for authorization.
+
+---
+
+## 797. What is stateless authentication?
+
+**Answer:**
+**Stateless Authentication** means the server does **not** keep a record of logged-in users (no Session ID in memory).
+*   **Mechanism:** Every request must contain all necessary info to identify the user (usually a **Token** like JWT).
+*   **Scalability:** High, as any server in a cluster can handle the request without needing shared session storage.
+
+---
+
+## 798. What is session fixation?
+
+**Answer:**
+**Session Fixation** is an attack where the attacker tricks a user into authenticating with a Session ID known to the attacker.
+*   **Attack:** Attacker sends a link with . User logs in. Attacker uses  to hijack the session.
+*   **Prevention:** **Migrate Session** on login (Spring Security does this by default: creates a new Session ID upon successful authentication).
+
+---
+
+## 799. What is brute-force protection?
+
+**Answer:**
+**Brute-Force Protection** prevents attackers from guessing passwords by trying millions of combinations.
+*   **Mechanisms:**
+    1.  **Account Lockout:** Lock account after 5 failed attempts.
+    2.  **Delay (Throttling):** Introduce a delay after each failed attempt.
+    3.  **CAPTCHA:** Verify the user is human.
+    4.  **2FA:** Require a second factor.
+
+---
+
+## 800. What is rate limiting?
+
+**Answer:**
+**Rate Limiting** controls the number of requests a user/client can make to an API within a given time frame.
+*   **Purpose:** Prevent DoS (Denial of Service) attacks and ensure fair usage.
+*   **Algorithms:** Token Bucket, Leaky Bucket, Fixed Window.
+*   **Tools:** Bucket4j, Redis, API Gateways (Kong, AWS API Gateway).
+*   **Response:** .
+
+---
+
+## 801. What is encryption vs hashing?
+
+**Answer:**
+*   **Encryption:** Two-way function. Converts data into ciphertext using a key. Can be decrypted back to original text with the correct key.
+    *   *Goal:* Confidentiality (e.g., encrypting credit card numbers).
+*   **Hashing:** One-way function. Converts data into a fixed-size string (digest). Cannot be reversed.
+    *   *Goal:* Integrity/Verification (e.g., password storage).
+
+---
+
+## 802. What is symmetric vs asymmetric encryption?
+
+**Answer:**
+*   **Symmetric:** Uses the **SAME key** for both encryption and decryption.
+    *   *Pros:* Fast.
+    *   *Cons:* Key distribution is risky (how to share the key securely?).
+    *   *Algo:* AES, DES.
+*   **Asymmetric:** Uses a **Key Pair** (Public Key and Private Key).
+    *   *Mechanism:* Encrypt with Public Key -> Decrypt with Private Key.
+    *   *Pros:* Secure key exchange.
+    *   *Cons:* Slow.
+    *   *Algo:* RSA, ECC.
+
+---
+
+## 803. What is TLS?
+
+**Answer:**
+**TLS (Transport Layer Security)** is a cryptographic protocol designed to provide secure communication over a network (replacement for SSL).
+*   **Features:**
+    1.  **Encryption:** Hides data from eavesdroppers.
+    2.  **Authentication:** Ensures you are talking to the right server.
+    3.  **Integrity:** Ensures data hasn't been tampered with.
+
+---
+
+## 804. What is HTTPS handshake?
+
+**Answer:**
+The **HTTPS Handshake** establishes a secure connection between Client and Server.
+1.  **Client Hello:** Sends supported crypto algorithms and TLS version.
+2.  **Server Hello:** Selects algorithm and sends its **Certificate** (Public Key).
+3.  **Verification:** Client validates the Certificate with a CA (Certificate Authority).
+4.  **Key Exchange:** Client generates a session key, encrypts it with Server's Public Key, and sends it.
+5.  **Finished:** Both parties switch to encrypted communication using the session key (Symmetric).
+
+---
+
+## 805. What is certificate?
+
+**Answer:**
+A **Digital Certificate** is an electronic credential that binds a Public Key to an identity (domain name, organization).
+*   **Issued By:** A trusted Certificate Authority (CA) like DigiCert, Let's Encrypt.
+*   **Contains:** Domain Name, Expiration Date, Public Key, CA Signature.
+
+---
+
+## 806. What is key rotation?
+
+**Answer:**
+**Key Rotation** is the practice of replacing cryptographic keys (API keys, DB credentials, Encryption keys) on a regular schedule.
+*   **Purpose:**
+    1.  Limits the amount of data encrypted with a single key (crypto-period).
+    2.  Reduces the impact if a key is compromised (attacker only gets access to a slice of data/time).
+
+---
+
+## 807. What is secret management?
+
+**Answer:**
+**Secret Management** involves storing sensitive data (passwords, API keys, certificates) securely, away from source code / config files.
+*   **Bad Practice:** Hardcoding secrets in git.
+*   **Best Practice:** Use tools like **HashiCorp Vault**, **AWS Secrets Manager**, or K8s Secrets.
+    *   Encrypts secrets at rest.
+    *   Controls access via policies.
+    *   Audits who accessed what.
+
+---
+
+## 808. What is zero trust?
+
+**Answer:**
+**Zero Trust** is a security model that assumes **no trust**, even for users/devices inside the network perimeter.
+*   **Motto:** "Never trust, always verify."
+*   **Principles:**
+    1.  Verify explicitly (AuthN/AuthZ for every request).
+    2.  Least Privilege Access.
+    3.  Assume Breach (Segment networks).
+
+---
+
+## 809. What is SSO?
+
+**Answer:**
+**SSO (Single Sign-On)** allows a user to log in once and gain access to multiple independent applications without re-entering credentials.
+*   **Protocol:** Often uses **SAML** (XML-based) or **OIDC** (JSON-based).
+*   **Flow:** User visits App A -> Redirected to Identity Provider (IdP) -> Logs in -> IdP sends token back to App A -> User visits App B -> App B trusts IdP token -> Logs in automatically.
+
+---
+
+## 810. What is multi-factor authentication?
+
+**Answer:**
+**MFA (Multi-Factor Authentication)** requires two or more pieces of evidence to verify identity.
+*   **Factors:**
+    1.  **Something you know:** Password, PIN.
+    2.  **Something you have:** Phone (SMS/OTP Code), Hardware Key (YubiKey).
+    3.  **Something you are:** Fingerprint, FaceID.
+*   **Security:** Significantly reduces the risk of account takeover even if the password is stolen.
+
+---
+
+## 811. What is OAuth2 flow types?
+
+**Answer:**
+**Grant Types** determine how the client gets the Access Token.
+1.  **Authorization Code Flow:** (Best for Web Apps) Redirects user to IdP login page. Returns code -> exchange for token.
+2.  **Client Credentials Flow:** (Server-to-Server) No user involved. App uses ID/Secret to get token.
+3.  **Implicit Flow:** (Deprecated) Returns token directly in URL. Unsecure.
+4.  **Password Grant:** (Deprecated) App sends username/password directly.
+
+---
+
+## 812. What is refresh token?
+
+**Answer:**
+A **Refresh Token** is a special token used to obtain a new Access Token without requiring the user to log in again.
+*   **Life Cycle:**
+    1.  Access Token expires (short-lived, e.g., 15 mins).
+    2.  Client sends Refresh Token (long-lived, e.g., 7 days) to Auth Server.
+    3.  Auth Server validates and issues new Access Token + new Refresh Token (Refresh Token Rotation).
+
+---
+
+## 813. What is access token expiry strategy?
+
+**Answer:**
+**Short-lived Access Tokens** reduce the window of attack if stolen.
+*   **Strategy:**
+    *   **Access Token:** 5-15 minutes.
+    *   **Refresh Token:** Days or Weeks.
+    *   **Hard Expiry:** Force re-login after X days regardless of activity.
+    *   **Idle Expiry:** Force re-login if inactive for X minutes.
+
+---
+
+## 814. What is API key security?
+
+**Answer:**
+**API Keys** are long-lived credentials used to identify a client application.
+*   **Risks:** Often checked into code (leakage).
+*   **Best Practices:**
+    1.  **Rotation:** Rotate keys periodically.
+    2.  **Scope:** Restrict what endpoints the key can access (Least Privilege).
+    3.  **Usage Limits:** Rate limit per key to prevent abuse.
+    4.  **Storage:** Store in Env Variables or Vault, never in code.
+
+---
+
+## 815. What is token revocation?
+
+**Answer:**
+**Token Revocation** is the process of invalidating a token before its expiry.
+*   **Challenge:** JWTs are stateless; server doesn't know they exist.
+*   **Solutions:**
+    1.  **Blacklist:** Store revoked JWT IDs (jti) in Redis with TTL = JWT expiry.
+    2.  **Short TTL:** Just wait for it to expire (5 mins).
+    3.  **Reference Tokens:** Use opaque tokens instead of JWT (requires DB lookup on every request, allowing instant revocation).
+
+---
+
+## 816. What is HMAC?
+
+**Answer:**
+**HMAC (Hash-Based Message Authentication Code)** ensures both **Integrity** and **Authenticity**.
+*   **Mechanism:** Hash(Message + Secret Key).
+*   **Usage:**
+    *   Verifying JWT signatures (HS256).
+    *   Verifying Webhook payloads (Provider signs payload with shared secret; receiver verifies).
+
+---
+
+## 817. What is digital signature?
+
+**Answer:**
+A **Digital Signature** guarantees the authenticity of a document/message using **Asymmetric Encryption**.
+*   **Process:**
+    1.  Sender hashes the message.
+    2.  Sender encrypts the hash with their **Private Key** (Signature).
+    3.  Receiver decrypts the signature with Sender's **Public Key**.
+    4.  Receiver compares the decrypted hash with their own hash of the message.
+*   **Verification:** If they match, the message came from the Sender and wasn't changed.
+
+---
+
+## 818. What is OWASP Top 10?
+
+**Answer:**
+The **OWASP Top 10** is a standard awareness document for developers and web application security. It lists the most critical security risks.
+*   **Examples:**
+    1.  Broken Access Control.
+    2.  Cryptographic Failures.
+    3.  Injection (SQLi, etc.).
+    4.  Insecure Design.
+    5.  Security Misconfiguration.
+
+---
+
+## 819. What is dependency vulnerability scanning?
+
+**Answer:**
+Checks third-party libraries (Maven/Gradle dependencies) for known security vulnerabilities (CVEs).
+*   **Tool:** **OWASP Dependency Check**, **Snyk**, **GitHub Dependabot**.
+*   **Action:** If `log4j` version 2.14 is found (vulnerable), the build fails and suggests upgrading to 2.17.
+
+---
+
+## 820. What is secure coding practices?
+
+**Answer:**
+Guidelines to prevent security flaws during development.
+1.  **Input Validation:** Never trust user input. Verify length, type, format.
+2.  **Output Encoding:** Prevent XSS.
+3.  **Error Handling:** Don't expose stack traces to users.
+4.  **Logging:** Don't log PII (Personally Identifiable Information) or passwords.
+5.  **Principle of Least Privilege:** Run apps with minimum required permissions.
+
+---
+
+## 821. What is CSP?
+
+**Answer:**
+**CSP (Content Security Policy)** is an HTTP response header that allows site administrators to declare approved sources of content that browsers are allowed to load.
+*   **Goal:** Mitigate XSS and Data Injection attacks.
+*   **Example:**  (Only allow scripts from own domain and trusted-scripts.com).
+
+---
+
+## 822. What is clickjacking?
+
+**Answer:**
+**Clickjacking** (UI Redressing) is a malicious technique where an attacker tricks a user into clicking on something different from what the user perceives.
+*   **Mechanism:** Embedding the target service inside an invisible  overlaid on a decoy website.
+*   **Prevention:**  or  header (prevents the site from being rendered in a frame).
+
+---
+
+## 823. What is SSRF?
+
+**Answer:**
+**SSRF (Server-Side Request Forgery)** occurs when an attacker can induce the server to make requests to an unintended location.
+*   **Scenario:** Attacker sends a URL to the server (e.g., ). If the server fetches it blindly, the attacker can access internal services behind the firewall.
+*   **Prevention:** Whitelist allowed domains/IPs; disable fetching from internal IPs (127.0.0.1, 10.x.x.x).
+
+---
+
+## 824. What is IDOR?
+
+**Answer:**
+**IDOR (Insecure Direct Object References)** occurs when an application exposes a reference to an internal implementation object (like a database ID) to users without access control checks.
+*   **Example:** . Attacker changes  to  and views another user's data.
+*   **Prevention:** Implement proper Access Control checks () verifying if the logged-in user owns the requested resource ID.
+
+---
+
+## 825. What is data masking?
+
+**Answer:**
+**Data Masking** (Obfuscation) creates a structurally similar but fake version of data to protect sensitive information during non-production use (e.g., Testing, Training).
+*   **Dynamic Masking:** Hiding data on-the-fly (e.g., showing  for credit cards).
+*   **Static Masking:** Permanently replacing data in a database copy.
+
+---
+
+## 826. What is audit logging?
+
+**Answer:**
+**Audit Logging** involves recording a chronological trail of system activities to enable the reconstruction and examination of the sequence of environments and activities.
+*   **What to Log:** WHO (User), DID WHAT (Action), WHEN (Timestamp), WHERE (IP/Resource), RESULT (Success/Failure).
+*   **Purpose:** Forensics, Compliance, Troubleshooting.
+
+---
+
+## 827. What is intrusion detection?
+
+**Answer:**
+**IDS (Intrusion Detection System)** monitors network traffic for suspicious activity and issues alerts.
+**IPS (Intrusion Prevention System)** also monitors but *takes action* to block the activity.
+*   **Types:**
+    *   **NIDS:** Network-based (analyzes packets).
+    *   **HIDS:** Host-based (analyzes system calls/logs on a specific server).
+
+---
+
+## 828. What is WAF?
+
+**Answer:**
+**WAF (Web Application Firewall)** protects web applications by filtering and monitoring HTTP traffic between a web application and the Internet.
+*   **Layer 7:** Operates at the Application Layer.
+*   **Protects Against:** SQL Injection, XSS, DDoS, Cookie Poisoning.
+*   **Example:** AWS WAF, Cloudflare.
+
+---
+
+## 829. What is cloud security best practice?
+
+**Answer:**
+1.  **Shared Responsibility Model:** Understand what you are responsible for (Data, App) vs Cloud Provider (Hardware, Network).
+2.  **IAM:** Use Least Privilege. Rotate keys. Use MFA.
+3.  **Encryption:** Encrypt data at Rest (S3/EBS encryption) and in Transit (TLS).
+4.  **Logging:** Enable CloudTrail/VPC Flow Logs.
+5.  **Network:** Use Private Subnets for backend; limit Security Group rules.
+
+---
+
+## 830. What is compliance (GDPR, PCI)?
+
+**Answer:**
+*   **GDPR (General Data Protection Regulation):** EU law on data privacy.
+    *   *Rights:* Right to be ignored (Deletion), Right to Access.
+    *   *Requirement:* Consent for cookies/tracking.
+*   **PCI-DSS (Payment Card Industry Data Security Standard):** For handling credit cards.
+    *   *Requirement:* Encrypt transmission, never store CVV, restrict physical access.
+
+---
+
+## 831. How to secure microservices?
+
+**Answer:**
+**Microservices Security** requires a Defense-in-Depth approach (layers).
+1.  **Gateway:** SSL/TLS termination, Rate Limiting, WAF (Edge Security).
+2.  **AuthN/AuthZ:** Centralized Identity Provider (OAuth2/OIDC) passing JWTs to services.
+3.  **Service-to-Service:** Mutual TLS (mTLS) for encrypted and authenticated internal communication (e.g., using Istio/Linkerd).
+4.  **Network:** Private Subnets, Security Groups (Firewalls) restricting traffic.
+5.  **Secrets:** Use Vault/Secrets Manager, don't hardcode.
+
+---
+
+## 832. How to secure REST APIs?
+
+**Answer:**
+1.  **HTTPS Everywhere:** Encrypt data in transit.
+2.  **Authentication:** Use Standard Auth (Bearer Token/API Key).
+3.  **Input Validation:** Sanitize all inputs to prevent Injection attacks.
+4.  **Output Encoding:** Prevent XSS.
+5.  **Rate Limiting:** Prevent Abuse/DoS.
+6.  **CORS:** Restrict cross-origin access.
+7.  **Error Handling:** Generic error messages (don't leak stack traces).
+
+---
+
+## 833. How to protect against DDoS?
+
+**Answer:**
+**DDoS (Distributed Denial of Service)** aims to overwhelm the system.
+*   **Protection:**
+    1.  **Edge Network:** Use a CDN (Cloudflare, AWS CloudFront) to absorb traffic.
+    2.  **WAF:** Block malicious IPs and bot signatures.
+    3.  **Auto-Scaling:** Scale out servers to handle the load spike.
+    4.  **Rate Limiting:** Throttle requests per IP.
+    5.  **Traffic Analysis:** Monitor for abnormal patterns (e.g., slowloris).
+
+---
+
+## 834. What is IAM policy design?
+
+**Answer:**
+**IAM (Identity and Access Management)** policies define permissions.
+*   **Best Practices:**
+    1.  **Least Privilege:** Grant *only* what is needed (e.g., allow  on , not ).
+    2.  **Role-Based:** Assign permissions to Roles, not Users.
+    3.  **Conditions:** Add conditions (e.g., allow access only from specific IP or time).
+    4.  **Separation of Duties:** Devs shouldn't have delete permissions in Prod.
+
+---
+
+## 835. What is least privilege principle?
+
+**Answer:**
+The **Principle of Least Privilege (PoLP)** states that a subject (user/process) should be given only those privileges needed for it to complete its task.
+*   **Example:** A  needs read access to the DB, but shouldn't have write/delete access.
+*   **Benefit:** Minimizes the blast radius if the entity is compromised.
+
+---
+
+## 836. What is security testing lifecycle?
+
+**Answer:**
+Integrating security into every phase of SDLC (DevSecOps):
+1.  **Design:** Threat Modeling.
+2.  **Code:** Static Analysis (SAST), Pre-commit hooks (Secret scanning).
+3.  **Build:** Dependency Scanning (SCA), Container Scanning.
+4.  **Test:** Dynamic Analysis (DAST).
+5.  **Deploy:** Infrastructure as Code (IaC) scanning.
+6.  **Monitor:** Runtime Application Self-Protection (RASP), IDS.
+
+---
+
+## 837. What is vulnerability management?
+
+**Answer:**
+**Vulnerability Management** is the cyclical practice of identifying, classifying, remediating, and mitigating vulnerabilities.
+*   **Cycle:** Scan -> prioritize (Critical/High) -> Patch/Update -> Rescan.
+*   **SLA:** e.g., "Critical vulnerabilities must be patched within 24 hours".
+
+---
+
+## 838. What is threat modeling?
+
+**Answer:**
+**Threat Modeling** is a structured approach to identifying potential security threats and vulnerabilities **during the design phase**.
+*   **Steps:**
+    1.  Decompose the application (Data Flow Diagrams).
+    2.  Identify threats (STRIDE model: Spoofing, Tampering, Repudiation, Information Disclosure, DoS, Elevation of Privilege).
+    3.  Determine mitigations.
+
+---
+
+## 839. What is risk assessment?
+
+**Answer:**
+**Risk Assessment** evaluates the potential impact of a threat vs the likelihood of it occurring.
+*   **Formula:**
+*   **Outcome:** Prioritized list of risks to address (e.g., High Risk: SQL Injection in Login; Low Risk: Info disclosure in debug logs).
+
+---
+
+## 840. Real production security incident handled?
+
+**Answer:**
+*(Behavioral Question - Example Format)*
+"In a previous project, we detected a **Credential Stuffing** attack on our login API.
+1.  **Detection:** Monitoring showed a 500% spike in failed login attempts from varied IPs.
+2.  **Containment:** We immediately enabled **IP Throttling** on the WAF and temporarily blocked the aggressive subnets.
+3.  **Mitigation:** We forced a password reset for affected users and implemented **reCAPTCHA** on the login page.
+4.  **Post-Mortem:** We updated our alerting thresholds and expedited the MFA rollout."
+
+---
+
+## 841. What is DevOps?
+
+**Answer:**
+**DevOps** is a set of practices, tools, and cultural philosophies that automate and integrate the processes between software development (**Dev**) and IT teams (**Ops**).
+*   **Goal:** Shorten the systems development life cycle and provide continuous delivery with high software quality.
+*   **Key Pillars:** CAMS (Culture, Automation, Measurement, Sharing).
+
+---
+
+## 842. DevOps vs Agile?
+
+**Answer:**
+*   **Agile:** Focuses on **Software Development** processes.
+    *   *Goal:* Faster delivery of features, adapting to change, customer collaboration.
+    *   *Artifacts:* Sprints, User Stories, Scrum.
+*   **DevOps:** Focuses on **End-to-End Delivery** (Dev + Ops).
+    *   *Goal:* Automation of build, test, and deployment.
+    *   *Artifacts:* CI/CD Pipelines, IaC, Monitoring.
+*   *Relation:* DevOps often enables Agile by providing the speed associated with Agile development.
+
+---
+
+## 843. What is CI/CD pipeline?
+
+**Answer:**
+**CI/CD** allows frequent and reliable code delivery.
+*   **CI (Continuous Integration):** Developers merge changes to the main branch often. Automated builds and tests run to validate changes.
+*   **CD (Continuous Delivery):** Automatically preparing the code for release to production (requires manual approval to deploy).
+*   **CD (Continuous Deployment):** Automatically deploying every change that passes tests to production (no manual approval).
+
+---
+
+## 844. What is infrastructure as code?
+
+**Answer:**
+**IaC (Infrastructure as Code)** is the managing and provisioning of infrastructure through code instead of manual processes.
+*   **Tools:** Terraform, CloudFormation, Ansible.
+*   **Benefits:**
+    *   **Consistency:** Prevents configuration drift.
+    *   **Version Control:** Infrastructure changes are tracked in Git.
+    *   **Speed:** Rapid setup/teardown of environments.
+
+---
+
+## 845. What is configuration management?
+
+**Answer:**
+**Configuration Management** maintains the consistency of a product's performance and functional/physical attributes throughout its life.
+*   **In DevOps:** Tools that manage software installation, patching, and configuration on servers.
+*   **Tools:** Ansible (Agentless, Push), Chef (Agent-based, Pull), Puppet.
+
+---
+
+## 846. What is monitoring in DevOps?
+
+**Answer:**
+**Monitoring** involves collecting data about the system's performance and health.
+*   **Levels:**
+    1.  **Infrastructure:** CPU, RAM, Disk (e.g., Nagios, Zabbix).
+    2.  **Application:** JVM Heap, Response Time (e.g., Prometheus, New Relic).
+    3.  **Network:** Latency, Packet Loss.
+
+---
+
+## 847. What is observability?
+
+**Answer:**
+**Observability** is the measure of how well you can understand the internal state of a system from its external outputs. It answers "Why is this happening?"
+*   **Three Pillars:**
+    1.  **Logs:** (Events) "Something happened at X time."
+    2.  **Metrics:** (Numbers) "CPU is at 90%."
+    3.  **Traces:** (Flow) "Request took 500ms in Service A and 200ms in Service B."
+
+---
+
+## 848. What is logging strategy?
+
+**Answer:**
+A **Logging Strategy** defines what, how, and where to log.
+*   **Best Practices:**
+    1.  **Structured Logging:** JSON format (easier to parse).
+    2.  **Correlation ID:** Unique ID per request passed across microservices.
+    3.  **Levels:** Use correct levels (ERROR, WARN, INFO, DEBUG).
+    4.  **Centralization:** Ship logs to ELK Stack (Elasticsearch, Logstash, Kibana) or Splunk.
+    5.  **Retention:** Archive old logs to S3 (cheaper) and delete after X days.
+
+---
+
+## 849. What is blue-green deployment?
+
+**Answer:**
+**Blue-Green Deployment** is a release management strategy that reduces downtime.
+*   **Setup:** Two identical environments (Blue = Live, Green = Idle/New Version).
+*   **Process:**
+    1.  Deploy new version to **Green**.
+    2.  Run tests on Green.
+    3.  Switch Router/Load Balancer to point to **Green** (Instant cutover).
+    4.  Blue becomes idle (can be used for rollback).
+
+---
+
+## 850. What is canary release?
+
+**Answer:**
+**Canary Release** involves rolling out the new version to a **small subset of users** first before a full rollout.
+*   **Goal:** Reduce risk. If the new version is buggy, only 5% of users are affected.
+*   **Process:**
+    1.  Route 5% traffic to V2, 95% to V1.
+    2.  Monitor errors/metrics.
+    3.  Gradually increase traffic (10%, 50%, 100%).
+
+---
+
+## 851. What is rolling update?
+
+**Answer:**
+**Rolling Update** replaces instances of the old version with the new version **incrementally** (one by one or in batches).
+*   **Process:**
+    1.  Deploy V2 to Instance 1. Wait for health check.
+    2.  Deploy V2 to Instance 2. Wait...
+    3.  Repeat until all instances are V2.
+*   **Pros:** Zero downtime.
+*   **Cons:** Slow rollouts; temporary version mismatch (some users see V1, some V2).
+
+---
+
+## 852. What is rollback plan?
+
+**Answer:**
+A **Rollback Plan** is a pre-defined strategy to revert the system to a previous stable state if a deployment fails.
+*   **Strategies:**
+    *   **Blue-Green:** Switch traffic back to Blue environment.
+    *   **Rolling:** Re-deploy the previous Docker image/tag.
+    *   **Database:** Restore from backup or run "down" migration scripts (hard if data was mutated).
+
+---
+
+## 853. What is artifact versioning?
+
+**Answer:**
+**Artifact Versioning** assigns unique identifiers to build artifacts (JARs, Docker Images).
+*   **Scheme:** Semantic Versioning (SemVer)  (e.g., ).
+*   **Antipattern:** Overwriting  tag without unique versioning (makes rollback impossible).
+*   **Best Practice:** Use Git Commit SHA or Build Number as part of the version (e.g., ).
+
+---
+
+## 854. What is release management?
+
+**Answer:**
+**Release Management** represents the planning, scheduling, and controlling of the build, test, and deployment of releases.
+*   **Goal:** Ensure we deliver new features while protecting the integrity of the existing production environment.
+*   **Key:** Communication between Dev, QA, and Ops.
+
+---
+
+## 855. What is environment strategy?
+
+**Answer:**
+Defining separate environments to ensure quality progression.
+1.  **Dev/Local:** For coding (mocked external dependencies).
+2.  **QA/Test:** Functional testing (stable environment).
+3.  **Staging/Pre-Prod:** Mirror of Production (same data size, configs). Performance testing happens here.
+4.  **Production:** Real user traffic.
+
+---
+
+## 856. What is GitOps?
+
+**Answer:**
+**GitOps** is a way of implementing Continuous Deployment for cloud native applications.
+*   **Core Idea:** Git is the **Single Source of Truth** for infrastructure and application configuration.
+*   **Mechanism:** An operator (like ArgoCD or Flux) inside the cluster detects drift between Git repo (desired state) and the Cluster (actual state) and syncs them automatically.
+
+---
+
+## 857. What is SRE?
+
+**Answer:**
+**SRE (Site Reliability Engineering)** is a discipline that incorporates aspects of software engineering and applies them to infrastructure and operations problems.
+*   **Origin:** Google.
+*   **Goal:** Create scalable and highly reliable software systems.
+*   **Key Concept:** "Hope is not a strategy." Automate everything. Treat Ops problems as software problems.
+
+---
+
+## 858. What is incident management?
+
+**Answer:**
+**Incident Management** is the process of handling unplanned interruptions (outages/degradation) to restore service as quickly as possible.
+*   **Process:**
+    1.  **Detect:** Monitoring alerts.
+    2.  **Respond:** On-call engineer acknowledges.
+    3.  **Recover:** Apply fix/workaround.
+    4.  **Communicate:** Update status page for users.
+
+---
+
+## 859. What is postmortem?
+
+**Answer:**
+A **Postmortem (RCA - Root Cause Analysis)** is a document written after an incident is resolved.
+*   **Goal:** Learn from failure, not to blame. (Blameless Culture).
+*   **Contents:**
+    *   Timeline of events.
+    *   Root cause (5 Whys).
+    *   Impact.
+    *   Action items to prevent recurrence.
+
+---
+
+## 860. What is SLA vs SLO vs SLI?
+
+**Answer:**
+*   **SLI (Service Level Indicator):** The **metric** (Number).
+    *   *e.g.,* "Request Latency".
+*   **SLO (Service Level Objective):** The **goal** (Threshold).
+    *   *e.g.,* "99% of requests < 200ms".
+*   **SLA (Service Level Agreement):** The **contract** (Consequence).
+    *   *e.g.,* "If we miss the SLO, we give customers 10% credit back."
+
+---
+
+## 861. What is container security?
+
+**Answer:**
+**Container Security** involves protecting the container pipeline, deployment, and runtime.
+*   **Best Practices:**
+    1.  **Image Scanning:** Scan for CVEs (Trivy, Clair).
+    2.  **Base Image:** Use minimal images (Distroless, Alpine) to reduce attack surface.
+    3.  **Non-Root:** Do NOT run containers as  user.
+    4.  **Runtime:** Use tools like **Falco** to detect abnormal behavior (e.g., shell spawned in a pod).
+
+---
+
+## 862. What is secrets management best practice?
+
+**Answer:**
+Managing sensitive config (Passwords, Keys) in a dynamic environment.
+*   **Do Not:** Hardcode in Dockerfile or commit to Git.
+*   **Do:**
+    1.  **Externalize:** Use Vault, AWS Secrets Manager, or Azure Key Vault.
+    2.  **inject:** Mount as a volume or environment variable at runtime only.
+    3.  **Rotate:** Automate rotation of database credentials.
+
+---
+
+## 863. What is pipeline failure handling?
+
+**Answer:**
+How to manage broken CI/CD pipelines.
+*   **Strategy:**
+    1.  **Stop the Line:** Prevent merging further code until fixed.
+    2.  **Notification:** Alert the team immediately (Slack/Teams).
+    3.  **Fast Fail:** Fail the build as early as possible (e.g., Linting first, then Unit Tests).
+    4.  **Auto-Rollback:** If CD fails, revert to the last stable artifact.
+
+---
+
+## 864. What is capacity planning?
+
+**Answer:**
+**Capacity Planning** is the process of determining the production capacity needed to meet changing demands for the application.
+*   **Inputs:** Current usage metrics, Growth projections, Load Test results.
+*   **Output:** Hardware requirements (Number of Nodes, CPU/RAM sizing, Storage IOPS).
+
+---
+
+## 865. What is cost optimization?
+
+**Answer:**
+**FinOps** practices to reduce Cloud spend without sacrificing performance.
+*   **Techniques:**
+    1.  **Right-Sizing:** Matching instance types to actual load.
+    2.  **Spot Instances:** Using spare capacity (cheaper) for stateless workloads.
+    3.  **Auto-Scaling:** Scaling down during off-peak hours.
+    4.  **Storage:** Moving infrequently accessed data to Cold Storage (S3 Glacier).
+
+---
+
+## 866. What is autoscaling?
+
+**Answer:**
+**Autoscaling** automatically adjusts the number of compute resources based on load.
+*   **Types:**
+    1.  **Horizontal (Scale Out):** Adding more instances/pods (e.g., K8s HPA).
+    2.  **Vertical (Scale Up):** Increasing CPU/RAM of an existing instance (e.g., K8s VPA).
+    3.  **Cluster Autoscaler:** Adding nodes to the cluster when pods are pending.
+
+---
+
+## 867. What is chaos engineering?
+
+**Answer:**
+**Chaos Engineering** is the discipline of experimenting on a system to build confidence in its capability to withstand turbulent conditions.
+*   **Tool:** **Chaos Monkey** (Netflix).
+*   **Action:** Intentionally kill services/pods, add latency, or sever network links in production (controlled) to ensure the system recovers gracefully.
+
+---
+
+## 868. What is fault tolerance?
+
+**Answer:**
+**Fault Tolerance** is the property that enables a system to continue operating properly in the event of the failure of some of its components.
+*   **Mechanisms:**
+    *   **Redundancy:** Multiple replicas of a service.
+    *   **Failover:** Switching to a backup database.
+    *   **Isolating:** Bulkheads (one failure doesn't crash the whole system).
+
+---
+
+## 869. What is backup strategy?
+
+**Answer:**
+A plan to copy data to protect against loss.
+*   **3-2-1 Rule:**
+    *   **3** copies of data.
+    *   **2** different media types (Disk, Tape/Cloud).
+    *   **1** copy offsite (Different Region).
+*   **RPO (Recovery Point Objective):** Max data loss allowed (e.g., 5 mins).
+*   **RTO (Recovery Time Objective):** Max downtime allowed (e.g., 1 hour).
+
+---
+
+## 870. What is disaster recovery?
+
+**Answer:**
+**Disaster Recovery (DR)** is the process of regaining access to infrastructure and data after a catastrophe (natural disaster, cyber attack).
+*   **Strategies:**
+    1.  **Backup & Restore:** Cheapest, Slowest.
+    2.  **Pilot Light:** Minimal version running in DR region (db sync active, app servers off).
+    3.  **Warm Standby:** Scaled-down version running always.
+    4.  **Multi-Site (Hot-Hot):** Active-Active traffic in multiple regions (Zero downtime).
+
+---
+
+## 871. What is immutable infrastructure?
+
+**Answer:**
+**Immutable Infrastructure** is a paradigm where servers are **never modified** after deployment.
+*   **Process:** If you need to update software, you replace the entire server/container with a new one built from a fresh image.
+*   **Benefit:** Eliminates configuration drift (Snowflake servers).
+*   **Tool:** Docker, VM Images (AMI).
+
+---
+
+## 872. What is ephemeral environment?
+
+**Answer:**
+An **Ephemeral Environment** (Preview Environment) is a temporary, on-demand environment created for a specific branch or Pull Request.
+*   **Usage:** Created automatically when a PR is opened. Used for testing/QA. Destroyed when the PR is merged.
+*   **Benefit:** Allows parallel testing without blocking Staging/Dev environments.
+
+---
+
+## 873. What is build optimization?
+
+**Answer:**
+Techniques to speed up CI build times.
+1.  **Caching:** Cache dependencies (Maven/Gradle) and Docker layers.
+2.  **Parallelization:** Run independent tests in parallel.
+3.  **Incremental Builds:** Only build what changed (Gradle does this well).
+4.  **Multi-Stage Builds:** Use smaller runtime images (Docker) to speed up pushing/pulling.
+
+---
+
+## 874. What is deployment automation?
+
+**Answer:**
+**Deployment Automation** allows deploying software to environments (Test/Prod) with a single click or commit, without manual intervention.
+*   **Benefits:**
+    *   **Repeatability:** Eliminates human error.
+    *   **Speed:** Deploys take minutes, not hours.
+    *   **Auditability:** Who deployed what and when is logged.
+
+---
+
+## 875. What is observability stack?
+
+**Answer:**
+The set of tools used to collect and analyze telemetry data.
+*   **Common Stack (LGTM):**
+    *   **L**ogs: Loki / Elasticsearch.
+    *   **G**rafana: Visualization.
+    *   **T**racing: Tempo / Jaeger.
+    *   **M**etrics: Prometheus / Mimir.
+
+---
+
+## 876. What is log retention policy?
+
+**Answer:**
+Defines how long logs are kept and where.
+*   **Hot Storage (7-30 days):** Fast access (Elasticsearch/Splunk) for debugging recent issues. Expensive.
+*   **Cold Storage (1-7 years):** Slow access (S3/Glacier) for compliance/audit. Cheap.
+*   **Policy:** Delete DEBUG logs after 3 days; Keep ERROR logs for 1 year.
+
+---
+
+## 877. What is alert fatigue?
+
+**Answer:**
+**Alert Fatigue** occurs when engineers become desensitized to frequent, non-actionable alerts (false positives).
+*   **Consequence:** Critical alerts are ignored or missed.
+*   **Fix:**
+    *   Delete flaky alerts.
+    *   Make alerts actionable (Runbook link).
+    *   Group related alerts.
+    *   Only page on symptoms that affect users (SLO burn).
+
+---
+
+## 878. What is CI/CD security?
+
+**Answer:**
+Securing the pipeline itself.
+1.  **Secret Injection:** Don't store secrets in the repo.
+2.  **Signed Commits:** Verify who wrote the code.
+3.  **Runner Security:** Don't run builds on Production servers. Use ephemeral runners.
+4.  **Artifact Signing:** Sign Docker images (Cosign) to ensure integrity.
+
+---
+
+## 879. What is supply chain attack?
+
+**Answer:**
+An attack that targets the software dependencies or build process to inject malicious code into the final application.
+*   **Example:** **SolarWinds**, **Log4Shell**.
+*   **Prevention:** SBOM (Software Bill of Materials), Dependency Scanning, Pinning versions.
+
+---
+
+## 880. What is platform engineering?
+
+**Answer:**
+**Platform Engineering** is the discipline of designing and building toolchains and workflows ("Internal Developer Platform") that enable self-service capabilities for software engineering organizations.
+*   **Goal:** Reduce cognitive load on developers (Golden Paths).
+*   **Example:** Providing a "Create Service" template that sets up Repo, CI/CD, K8s manifest, and Monitoring automatically.
+
+---
+
+## 881. What is Git?
+
+**Answer:**
+**Git** is a distributed version control system (DVCS) used to track changes in source code.
+*   **Distributed:** Every developer has a full copy of the repository (history + code) on their local machine.
+*   **Goal:** Enable collaboration, history tracking, and reverting changes.
+
+---
+
+## 882. What is commit?
+
+**Answer:**
+A **Commit** is a snapshot of the project's files at a specific point in time.
+*   **Properties:**
+    *   **SHA-1 Hash:** Unique ID (e.g., `a1b2c3d`).
+    *   **Message:** Description of the change.
+    *   **Author/Date:** Who and When.
+    *   **Parent:** Link to the previous commit (forming a chain).
+
+---
+
+## 883. What is branch?
+
+**Answer:**
+A **Branch** is a lightweight pointer to a specific commit.
+*   **Purpose:** Allows you to diverge from the main line of development (e.g., `main`) to work on a feature or bug fix in isolation.
+*   **Head:** A pointer to the *current* branch you are working on.
+
+---
+
+## 884. What is merge?
+
+**Answer:**
+**Merge** takes the contents of a source branch and integrates them with a target branch.
+*   **Fast-Forward:** If no divergent work exists, just move the pointer forward.
+*   **True Merge (3-Way):** If divergent work exists, creates a new **Merge Commit** with two parents.
+
+---
+
+## 885. What is rebase?
+
+**Answer:**
+**Rebase** moves or combines a sequence of commits to a new base commit.
+*   **Process:** It takes your changes and "plays" them on top of the latest version of the target branch.
+*   **Goal:** Maintains a linear project history (no ugly merge bubbles).
+
+---
+
+## 886. Merge vs rebase difference?
+
+**Answer:**
+*   **Merge:** Preserves history exactly as it happened. Creates an extra commit (Merge Commit) if branches diverged. Safe for shared branches.
+*   **Rebase:** Rewrites history to make it linear. Cleaner, but dangerous on shared branches (changes Commit IDs).
+
+---
+
+## 887. What is cherry-pick?
+
+**Answer:**
+**Cherry-Pick** applies the changes introduced by some existing commits (from another branch) onto the current branch.
+*   **Use Case:** You fixed a critical bug in `dev` and want to apply *only* that specific commit to `prod` without merging the entire `dev` branch.
+
+---
+
+## 888. What is stash?
+
+**Answer:**
+**Stash** temporarily shelves (saves) changes you've made to your working copy so you can work on something else, and then come back and re-apply them later.
+*   **Command:** `git stash` (save), `git stash pop` (restore).
+*   **Scenario:** You are working on a feature, but need to switch branches to fix a bug immediately, but your code isn't ready to commit.
+
+---
+
+## 889. What is reset?
+
+**Answer:**
+**Reset** moves the current branch pointer backward to a specific commit.
+*   **Soft:** `git reset --soft HEAD~1` (Moves pointer back, keeps changes in Staging Area).
+*   **Mixed:** (Default) Moves pointer back, keeps changes in Working Directory (Unstaged).
+*   **Hard:** `git reset --hard HEAD~1` (Moves pointer back, **destroys** all changes).
+
+---
+
+## 890. What is revert?
+
+**Answer:**
+**Revert** creates a *new* commit that undoes the changes made in a previous commit.
+*   **Difference from Reset:** It adds to history instead of rewriting it.
+*   **Safe:** This is the correct way to undo changes on a **public/shared** branch.
+
+---
+
+## 891. What is detached HEAD?
+
+**Answer:**
+**Detached HEAD** state occurs when you check out a specific **Commit SHA** instead of a Branch name.
+*   **State:** HEAD points directly to a commit, not a branch reference.
+*   **Risk:** Any new commits made in this state will be "orphaned" (lost) when you switch away, unless you create a new branch to save them.
+
+---
+
+## 892. What is squash?
+
+**Answer:**
+**Squashing** combines multiple commits into a single commit.
+*   **Use Case:** Cleaning up a messy history before merging a Pull Request.
+    *   *Before:* "WIP", "Fix typo", "Fixed bug", "Final fix".
+    *   *After:* "Implemented Feature X".
+*   **Command:** Interactive Rebase (`git rebase -i`).
+
+---
+
+## 893. What is tag?
+
+**Answer:**
+A **Tag** is a reference to a specific commit that does not move (unlike a branch).
+*   **Purpose:** To mark specific release points (e.g., `v1.0.0`, `v2.1.0`).
+*   **Types:**
+    *   **Lightweight:** Just a pointer.
+    *   **Annotated:** Includes a message, author, and date (stored as a full object).
+
+---
+
+## 894. What is conflict resolution?
+
+**Answer:**
+**Merge Conflicts** occur when two branches have modified the same lines in a file, or one deleted a file while another modified it.
+*   **Process:**
+    1.  Git pauses the merge.
+    2.  Developer manually edits the file to choose changes (HEAD vs Incoming).
+    3.  Developer adds the file (`git add`) and commits to finish the merge.
+
+---
+
+## 895. What is git workflow models?
+
+**Answer:**
+**Git Workflows** define how developers collaborate and use branches.
+*   **Common Models:**
+    1.  Centralized Workflow (SVN style).
+    2.  Feature Branch Workflow.
+    3.  GitFlow.
+    4.  Trunk-Based Development.
+
+---
+
+## 896. What is GitFlow?
+
+**Answer:**
+**GitFlow** is a strict branching model designed around project releases.
+*   **Branches:**
+    *   `main`: Production code.
+    *   `develop`: Integration branch for features.
+    *   `feature/*`: Logic for new features.
+    *   `release/*`: Prep for a new production release.
+    *   `hotfix/*`: Urgent fixes for production.
+*   **Cons:** Complex, slow for CI/CD.
+
+---
+
+## 897. What is trunk-based development?
+
+**Answer:**
+**Trunk-Based Development** allows developers to merge small, frequent updates to a core "trunk" or "main" branch.
+*   **Key:** Avoid long-lived feature branches. Merge daily.
+*   **Enabler:** Feature Flags (to hide unfinished code).
+*   **Pros:** Minimal merge conflicts, enables true CI/CD.
+
+---
+
+## 898. What is submodule?
+
+**Answer:**
+**Submodules** allow you to keep a Git repository as a subdirectory of another Git repository.
+*   **Use Case:** Shared library code used by multiple projects.
+*   **Mechanic:** The parent repo tracks the specific **Commit SHA** of the submodule, not the branch tip.
+
+---
+
+## 899. What is hook?
+
+**Answer:**
+**Git Hooks** are scripts that run automatically before or after Git events.
+*   **Client-Side:**
+    *   `pre-commit`: Run linters/tests before allowing a commit.
+    *   `pre-push`: Prevent pushing secrets.
+*   **Server-Side:**
+    *   `pre-receive`: Enforce rules on the server (e.g., commit message format).
+
+---
+
+## 900. What is shallow clone?
+
+**Answer:**
+**Shallow Clone** pulls only the latest history (or a specific depth) instead of the entire project history.
+*   **Command:** `git clone --depth 1 <url>`.
+*   **Use Case:** CI/CD pipelines (faster download speed since history isn't needed for building).
+
+---
+
+## 901. What is bisect?
+
+**Answer:**
+**Git Bisect** is a debugging tool that uses excessive binary search to find which specific commit introduced a bug.
+*   **Process:**
+    1.  Start bisect: `git bisect start`.
+    2.  Mark current commit as bad: `git bisect bad`.
+    3.  Mark an older commit as good: `git bisect good <sha>`.
+    4.  Git checks out the middle commit -> You test -> Mark good/bad -> Repeats until the culprit is found.
+
+---
+
+## 902. What is blame?
+
+**Answer:**
+**Git Blame** shows what revision and author last modified each line of a file.
+*   **Command:** `git blame <filename>`.
+*   **Use Case:** Identifying who wrote a specific piece of logic or when it was changed, to ask for context (not just for "blaming").
+
+---
+
+## 903. What is reflog?
+
+**Answer:**
+**Reflog** (Reference Log) records updates to the tip of branches and other references (HEAD).
+*   **Superpower:** It allows you to recover **"lost" commits** (e.g., after a hard reset or deleted branch) that are no longer referenced by any branch but are still in the local object database.
+*   **Command:** `git reflog`.
+
+---
+
+## 904. How to recover deleted branch?
+
+**Answer:**
+If you accidentally deleted a branch that wasn't merged:
+1.  Run `git reflog` to find the SHA of the commit the branch pointed to before deletion.
+2.  Recreate the branch pointing to that SHA: `git checkout -b <branch-name> <sha>`.
+
+---
+
+## 905. How to revert pushed commit?
+
+**Answer:**
+*   **Private Branch:** `git reset --hard HEAD~1` then `git push --force` (Dangerous).
+*   **Shared/Public Branch:** `git revert <sha>`. This creates a *new* commit that is the strict inverse of the bad commit. This is safe for history.
+
+---
+
+## 906. How to resolve large repo issue?
+
+**Answer:**
+Repositories get slow if large binary files (jars, images) are committed along with code.
+*   **Solution:** Use **Git LFS (Large File Storage)**.
+    *   Replaces large files with text pointers inside Git.
+    *   Stores the actual file contents on a separate server (e.g., S3).
+    *   Downloaded only when needed (lazy fetch).
+
+---
+
+## 907. How to manage versioning?
+
+**Answer:**
+Versioning creates unique identifiers for different states of source code.
+*   **Tags:** Use Git Tags to mark release points.
+*   **Strategy:** Follow a standard schema like **SemVer** to communicate compatibility.
+
+---
+
+## 908. What is semantic versioning?
+
+**Answer:**
+**Semantic Versioning (SemVer)** uses `MAJOR.MINOR.PATCH` (e.g., `2.1.4`).
+1.  **MAJOR:** Incompatible API changes (Breaking changes).
+2.  **MINOR:** Add functionality in a backwards-compatible manner (New features).
+3.  **PATCH:** Backwards-compatible bug fixes.
+
+---
+
+## 909. What is code review best practice?
+
+**Answer:**
+1.  **Small PRs:** Easier to review (< 400 lines).
+2.  **Linting:** Automate style checks (don't waste human time on formatting).
+3.  **Context:** Provide a clear description and screenshots.
+4.  **Tone:** Be constructive ("Could we try..." instead of "Wrong").
+5.  **Turnaround:** Review within 24 hours to enable flow.
+
+---
+
+## 910. What is pull request strategy?
+
+**Answer:**
+Defining how changes are merged.
+1.  **Merge Commit:** Keeps full history. Good for feature branches.
+2.  **Squash and Merge:** One commit per PR. Keeps main history clean. (Preferred by many).
+3.  **Rebase and Merge:** Linear history, but individual commits are preserved.
+
+---
+
+## 911. Reverse a string without using built-in methods.
+
+**Answer:**
+```java
+public static String reverse(String str) {
+    if (str == null) return null;
+    char[] chars = str.toCharArray();
+    int left = 0;
+    int right = chars.length - 1;
+    while (left < right) {
+        char temp = chars[left];
+        chars[left] = chars[right];
+        chars[right] = temp;
+        left++;
+        right--;
+    }
+    return new String(chars);
+}
+```
+
+---
+
+## 912. Find duplicate elements in array.
+
+**Answer:**
+```java
+// Using Set (O(n))
+public static Set<Integer> findDuplicates(int[] nums) {
+    Set<Integer> seen = new HashSet<>();
+    Set<Integer> duplicates = new HashSet<>();
+    for (int num : nums) {
+        if (!seen.add(num)) {
+            duplicates.add(num);
+        }
+    }
+    return duplicates;
+}
+```
+
+---
+
+## 913. Find first non-repeating character.
+
+**Answer:**
+```java
+public static Character firstNonRepeating(String str) {
+    Map<Character, Integer> counts = new LinkedHashMap<>(); // Preserves order
+    for (char c : str.toCharArray()) {
+        counts.put(c, counts.getOrDefault(c, 0) + 1);
+    }
+    for (Map.Entry<Character, Integer> entry : counts.entrySet()) {
+        if (entry.getValue() == 1) {
+            return entry.getKey();
+        }
+    }
+    return null;
+}
+```
+
+---
+
+## 914. Check if two strings are anagram.
+
+**Answer:**
+```java
+public static boolean isAnagram(String s1, String s2) {
+    if (s1.length() != s2.length()) return false;
+    int[] count = new int[26]; // Assuming lowercase English letters
+    for (int i = 0; i < s1.length(); i++) {
+        count[s1.charAt(i) - 'a']++;
+        count[s2.charAt(i) - 'a']--;
+    }
+    for (int c : count) {
+        if (c != 0) return false;
+    }
+    return true;
+}
+```
+
+---
+
+## 915. Find factorial using recursion.
+
+**Answer:**
+```java
+public static long factorial(int n) {
+    if (n <= 1) return 1;
+    return n * factorial(n - 1);
+}
+```
+
+---
+
+## 916. Fibonacci series using DP.
+
+**Answer:**
+```java
+// Memoization (Top-Down)
+public static int fib(int n, int[] memo) {
+    if (n <= 1) return n;
+    if (memo[n] != 0) return memo[n];
+    memo[n] = fib(n - 1, memo) + fib(n - 2, memo);
+    return memo[n];
+}
+```
+
+---
+
+## 917. Detect cycle in linked list.
+
+**Answer:**
+**Floyd’s Cycle-Finding Algorithm (Tortoise and Hare):**
+```java
+public boolean hasCycle(ListNode head) {
+    if (head == null) return false;
+    ListNode slow = head;
+    ListNode fast = head;
+    while (fast != null && fast.next != null) {
+        slow = slow.next;
+        fast = fast.next.next;
+        if (slow == fast) return true; // Cycle detected
+    }
+    return false;
+}
+```
+
+---
+
+## 918. Reverse linked list.
+
+**Answer:**
+```java
+public ListNode reverseList(ListNode head) {
+    ListNode prev = null;
+    ListNode current = head;
+    while (current != null) {
+        ListNode nextTemp = current.next;
+        current.next = prev;
+        prev = current;
+        current = nextTemp;
+    }
+    return prev;
+}
+```
+
+---
+
+## 919. Implement stack using queue.
+
+**Answer:**
+```java
+class MyStack {
+    Queue<Integer> q = new LinkedList<>();
+
+    public void push(int x) {
+        q.add(x);
+        // Rotate all previous elements to the back
+        int size = q.size();
+        while (size > 1) {
+            q.add(q.remove());
+            size--;
+        }
+    }
+
+    public int pop() {
+        return q.remove();
+    }
+}
+```
+
+---
+
+## 920. Implement queue using stack.
+
+**Answer:**
+```java
+class MyQueue {
+    Stack<Integer> s1 = new Stack<>(); // Input
+    Stack<Integer> s2 = new Stack<>(); // Output
+
+    public void enQueue(int x) {
+        s1.push(x);
+    }
+
+    public int deQueue() {
+        if (s2.isEmpty()) {
+            while (!s1.isEmpty()) {
+                s2.push(s1.pop());
+            }
+        }
+        return s2.pop();
+    }
+}
+```
+
+---
+
+## 921. Find longest substring without repeating characters.
+
+**Answer:**
+**Sliding Window Technique:**
+```java
+public int lengthOfLongestSubstring(String s) {
+    Set<Character> set = new HashSet<>();
+    int left = 0, right = 0, max = 0;
+    while (right < s.length()) {
+        if (!set.contains(s.charAt(right))) {
+            set.add(s.charAt(right++));
+            max = Math.max(max, right - left);
+        } else {
+            set.remove(s.charAt(left++));
+        }
+    }
+    return max;
+}
+```
+
+---
+
+## 922. Find majority element.
+
+**Answer:**
+Element appearing > n/2 times. **Boyer-Moore Voting Algorithm**:
+```java
+public int majorityElement(int[] nums) {
+    int count = 0;
+    Integer candidate = null;
+    for (int num : nums) {
+        if (count == 0) candidate = num;
+        count += (num == candidate) ? 1 : -1;
+    }
+    return candidate;
+}
+```
+
+---
+
+## 923. Binary search implementation.
+
+**Answer:**
+(Requires sorted array).
+```java
+public int binarySearch(int[] arr, int target) {
+    int left = 0, right = arr.length - 1;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (arr[mid] == target) return mid;
+        if (arr[mid] < target) left = mid + 1;
+        else right = mid - 1;
+    }
+    return -1;
+}
+```
+
+---
+
+## 924. Merge two sorted arrays.
+
+**Answer:**
+```java
+public int[] merge(int[] arr1, int[] arr2) {
+    int n1 = arr1.length, n2 = arr2.length;
+    int[] result = new int[n1 + n2];
+    int i = 0, j = 0, k = 0;
+    while (i < n1 && j < n2) {
+        if (arr1[i] <= arr2[j]) result[k++] = arr1[i++];
+        else result[k++] = arr2[j++];
+    }
+    while (i < n1) result[k++] = arr1[i++];
+    while (j < n2) result[k++] = arr2[j++];
+    return result;
+}
+```
+
+---
+
+## 925. Find missing number in array.
+
+**Answer:**
+Array contains 0 to n, one missing.
+```java
+public int missingNumber(int[] nums) {
+    int n = nums.length;
+    int expectedSum = n * (n + 1) / 2;
+    int actualSum = 0;
+    for (int num : nums) actualSum += num;
+    return expectedSum - actualSum;
+}
+```
+
+---
+
+## 926. Two sum problem.
+
+**Answer:**
+Find indices of two numbers that add up to target.
+```java
+public int[] twoSum(int[] nums, int target) {
+    Map<Integer, Integer> map = new HashMap<>();
+    for (int i = 0; i < nums.length; i++) {
+        int complement = target - nums[i];
+        if (map.containsKey(complement)) {
+            return new int[] { map.get(complement), i };
+        }
+        map.put(nums[i], i);
+    }
+    throw new IllegalArgumentException("No solution");
+}
+```
+
+---
+
+## 927. LRU cache implementation.
+
+**Answer:**
+Using Java's `LinkedHashMap`:
+```java
+class LRUCache<K, V> extends LinkedHashMap<K, V> {
+    private final int capacity;
+
+    public LRUCache(int capacity) {
+        super(capacity, 0.75f, true); // true = access-order
+        this.capacity = capacity;
+    }
+
+    @Override
+    protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
+        return size() > capacity;
+    }
+}
+```
+
+---
+
+## 928. Implement custom HashMap.
+
+**Answer:**
+Simple Chaining implementation:
+```java
+class MyHashMap<K, V> {
+    class Node { K key; V value; Node next; }
+    private Node[] buckets = new Node[16];
+
+    public void put(K key, V value) {
+        int idx = key.hashCode() % buckets.length;
+        Node node = buckets[idx];
+        while (node != null) {
+            if (node.key.equals(key)) { node.value = value; return; }
+            node = node.next;
+        }
+        Node newNode = new Node();
+        newNode.key = key; newNode.value = value; newNode.next = buckets[idx];
+        buckets[idx] = newNode;
+    }
+    // get() similar logic...
+}
+```
+
+---
+
+## 929. Producer-consumer problem.
+
+**Answer:**
+Using `BlockingQueue` (Thread-safe):
+```java
+BlockingQueue<Integer> queue = new ArrayBlockingQueue<>(10);
+
+// Producer
+new Thread(() -> {
+    try { while(true) queue.put(produce()); } catch (InterruptedException e) {}
+}).start();
+
+// Consumer
+new Thread(() -> {
+    try { while(true) consume(queue.take()); } catch (InterruptedException e) {}
+}).start();
+```
+
+---
+
+## 930. Thread-safe singleton implementation.
+
+**Answer:**
+**Double-Checked Locking:**
+```java
+public class Singleton {
+    private static volatile Singleton instance;
+    private Singleton() {}
+
+    public static Singleton getInstance() {
+        if (instance == null) {
+            synchronized (Singleton.class) {
+                if (instance == null) {
+                    instance = new Singleton();
+                }
+            }
+        }
+        return instance;
+    }
+}
+```
+
+---
+
+## 931. Deadlock example and solution.
+
+**Answer:**
+**Deadlock** occurs when two threads wait for each other to release a lock.
+```java
+// Deadlock Scenario
+Thread 1: locks A, waits for B
+Thread 2: locks B, waits for A
+
+// Solution: Lock Order
+// Always acquire locks in the same order (e.g., A then B) to avoid cyclical dependency.
+synchronized(A) {
+    synchronized(B) {
+        // critical section
+    }
+}
+```
+
+---
+
+## 932. Design rate limiter in code.
+
+**Answer:**
+**Token Bucket Algorithm (Simplified):**
+```java
+public class RateLimiter {
+    private int tokens;
+    private final int maxTokens;
+    private long lastRefillTime;
+
+    public synchronized boolean allowRequest() {
+        refill();
+        if (tokens > 0) {
+            tokens--;
+            return true;
+        }
+        return false;
+    }
+
+    private void refill() {
+        long now = System.currentTimeMillis();
+        if (now - lastRefillTime > 1000) { // Refill every second
+            tokens = maxTokens;
+            lastRefillTime = now;
+        }
+    }
+}
+```
+
+---
+
+## 933. Find top K frequent elements.
+
+**Answer:**
+Using **Min-Heap**:
+```java
+public int[] topKFrequent(int[] nums, int k) {
+    Map<Integer, Integer> count = new HashMap<>();
+    for (int n : nums) count.put(n, count.getOrDefault(n, 0) + 1);
+
+    PriorityQueue<Integer> heap = new PriorityQueue<>(
+        (a, b) -> count.get(a) - count.get(b) // Min heap based on frequency
+    );
+
+    for (int n : count.keySet()) {
+        heap.add(n);
+        if (heap.size() > k) heap.poll();
+    }
+
+    return heap.stream().mapToInt(i -> i).toArray();
+}
+```
+
+---
+
+## 934. Implement Trie (Prefix Tree).
+
+**Answer:**
+```java
+class Trie {
+    class Node {
+        Node[] children = new Node[26];
+        boolean isEnd;
+    }
+    Node root = new Node();
+
+    public void insert(String word) {
+        Node node = root;
+        for (char c : word.toCharArray()) {
+            if (node.children[c - 'a'] == null)
+                node.children[c - 'a'] = new Node();
+            node = node.children[c - 'a'];
+        }
+        node.isEnd = true;
+    }
+    // search() and startWith() follow similar path traversal logic.
+}
+```
+
+---
+
+## 935. Check palindrome in linked list.
+
+**Answer:**
+1.  Find Middle (Slow/Fast pointers).
+2.  Reverse the second half.
+3.  Compare first half and reversed second half.
+
+---
+
+## 936. Rotate array.
+
+**Answer:**
+Rotate right by K steps.
+**Algorithm:**
+1.  Reverse entire array.
+2.  Reverse first K elements.
+3.  Reverse remaining elements.
+*   Example: `[1,2,3,4,5]`, k=2 -> `[5,4,3,2,1]` -> `[4,5,3,2,1]` -> `[4,5,1,2,3]`.
+
+---
+
+## 937. Find median of two sorted arrays.
+
+**Answer:**
+**Binary Search** on the smaller array to partition both arrays such that:
+*   `left_part_size == right_part_size`
+*   `max(left_part) <= min(right_part)`
+*   Time Complexity: **O(log(min(n, m)))**.
+
+---
+
+## 938. Design parking lot system.
+
+**Answer:**
+**LLD (Low Level Design) Key Classes:**
+*   `ParkingLot`: Singleton pattern, manages levels.
+*   `Level`: Contains list of spots.
+*   `Spot`: Type (Compact, Large), Availability status.
+*   `Vehicle`: (Car, Truck, Bike).
+*   `Ticket`: EntryTime, SpotID.
+*   **Logic:** `findSpot()` iterates levels/spots to find first available for vehicle type.
+
+---
+
+## 939. Design elevator system.
+
+**Answer:**
+**LLD Key Classes:**
+*   `ElevatorController`: Manages multiple elevators (Strategy to pick best one).
+*   `Elevator`: CurrentFloor, Direction (UP/DOWN/IDLE), RequestQueue.
+*   `Request`: Floor, Direction.
+*   **Algorithm:** **SCAN (Elevator Algorithm)** - Move same direction until no requests, then switch.
+
+---
+
+## 940. Design ATM system.
+
+**Answer:**
+**LLD Key Classes:**
+*   `ATM`: Has CardReader, Keypad, Dispenser, connect to BankAPI.
+*   `Account`: CheckBalance, Deduct.
+*   `Transaction`: (Withdrawal, Deposit, BalanceCheck) - **Strategy Pattern**.
+*   **States:** Idle -> CardInserted -> PinEntered -> SelectingOption -> Transaction -> EjectCard (**State Pattern**).
+
+---
+
+## 941. Implement Observer pattern.
+
+**Answer:**
+Defines a one-to-many dependency between objects.
+```java
+interface Observer { void update(String msg); }
+
+class Subscriber implements Observer {
+    public void update(String msg) { System.out.println("Received: " + msg); }
+}
+
+class Topic {
+    private List<Observer> observers = new ArrayList<>();
+    public void addObserver(Observer o) { observers.add(o); }
+    public void notifyObservers(String msg) {
+        for (Observer o : observers) o.update(msg);
+    }
+}
+```
+
+---
+
+## 942. Implement Strategy pattern.
+
+**Answer:**
+Defines a family of algorithms and makes them interchangeable.
+```java
+interface PaymentStrategy { void pay(int amount); }
+
+class CreditCardPayment implements PaymentStrategy {
+    public void pay(int amount) { System.out.println("Paid " + amount + " via Card"); }
+}
+
+class PayPalPayment implements PaymentStrategy {
+    public void pay(int amount) { System.out.println("Paid " + amount + " via PayPal"); }
+}
+
+class ShoppingCart {
+    public void checkout(int amount, PaymentStrategy strategy) {
+        strategy.pay(amount);
+    }
+}
+```
+
+---
+
+## 943. Implement custom annotation.
+
+**Answer:**
+Creating a `@LogExecutionTime` annotation.
+```java
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface LogExecutionTime {}
+
+// Usage with AspectJ usually:
+@Around("@annotation(LogExecutionTime)")
+public Object logTime(ProceedingJoinPoint joinPoint) throws Throwable {
+    long start = System.currentTimeMillis();
+    Object proceed = joinPoint.proceed();
+    long executionTime = System.currentTimeMillis() - start;
+    System.out.println(joinPoint.getSignature() + " executed in " + executionTime + "ms");
+    return proceed;
+}
+```
+
+---
+
+## 944. Implement thread pool.
+
+**Answer:**
+Simplified version:
+```java
+class SimpleThreadPool {
+    private final BlockingQueue<Runnable> taskQueue;
+    private final List<Thread> workers;
+
+    public SimpleThreadPool(int numThreads) {
+        taskQueue = new LinkedBlockingQueue<>();
+        workers = new ArrayList<>();
+        for (int i = 0; i < numThreads; i++) {
+            Thread worker = new Thread(() -> {
+                while (true) {
+                    try { taskQueue.take().run(); } catch (InterruptedException e) {}
+                }
+            });
+            worker.start();
+            workers.add(worker);
+        }
+    }
+
+    public void submit(Runnable task) { taskQueue.offer(task); }
+}
+```
+
+---
+
+## 945. Solve concurrency issue in code snippet.
+
+**Answer:**
+**Problem:** `count++` is not atomic. Multi-threaded access causes lost updates / race conditions.
+**Solution:**
+1.  Use `AtomicInteger`: `count.incrementAndGet()`.
+2.  Or `synchronized` block/method.
+3.  Or `ReentrantLock`.
+
+---
+
+## 946. Optimize slow algorithm.
+
+**Answer:**
+**Scenario:** Finding duplicates in an array using nested loops (O(n²)).
+**Optimization:** Use a `HashSet` to track seen elements.
+*   **Time Complexity:** O(n).
+*   **Space Complexity:** O(n).
+
+---
+
+## 947. Debug memory leak.
+
+**Answer:**
+**Common Causes:**
+1.  **Static Collections:** Adding objects to a `static List/Map` and never removing them.
+2.  **Unclosed Resources:** Database connections, InputStreams not closed in `finally` or `try-with-resources`.
+3.  **Listeners:** Registering listeners but never deregistering them.
+    **Tool:** **VisualVM** or **Eclipse MAT** (Memory Analyzer Tool) to analyze Heap Dump.
+
+---
+
+## 948. Write SQL for complex join.
+
+**Answer:**
+Find users who have placed more than 5 orders.
+```sql
+SELECT u.name, COUNT(o.id) as order_count
+FROM Users u
+JOIN Orders o ON u.id = o.user_id
+GROUP BY u.id, u.name
+HAVING COUNT(o.id) > 5;
+```
+
+---
+
+## 949. Optimize REST API latency.
+
+**Answer:**
+1.  **Caching:** Use Redis to cache expensive DB queries.
+2.  **N+1 Problem:** Fix Hibernate fetching (Use `JOIN FETCH`).
+3.  **Database Indexing:** Ensure queries hit indexes.
+4.  **Asynchronous Processing:** Offload heavy tasks (e.g., sending emails) to a message queue (Kafka/RabbitMQ).
+5.  **Payload Size:** Use GZIP compression, Pagination.
+
+---
+
+## 950. Improve DB performance issue.
+
+**Answer:**
+1.  **Analyze Query Plan:** Use `EXPLAIN ANALYZE` to find full table scans.
+2.  **Indexing:** Add indexes on columns used in `WHERE`, `JOIN`, and `ORDER BY`.
+3.  **Connection Pooling:** Use HikariCP to reuse connections.
+4.  **Partitioning:** Split large tables into smaller chunks (e.g., by date).
+5.  **Read Replicas:** Direct read traffic to replicas, writes to primary.
+
+---
+
+## 951. Handle high traffic scenario.
+
+**Answer:**
+**Strategy:**
+1.  **Scale Out:** Add more instances (Horizontal Scaling) behind a Load Balancer.
+2.  **Caching:** Cache static assets (CDN) and hot data (Redis) to offload DB.
+3.  **Asynchronous:** Move non-critical tasks to queues (Kafka).
+4.  **Rate Limiting:** Protect services from being overwhelmed (429 Too Many Requests).
+5.  **Degradation:** Turn off non-essential features to save resources.
+
+---
+
+## 952. Debug production crash.
+
+**Answer:**
+**Steps:**
+1.  **Check Logs:** Look for Exceptions/Errors in ELK/Splunk.
+2.  **Metrics:** Check CPU/Memory/Disk spikes in Grafana/Prometheus.
+3.  **Recent Changes:** Did a deployment or config change happen recently?
+4.  **Reproduce:** Try to reproduce in Staging.
+5.  **Fix/Rollback:** If crucial, rollback immediately. If fixable, push hotfix.
+
+---
+
+## 953. Design scalable chat system.
+
+**Answer:**
+**Key Components:**
+*   **Protocol:** WebSocket for real-time bi-directional communication.
+*   **Storage:** HBase/Cassandra for storing billions of messages (Write-heavy).
+*   **Pub/Sub:** Redis Pub/Sub or Kafka to route messages between users connected to different servers.
+*   **Presence:** Redis to track user online/offline status.
+
+---
+
+## 954. Write efficient pagination query.
+
+**Answer:**
+**Avoid Offset Pagination** (`LIMIT 10 OFFSET 100000`) as it scans prior rows.
+**Use Keyset/Cursor Pagination:**
+```sql
+SELECT * FROM Messages
+WHERE id < last_seen_id
+ORDER BY id DESC
+LIMIT 10;
+```
+*   **Pros:** O(1) time complexity with index.
+
+---
+
+## 955. Implement consistent hashing.
+
+**Answer:**
+Used in distributed caching/databases to minimize data movement when nodes are added/removed.
+**Concept:** Map both Nodes and Keys to a circle (0-360 degrees). Key is stored in the first Node found clockwise.
+**Virtual Nodes:** Add multiple points per physical node to ensure even distribution.
+
+---
+
+## 956. Build caching mechanism.
+
+**Answer:**
+**Cache-Aside Pattern:**
+```java
+public Data getData(String key) {
+    Data data = cache.get(key);
+    if (data == null) {
+        data = db.get(key);
+        if (data != null) {
+            cache.put(key, data);
+        }
+    }
+    return data;
+}
+```
+
+---
+
+## 957. Implement distributed lock.
+
+**Answer:**
+Using **Redis (Redlock Algorithm)** or **ZooKeeper**.
+**Redis Example (Simple):**
+```java
+// Set key only if not exists, with expiry (TTL) to prevent deadlock if app crashes
+boolean locked = redis.set(lockKey, uniqueId, "NX", "EX", 10);
+if (locked) {
+    try { /* critical section */ }
+    finally {
+        // Lua script to ensure we only delete our own lock
+        if (redis.get(lockKey).equals(uniqueId)) redis.del(lockKey);
+    }
+}
+```
+
+---
+
+## 958. Handle race condition.
+
+**Answer:**
+Occurs when order of execution affects the result.
+**Fixes:**
+1.  **Atomic Operations:** Database Row Locking (`SELECT ... FOR UPDATE`).
+2.  **Synchronized:** Java `synchronized` keyword.
+3.  **Optimistic Locking:** Use a `version` column in DB. Update fails if version changed.
+
+---
+
+## 959. Optimize CPU-bound application.
+
+**Answer:**
+1.  **Parallelism:** Use `ForkJoinPool` or `Parallel Streams` to utilize all Cores.
+2.  **Algorithm efficiently:** Reduce complexity (e.g., O(n) instead of O(n²)).
+3.  **Avoid Blocking:** Don't do I/O in CPU-intensive threads.
+4.  **Profiling:** Use `AsyncProfiler` to find hot methods.
+
+---
+
+## 960. Refactor legacy code.
+
+**Answer:**
+**Strangler Fig Pattern:**
+1.  Identify a specific functionality to modernize.
+2.  Build new microservice/module for it.
+3.  Route calls to the new service.
+4.  Remove old code.
+    **Code Level:** Extract Method, Rename Variables, Introduce Design Patterns, Add Unit Tests **before** changing logic.
+
+---
+
+## 961. Describe challenging production issue you handled.
+
+**Answer:**
+**S.T.A.R Method:**
+*   **Situation:** During Black Friday sale, Checkout Service latency
+    spiked to 10s.
+*   **Task:** Identify the bottleneck and restore normal operations.
+*   **Action:**
+    1.  Checked metrics (Datadog) and found DB CPU at 100%.
+    2.  Found a slow query (Missing Index on `order_date`).
+    3.  Applied hotfix (Added Index).
+*   **Result:** Latency dropped to 200ms. Sales resumed.
+
+---
+
+## 962. How do you handle tight deadlines?
+
+**Answer:**
+1.  **Prioritize:** Identify MVP (Must-Have vs Nice-to-Have).
+2.  **Communicate:** Inform stakeholders early if scope needs cutting.
+3.  **De-risk:** Tackle hardest parts first.
+4.  **negotiate:** Can we trade scope for time?
+5.  **Focus:** Minimize distractions/meetings.
+
+---
+
+## 963. How do you mentor juniors?
+
+**Answer:**
+1.  **Pair Programming:** Code together to share context and shortcuts.
+2.  **Code Reviews:** Focus on logic/design, not just syntax. Explain "Why", not just "What".
+3.  **Design Docs:** Ask them to write a design doc for small features.
+4.  **Autonomy:** Let them own a task, but be available for questions.
+
+---
+
+## 964. How do you review code?
+
+**Answer:**
+1.  **Correctness:** Does it do what it's supposed to?
+2.  **Tests:** Are there unit/integration tests covering edge cases?
+3.  **Readability:** Is variable naming clear? Is logic simple?
+4.  **Security:** SQL Injection? exposed secrets?
+5.  **Performance:** loop inside loop? N+1 query?
+
+---
+
+## 965. How do you handle conflict in team?
+
+**Answer:**
+1.  **Listen:** Understand the other person's perspective.
+2.  **Data-Driven:** Use metrics/facts rather than opinions (e.g., "A/B test results showed X").
+3.  **Common Goal:** Remind everyone we want the best product for the user.
+4.  **Compromise:** Find a middle ground (e.g., "Let's try your approach for this smaller module first").
+
+---
+
+## 966. How do you design scalable solution?
+
+**Answer:**
+1.  **Requirements:** Clarify DAU, QPS, Latency goals.
+2.  **High Level:** Diagram services (Microservices vs Monolith).
+3.  **Data Layer:** SQL vs NoSQL. Sharding? Replication?
+4.  **Caching:** Redis/CDN usage.
+5.  **Async:** Queues for decoupling.
+6.  **Failure Modes:** What happens if DB goes down? (Circuit Breaker).
+
+---
+
+## 967. How do you estimate tasks?
+
+**Answer:**
+1.  **Break Down:** Split large stories into small tasks (< 1 day).
+2.  **Complexity:** Use T-Shirt sizing (S, M, L) or Fibonacci points.
+3.  **Buffer:** Add 20% buffer for unknowns/testing/meetings.
+4.  **Comparison:** "This is similar to Feature X which took 3 days."
+
+---
+
+## 968. How do you handle requirement changes?
+
+**Answer:**
+1.  **Assess Impact:** How does this affect the deadline/architecture?
+2.  **Communicated:** Discuss trade-offs with Product Manager (e.g., "If we add X, we must drop Y or push date").
+3.  **Adapt:** Agile mindset. Embrace change but manage scope creep.
+
+---
+
+## 969. How do you improve code quality?
+
+**Answer:**
+1.  **CI/CD:** Automate linting (SonarQube) and testing.
+2.  **Reviews:** Strict code review process.
+3.  **Refactoring:** Allocate 20% time for tech debt.
+4.  **Standards:** Agree on coding conventions (Google Java Style).
+5.  **Testing:** Enforce min 80% coverage.
+
+---
+
+## 970. How do you ensure high availability?
+
+**Answer:**
+1.  **Redundancy:** Multiple instances of service across Availability Zones (AZ).
+2.  **Load Balancing:** Distribute traffic.
+3.  **Failover:** Active-Passive DB setup.
+4.  **Monitoring:** Alerts for downtime.
+5.  **Chaos Testing:** Proactively kill nodes to test recovery.
+
+---
+
+## 971. How do you handle on-call incident?
+
+**Answer:**
+**Process:**
+1.  **Acknowledge:** Confirm receipt of alert (PagerDuty/OpsGenie).
+2.  **Triage:** Assess severity (Sev1 vs Sev3). Is it affecting customers?
+3.  **Mitigate:** Focus on restoring service first (Restart, Rollback, Switch Region) rather than fixing the root cause immediately.
+4.  **Communicate:** Update Status Page or stakeholders.
+5.  **Post-Mortem:** Analyze root cause and add prevention measures (5 Whys).
+
+---
+
+## 972. How do you prioritize bugs?
+
+**Answer:**
+**Matrix: Severity (Impact) vs Probability (Frequency).**
+1.  **Critical (P0):** Data loss, Security breach, System down. Fix Immediately.
+2.  **High (P1):** Major feature broken, no workaround. Fix in current sprint.
+3.  **Medium (P2):** Annoying UI glitch, workaround exists. Backlog.
+4.  **Low (P3):** Typos. "Nice to fix".
+
+---
+
+## 973. How do you reduce technical debt?
+
+**Answer:**
+1.  **Visibility:** Track debt in specific tickets in JIRA.
+2.  **Boy Scout Rule:** "Leave the code cleaner than you found it." Refactor small things while working on features.
+3.  **Dedicated Time:** Allocate 20% of sprint capacity to Engineering tasks.
+4.  **Definition of Done:** Include "Refactoring / Tests" in DoD.
+
+---
+
+## 974. How do you communicate architecture?
+
+**Answer:**
+1.  **C4 Model:** Context, Containers, Components, Code (Zoom in/out levels).
+2.  **ADRs (Architecture Decision Records):** Document `Why` a decision was made (Context, Decision, Consequences).
+3.  **Whiteboarding:** Draw boxes and arrows to explain data flow to the team.
+
+---
+
+## 975. How do you handle cross-team dependency?
+
+**Answer:**
+1.  **Contract First:** Define API specs (OpenAPI/Swagger) before coding.
+2.  **Mocking:** Use mocks/stubs to develop in parallel without waiting for the other team.
+3.  **Establish SLIs/SLOs:** Agree on expected latency/uptime.
+4.  **Regular Sync:** Weekly check-ins to flag blockers early.
+
+---
+
+## 976. How do you introduce new technology?
+
+**Answer:**
+1.  **Problem First:** Ensure it solves a real problem, not just "Resume Driven Development".
+2.  **POC (Proof of Concept):** Build a small prototype to validate.
+3.  **Trade-off Analysis:** Cost vs Benefit, Learning curve, Maintenance.
+4.  **Team Buy-in:** Present findings to the team.
+5.  **Migration Plan:** Incremental adoption.
+
+---
+
+## 977. How do you handle failure?
+
+**Answer:**
+**Example:** "I once deployed a change that caused a memory leak."
+1.  **Own it:** Admitted the mistake immediately.
+2.  **Fix it:** Rolled back the change.
+3.  **Learn:** Wrote a blameless post-mortem.
+4.  **Prevent:** Added a load test to the CI pipeline to catch leaks in the future.
+
+---
+
+## 978. What is your leadership style?
+
+**Answer:**
+**Servant Leadership:**
+*   **Support:** Blocking distractions, removing obstacles for the team.
+*   **Empowerment:** Giving developers ownership of their features.
+*   **Empathy:** Understanding personal situations and burnout.
+*   **Growth:** Focusing on team members' career progression.
+
+---
+
+## 979. How do you handle performance issue?
+
+**Answer:**
+**Systematic Approach:**
+1.  **Baseline:** Measure current performance.
+2.  **Profile:** Identify the bottleneck (CPU? I/O? DB? Network?).
+3.  **Hypothesis:** "Adding cache will reduce load."
+4.  **Experiments:** Apply fix in isolation.
+5.  **Verify:** Measure again.
+6.  **Monitor:** Set alerts to prevent regression.
+
+---
+
+## 980. How do you motivate team?
+
+**Answer:**
+**Dan Pink's Drive (AMP):**
+1.  **Autonomy:** Let them allow *how* to solve the problem.
+2.  **Mastery:** Give difficult/interesting challenges that help them grow.
+3.  **Purpose:** Connect their work to the business impact ("This feature helps 1M users").
+4.  **Recognition:** Publicly celebrate wins.
+
+---
+
+## 981. How do you handle production outage?
+
+**Answer:**
+**Incident Response:**
+1.  **Assign Roles:** Incident Commander (Communicates), Ops Lead (Fixes).
+2.  **Mitigate:** Focus on bringing service UP (even if degraded).
+3.  **Communication:** Update status page every 30 mins.
+4.  **Investigate:** Check logs, metrics, recent changes.
+5.  **Review:** Conduct a Post-Incident Review (PIR) within 24 hours.
+
+---
+
+## 982. How do you document system?
+
+**Answer:**
+1.  **High-Level:** Architecture Diagrams (C4), Data Flow.
+2.  **Low-Level:** Swagger/OpenAPI for APIs.
+3.  **Operational:** Runbooks for on-call (How to restart, How to rollback).
+4.  **Decisions:** ADRs (Architecture Decision Records).
+5.  **Onboarding:** `README.md` in every repo with "How to run locally".
+
+---
+
+## 983. How do you handle disagreement on design?
+
+**Answer:**
+1.  **Standardize:** Do we have existing patterns?
+2.  **Pros/Cons:** List trade-offs (Complexity vs Performance).
+3.  **POC:** "Let's code both quick prototypes and compare."
+4.  **Disagree and Commit:** If consensus isn't reached, the Tech Lead decides, and everyone supports it.
+
+---
+
+## 984. How do you scale a system from 1k to 1M users?
+
+**Answer:**
+1.  **1k:** Monolith, Single DB.
+2.  **10k:** Separate DB, Load Balancer, Caching (Redis).
+3.  **100k:** CDN for static assets, Read Replicas for DB, Message Queues (Async).
+4.  **1M:** Microservices, Sharding DB, Geolocation routing, Data Lake for analytics.
+
+---
+
+## 985. How do you ensure security compliance?
+
+**Answer:**
+1.  **Automated:** SAST/DAST tools in CI/CD pipeline.
+2.  **Dependencies:** Snyk/Dependabot for vulnerable libraries.
+3.  **Access:** Least Privilege Principle (IAM roles).
+4.  **Audit:** Regular penetration testing (PenTest) by external firms.
+5.  **Data:** Encrypt at REST and in Transit (TLS 1.3).
+
+---
+
+## 986. How do you handle customer escalation?
+
+**Answer:**
+1.  **Empathize:** Acknowledge the frustration.
+2.  **Prioritize:** Is this an edge case or affecting many users?
+3.  **Transparency:** "We found the issue and are working on it. ETA 2 hours."
+4.  **Root Cause:** Fix the process so it doesn't happen again.
+
+---
+
+## 987. How do you conduct root cause analysis?
+
+**Answer:**
+**5 Whys Technique:**
+*   **Problem:** The DB crashed.
+1.  **Why?** ran out of connection.
+2.  **Why?** Connection pool wasn't releasing connections.
+3.  **Why?** Code exception didn't close connection in `finally` block.
+4.  **Why?** Developer forgot.
+5.  **Why?** No code review or linter checked for resource leaks.
+*   **Root Cause:** Process failure (missing linter rules).
+
+---
+
+## 988. How do you measure team productivity?
+
+**Answer:**
+**DORA Metrics (DevOps Research and Assessment):**
+1.  **Deployment Frequency:** How often we ship.
+2.  **Lead Time for Changes:** Commit to Production time.
+3.  **Change Failure Rate:** % of deployments causing failure.
+4.  **Time to Restore Service:** How fast we recover.
+*   *Avoid:* Lines of code (LOC) or Hours worked.
+
+---
+
+## 989. How do you improve deployment frequency?
+
+**Answer:**
+1.  **Small Batches:** Merge small changes often (Trunk-based).
+2.  **Automated Testing:** Trust the test suite (Unit > Integration > E2E).
+3.  **Feature Flags:** Deploy code that is "off" by default.
+4.  **CI/CD Optimization:** Parallelize builds to reducing waiting time.
+
+---
+
+## 990. How do you reduce downtime?
+
+**Answer:**
+1.  **Blue-Green Deployment:** Switch traffic only when new version is healthy.
+2.  **Canary Release:** Roll out to 1% of users first.
+3.  **Auto-Healing:** Kubernetes restarts crashed pods automatically.
+4.  **Circuit Breakers:** Fail fast instead of cascading failure.
+
+---
+
+## 991. How do you plan migration project?
+
+**Answer:**
+**Strategies:**
+1.  **Dual Write:** Write to both Old and New systems.
+2.  **Backfill:** Copy historical data.
+3.  **Verification:** Compare data consistency between both.
+4.  **Shadow Traffic:** Route traffic to new system but discard response (to test load).
+5.  **Canary:** Switch 1% users.
+6.  **Cutover:** Switch 100%.
+
+---
+
+## 992. How do you ensure observability?
+
+**Answer:**
+**Three Pillars:**
+1.  **Logs (ELK/Splunk):** "What happened?" (Error details).
+2.  **Metrics (Prometheus/Grafana):** "What is the trend?" (CPU, Request Count, Latency).
+3.  **Tracing (Jaeger/Zipkin):** "Where did it happen?" (Distributed transaction flow).
+*   **Alerting:** PagerDuty for critical thresholds.
+
+---
+
+## 993. How do you build resilient system?
+
+**Answer:**
+1.  **Circuit Breaker:** Stop calling failing service throughout.
+2.  **Bulkhead:** Isolate resources so one failure doesn't crash everything (e.g., separate thread pools).
+3.  **Retry with Backoff:** Exponential backoff for transient errors.
+4.  **Fallback:** Return default value/cache if service fails.
+5.  **Rate Limiting:** Protect against traffic spikes.
+
+---
+
+## 994. How do you conduct technical interviews?
+
+**Answer:**
+1.  **Coding:** Focus on logic and clean code, not obscure algorithms.
+2.  **System Design:** Evaluate thinking process on scalability and trade-offs.
+3.  **Behavioral:** Assess culture fit and past experiences (STAR method).
+4.  **Scenario:** "What would you do if..." (Debugging/Production outage).
+
+---
+
+## 995. How do you evaluate architecture trade-offs?
+
+**Answer:**
+1.  **CAP Theorem:** Consistency vs Availability.
+2.  **Complexity vs Maintainability:** Is Microservices worth the ops overhead vs Monolith?
+3.  **Cost vs Performance:** Is AWS Lambda cheaper than EC2 for this workload?
+4.  **Build vs Buy:** Do we need custom solution or use SaaS (Auth0)?
+
+---
+
+## 996. How do you balance speed vs quality?
+
+**Answer:**
+1.  **MVP:** Build minimum viable feature first.
+2.  **Tech Debt Management:** Accumulate debt intentionally for speed, pay it back later.
+3.  **Automation:** CI/CD and Tests ensure speed doesn't break quality.
+4.  **Good Enough:** Don't optimized prematurely.
+
+---
+
+## 997. How do you handle legacy system modernization?
+
+**Answer:**
+1.  **Anti-Corruption Layer (ACL):** Adapter between New and Old system.
+2.  **Strangler Fig:** Replace piece by piece.
+3.  **CDC (Change Data Capture):** Sync data from Old DB to New DB (Debezium).
+4.  **Documentation:** Understand existing business rules before rewriting.
+
+---
+
+## 998. What is your biggest technical achievement?
+
+**Answer:**
+**(Personalize this answer using STAR):**
+"I led the migration of our monolith to microservices (Task), solving the scalability bottleneck (Situation). I designed the event-driven architecture using Kafka (Action), which reduced latency by 40% and enabled handling 5x traffic (Result)."
+
+---
+
+## 999. What is biggest production failure and learning?
+
+**Answer:**
+**(Personalize this answer):**
+"Accidentally deleted a prod table (Situation). Restored from backup which took 4 hours (Action). Learned to automate backups and remove write access for developers in prod (Result). Implemented a 'terraform plan' review process to prevent infrastructure deletion."
+
+---
+
+## 1000. Why should we hire you as Senior Developer?
+
+**Answer:**
+1.  **Technical Depth:** Strong Java/Spring/Cloud skills.
+2.  **Problem Solving:** Proven track record of fixing complex production issues.
+3.  **Leadership:** Mentored juniors and improved team velocity.
+4.  **Ownership:** I care about the product, not just code.
+5.  **Communication:** Can bridge gap between Tech and Business.
